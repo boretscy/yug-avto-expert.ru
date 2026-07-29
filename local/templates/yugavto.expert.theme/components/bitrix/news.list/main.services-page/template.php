@@ -23,8 +23,8 @@ $this->setFrameMode(true);
     <div class="row">
         <?php foreach ($arResult['ITEMS'] as $arItem) { ?>
             <div class="col-md-6 col-lg-4 mb-4">
-                <a href="<?= $arItem['PROPERTIES']['LINK']['VALUE'];?>" class="b-yagray b-radius-yaradius-25 py-5 px-4 d-block text-decoration-none" title="<?= $arItem['NAME'];?>">
-                    <img src="<?= $templateFolder;?>/images/<?= $arItem['PROPERTIES']['SVG']['VALUE'];?>.svg" style="height:74px; width:auto;" />
+                <a href="<?= $arItem['PROPERTIES']['LINK']['VALUE'];?>" class="b-yagray b-radius-yaradius-25 py-5 px-4 d-block text-decoration-none" title="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>">
+                    <img src="<?= $templateFolder;?>/images/<?= $arItem['PROPERTIES']['SVG']['VALUE'];?>.svg" style="height:74px; width:auto;" alt="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" />
                     <div class="title c-yalightblack c-h-yalightblack h3 mt-5"><?= $arItem['NAME'];?></div>
                     <div class="text c-yadarkgray c-h-yadarkgray"><?= $arItem['PREVIEW_TEXT'];?></div>
                 </a>

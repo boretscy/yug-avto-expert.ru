@@ -17,7 +17,7 @@ $this->setFrameMode(true);
         <?php foreach( $arResult['ITEMS'] as $k => $arItem ) { ?>
         <a href="<?= $arItem['PROPERTIES']['LINK']['VALUE'];?>" class="car-cards__item b-yalightgray b-radius-yaradius-25 bg-yawhite position-relative text-decoration-none" data-section="<?= $arItem['PROPERTIES']['SECTION']['VALUE'];?>">
             <div class="car-card__item-footer">
-                <img src="<?= CFile::GetPath($arItem['PROPERTIES']['ICON']['VALUE']);?>" alt="<?= $arItem['NAME'];?>" alt="">
+                <img src="<?= CFile::GetPath($arItem['PROPERTIES']['ICON']['VALUE']);?>" alt="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>">
             </div>
             <div class="car-card__item-head">
                 <div class="car-cards__item-title c-yalightblack c-h-yalightblack fw-bold">
