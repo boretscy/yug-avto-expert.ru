@@ -1,0 +1,12 @@
+@media (max-width: 768px) {
+    .form-group .but {
+        height: auto;
+    }
+    .mobile {
+        display: block;
+    }
+    .desktop {
+        display: none;
+    }
+
+}

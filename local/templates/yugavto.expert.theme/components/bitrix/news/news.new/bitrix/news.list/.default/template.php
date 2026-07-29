@@ -1,0 +1,139 @@
+<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+/** @var array $arParams */
+/** @var array $arResult */
+/** @global CMain $APPLICATION */
+/** @global CUser $USER */
+/** @global CDatabase $DB */
+/** @var CBitrixComponentTemplate $this */
+/** @var string $templateName */
+/** @var string $templateFile */
+/** @var string $templateFolder */
+/** @var string $componentPath */
+/** @var CBitrixComponent $component */
+$this->setFrameMode(true);
+?>
+<div class="bg-yablue py-4">
+	<div class="container">
+		<div class="row">
+			<div class="col"><h1 class="h1 fw-normal c-yawhite"><?= $arResult['NAME'];?></h1></div>
+		</div>
+	</div>
+</div>
+
+<div class="container my-5 filter">
+	<div class="row">
+		<div class="col-md-6 col-lg-4">
+			<div class="filter-dropcontainer position-relative">
+				<div class="b-radius-yaradius-15 bg-yalightgray filter-dropdown d-flex justify-content-between c-yalightblack position-relative">
+					<span><?= $arResult['vuefilter']['items']['dealership']['title'];?></span>
+					<?php if ( $_GET['dealership'] && count(explode(',', $_GET['dealership'])) != 0 ) { ?>
+					<span><?= count(explode(',', $_GET['dealership']));?> выбрано</span>
+					<?php } ?>
+					<span><img src="<?= SITE_TEMPLATE_PATH;?>/assets/images/svg/drop-corner.svg" /></span>
+				</div>
+				<div class="filter-droplist bg-yawhite w-100 position-absolute d-none">
+					<?php foreach ( $arResult['vuefilter']['items']['dealership']['items'] as $item ) { ?>
+					<a href="<?= YApp::makeFilterUrl($_GET, ['dealership'=>$item['code']]);?>" 
+						class="filter-droplist-item py-2 d-block c-yalightblack c-h-yalightblack text-decoration-none bg-h-yalightgray <?= (($item['selected'])?'bg-yalightgray selected fw-bold':'');?>"
+						data-name="brand"
+						data-value="<?= $item['code'];?>"
+						><?= $item['name'];?></a>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-2 mt-3 mt-md-0">
+			<a href="<?= YApp::makeFilterUrl($_GET, []);?>" class="b-radius-yaradius-15 c-yalightblack c-h-yalightblack bg-yayellow text-decoration-none text-center filter-button d-block">Сбросить</a>
+		</div>
+		
+	</div>
+</div>
+
+<?php if ( empty($arResult['ITEMS']) ) { ?>
+<div class="container my-5 text-center">
+	<div class="row">
+		<div class="col">
+			<p class="h2 fw-normal c-yamiddlegray">Ничего не найдено</p>
+		</div>
+	</div>
+</div>
+<?php } else { ?>
+<div class="container my-4">
+	<div class="row">
+		<?php foreach ( $arResult['ITEMS'] as $arItem ) { ?>
+		<div class="col-md-6 col-lg-4 mb-3 news-item">
+			<a 
+				href="<?= $arItem['DETAIL_PAGE_URL'];?>" 
+				class="b-radius-yaradius-25 overflow-hidden b-yagray bg-yawhite shadow-small-h d-block c-yablack c-h-yablack text-decoration-none"
+				alt="<?= $arItem['NAME'];?>"
+				>
+				<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" alt="<?= $arItem['NAME'];?>" class="w-100" />
+				<p class="my-3 p-3 с-yamiddlegray">
+					<span class="c-yamiddlegray text-minus d-block mb-3"><?= $arItem['DISPLAY_ACTIVE_FROM'];?> · <?= (($arItem['PROPERTIES']['VIDEO']['VALUE'])?'Видеообзор':'Новости');?></span>
+					<span class="fw-bold d-block" style="min-height: 81px;"><?= $arItem['NAME'];?> &rarr;</span>
+				</p>
+			</a>
+
+		</div>
+		<?php } // foreach ITEMS ?>
+	</div>
+</div>
+<?php if ( $arParams["DISPLAY_BOTTOM_PAGER"] ) { ?>
+<div class="container my-5">
+	<div class="row">
+		<div class="col"><?= $arResult["NAV_STRING"];?></div>
+	</div>
+</div>
+<?php } // if PAGES >?>
+<?php } // if ITEMS ?>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="0" height="0" display="none" aria-hidden="true">
+    
+    <symbol id="ns-news" viewbox="0 0 74 74">
+		<path d="M5.1,5.9C4.4,6,4,6.6,4,7.2v48.9c0,5.8,3,9.1,6,10.6c3,1.5,5.9,1.4,5.9,1.4h42.2V68c0.7,0.1,1.4,0.1,1.4,0.1s2.6,0,5.3-1.5
+			c2.6-1.5,5.1-4.6,5.2-10c0,0,0-0.1,0-0.1c0,0,0-0.1,0-0.1c0-0.1,0-0.1,0-0.2V21.8c0,0,0,0,0,0c0,0,0-1.6-0.8-3.3
+			c-0.8-1.6-2.8-3.4-5.8-3.4v0h-13v2.7H58c-0.2,0.2-0.3,0.4-0.4,0.7c-0.8,1.6-0.9,3.3-0.9,3.3V55c0,0.5,0.3,1,0.7,1.2
+			c0.4,0.2,1,0.2,1.4,0c0.4-0.3,0.7-0.7,0.7-1.2V21.8c0,0,0.1-1,0.6-2c0.5-1,1.2-1.9,3.3-1.9c2.1,0,2.8,0.9,3.3,1.9
+			c0.5,1,0.6,2,0.6,2.1h0v34.4c0,4.9-1.9,6.9-3.9,8.1c-1.9,1.1-3.9,1.1-3.9,1.1s-2.3,0-4.6-1.2c-2.3-1.2-4.5-3.2-4.5-8.1V7.2
+			c0-0.8-0.6-1.4-1.4-1.4H5.4C5.3,5.8,5.2,5.8,5.1,5.9z M6.8,8.6h40.8v47.6c0,4.5,1.9,7.5,4.2,9.3H15.9c0,0,0,0,0,0c0,0-0.6,0-1.5-0.1
+			c-0.4-0.1-0.9-0.2-1.5-0.3c-0.5-0.2-1.1-0.4-1.7-0.6c-0.3-0.1-0.6-0.3-0.9-0.5c-2-1.2-3.6-3.4-3.6-7.7V8.6z M12.2,17.1
+			c-0.8,0.1-1.3,0.8-1.2,1.6c0.1,0.8,0.8,1.3,1.6,1.2h27c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7h-27
+			c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0C12.3,17.1,12.3,17.1,12.2,17.1z M12.2,22.6c-0.8,0.1-1.3,0.8-1.2,1.6c0.1,0.8,0.8,1.3,1.6,1.2h27
+			c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7h-27c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0
+			C12.3,22.6,12.3,22.6,12.2,22.6z M12.9,33.6c-0.8,0.1-1.3,0.8-1.2,1.6s0.8,1.3,1.6,1.2h9.3c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4
+			c-0.3-0.4-0.7-0.7-1.2-0.7h-9.3c0,0-0.1,0-0.1,0s-0.1,0-0.1,0S12.9,33.6,12.9,33.6z M28.7,33.6c-0.8,0.1-1.3,0.8-1.2,1.6
+			s0.8,1.3,1.6,1.2h10.6c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7H29.1c0,0-0.1,0-0.1,0s-0.1,0-0.1,0
+			S28.7,33.6,28.7,33.6z M12.9,39.1c-0.8,0.1-1.3,0.8-1.2,1.6s0.8,1.3,1.6,1.2h9.3c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4
+			c-0.3-0.4-0.7-0.7-1.2-0.7h-9.3c0,0-0.1,0-0.1,0s-0.1,0-0.1,0S12.9,39.1,12.9,39.1z M28.7,39.1c-0.8,0.1-1.3,0.8-1.2,1.6
+			s0.8,1.3,1.6,1.2h10.6c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7H29.1c0,0-0.1,0-0.1,0s-0.1,0-0.1,0
+			S28.7,39.1,28.7,39.1z M28.7,44.2c-0.8,0.1-1.3,0.8-1.2,1.6s0.8,1.3,1.6,1.2h10.6c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4
+			c-0.3-0.4-0.7-0.7-1.2-0.7H29.1c-0.1,0-0.2,0-0.3,0C28.8,44.2,28.7,44.2,28.7,44.2z M12.9,44.5c-0.8,0.1-1.3,0.8-1.2,1.6
+			s0.8,1.3,1.6,1.2h9.3c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7h-9.3c0,0-0.1,0-0.1,0s-0.1,0-0.1,0
+			S12.9,44.5,12.9,44.5z M28.7,49.7c-0.8,0.1-1.3,0.8-1.2,1.6s0.8,1.3,1.6,1.2h10.6c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4
+			c-0.3-0.4-0.7-0.7-1.2-0.7H29.1c-0.1,0-0.2,0-0.3,0C28.8,49.7,28.7,49.7,28.7,49.7z M12.9,50c-0.8,0.1-1.3,0.8-1.2,1.6
+			s0.8,1.3,1.6,1.2h9.3c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7h-9.3c0,0-0.1,0-0.1,0s-0.1,0-0.1,0
+			S12.9,50,12.9,50z M28.7,54.9c-0.8,0.1-1.3,0.8-1.2,1.6c0.1,0.8,0.8,1.3,1.6,1.2h10.6c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4
+			c-0.3-0.4-0.7-0.7-1.2-0.7H29.1c0,0-0.1,0-0.1,0s-0.1,0-0.1,0S28.7,54.9,28.7,54.9z M12.9,55.5c-0.8,0.1-1.3,0.8-1.2,1.6
+			s0.8,1.3,1.6,1.2h9.3c0.5,0,1-0.3,1.2-0.7c0.2-0.4,0.2-1,0-1.4c-0.3-0.4-0.7-0.7-1.2-0.7h-9.3c0,0-0.1,0-0.1,0s-0.1,0-0.1,0
+			S12.9,55.5,12.9,55.5z"/>
+    </symbol>
+	<symbol id="ns-video" viewbox="0 0 74 74">
+		<path d="M68.9,14.5c-0.7-0.4-1.5-0.3-2.1,0.1L49.4,26.1v-4.8c0-3.9-3.2-7.1-7.1-7.1H11.1c-3.9,0-7.1,3.2-7.1,7.1v31.3
+			c0,3.9,3.2,7.1,7.1,7.1h31.3c3.9,0,7.1-3.2,7.1-7.1v-4.8l17.4,11.5c0.3,0.2,0.7,0.3,1.1,0.3c0.3,0,0.7-0.1,1-0.2
+			c0.7-0.4,1.1-1,1.1-1.8V16.3C70,15.5,69.6,14.8,68.9,14.5z M45.4,52.6c0,1.7-1.4,3-3,3H11.1c-1.7,0-3-1.4-3-3V21.4c0-1.7,1.4-3,3-3
+			h31.3c1.7,0,3,1.4,3,3v8.5v14.2V52.6z M66,54L49.4,43V31L66,20V54z"/>
+    </symbol>
+
+</svg>
+
+<script data-skip-moving="true">
+	var filter = <?= json_encode($arResult['vuefilter']);?>
+</script>
+
+<?php 
+	foreach ( glob($_SERVER['DOCUMENT_ROOT'].'/local/vue-apps/vue-filter/dist/js/*.js') as $file ) {
+
+		$arF = explode('/', $file);
+		$this->addExternalJS('/local/vue-apps/vue-filter/dist/js/'.$arF[count($arF)-1]);
+	}
+?>

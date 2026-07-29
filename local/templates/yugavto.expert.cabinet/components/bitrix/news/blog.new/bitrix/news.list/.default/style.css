@@ -1,0 +1,72 @@
+.news-filter-cancel {
+	height: 40px;
+	width: 40px;
+	padding: 10px;
+}
+.news-filter-cancel svg {
+    fill: var(--yamiddlegray);
+    width: 20px;
+    height: 20px;
+    transition: .2s;
+}
+.news-filter-cancel:hover svg {
+    fill: var(--yayellow);
+    transition: .2s;
+}
+
+.news-filter-select {
+	user-select: none;
+}
+.news-filter-select svg {
+    fill: var(--yamiddlegray);
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 12px;
+    right: 10px;
+}
+.news-filter-select-list {
+	position: absolute;
+    width: 100%;
+    top: 55px;
+    z-index: 100;
+    display: none;
+	max-height: 500px;
+	overflow-y: auto;
+	user-select: none;
+}
+.news-filter-select-list::before {
+	content: '';
+	position: absolute;
+	top: -10px;
+	left: 10px;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px 0 0 10px;
+	border-color: transparent transparent transparent var(--yalightgray);
+}
+
+.news-filter-select-list-item svg {
+	position: unset;
+	fill: var(--yamiddlegray);
+	width: 18px;
+	height: 18px;
+	transition: .2s;
+	margin-right: 10px;
+}
+.news-filter-select-list-item img {
+	width: 24x;
+	height: 18px;
+	margin-right: 20px;
+}
+
+.news-item {
+	overflow: hidden;
+}
+.news-item a {
+	overflow: hidden;
+}
+.news-item a p {
+	min-height: 130px;
+}

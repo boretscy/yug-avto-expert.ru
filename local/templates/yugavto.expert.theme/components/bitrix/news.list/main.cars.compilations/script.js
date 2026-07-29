@@ -1,0 +1,125 @@
+let CompilationsRender = function (data) {
+    
+    $.ajax({
+        type: 'POST',
+        url: '/api/main_compilations/render/',
+        data: data,
+        success: (resp) => {
+            $('.swiper-cis-compilations .swiper-wrapper').html(resp);
+            swiper_cis_compilations.update();
+            $('.compilations-on-main-title a span').text( $('.compilations-on-main-data').data('text') );
+            $('.compilations-on-main-title a').attr('href', data.link);
+        },
+        error: () => { 
+        }
+    });
+
+    return true;
+
+}
+$(document).on('click', '.collections__list a', function() {
+
+    $('.collections__list a').removeClass('bg-yagray').addClass('bg-yalightgray');
+    $(this).toggleClass('bg-yagray bg-yalightgray');
+
+    let data = {
+        query: $(this).data('query'),
+        link: '/cars/used/',
+        entity: 'used',
+        city: CONNECTOR.SELECTED_CITY || null,
+    }
+    CompilationsRender(data);
+
+    return false;
+});
+SELECTED_CITY = [... CONNECTOR.SELECTED_CITY];
+setInterval(() => {
+    if ( SELECTED_CITY.length != CONNECTOR.SELECTED_CITY.length ) {
+        SELECTED_CITY = [... CONNECTOR.SELECTED_CITY];
+        let data = {
+            query: $('.collections__list a .bg-yalightgray').data('query') || null,
+            link: '/cars/used/',
+            entity: 'used',
+            city: CONNECTOR.SELECTED_CITY || null,
+        }
+        CompilationsRender(data)
+    }
+}, 100);
+
+const swiper_cis_compilations = new Swiper('.swiper-cis-compilations', {
+    pagination: {
+        el: ".swiper-pagination",
+        type: "fraction",
+    },
+    navigation: {
+        nextEl: '.swiper-cis-compilations-button-next',
+        prevEl: '.swiper-cis-compilations-button-prev',
+    },
+    slidesPerView: 4,
+    spaceBetween: 24,
+    
+    breakpoints: {
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 24
+        },
+        750: {
+            slidesPerView: 2,
+            spaceBetween: 24
+        },
+        1024: {
+            slidesPerView: 3,
+            spaceBetween: 24
+        },
+        1200: {
+            slidesPerView: 4,
+            spaceBetween: 24
+        },
+    }
+})
+
+///////////// Vehicle card
+///////////// Vehicle card
+$(document).on('mousemove', '.vehicle-card-images', function(e) {
+    let el = e.currentTarget.getBoundingClientRect();
+    let indx = 0;
+    let w = el.width / 4;
+
+    if ( e.clientX >= el.left && e.clientX < el.left + w) {
+        indx = 0;
+    } else if ( e.clientX >= el.left+w && e.clientX < el.left+w+w ) {
+        indx = 1;
+    } else if ( e.clientX >= el.left+w+w && e.clientX < el.left+w+w+w ) {
+        indx = 2;
+    } else if ( e.clientX >= el.left+w+w+w && e.clientX <= el.right) {
+        indx = 3;
+    }
+    
+    $(this).find('.vehicle-card-images-item-container').hide()
+    $(this).find('.vehicle-card-images-item-container[data-index="'+indx+'"]').show()
+    $(this).find('.vehicle-card-images-row-item').removeClass('active')
+    $(this).find('.vehicle-card-images-row-item[data-index="'+indx+'"]').addClass('active')
+});
+document.querySelectorAll('.vehicle-card-images').forEach( (item) => {
+    item.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        let el = e.currentTarget.getBoundingClientRect();
+        let indx = 0;
+        let w = el.width / 4;
+
+        if ( e.touches[0].clientX >= el.left && e.touches[0].clientX < el.left + w) {
+            indx = 0;
+        } else if ( e.touches[0].clientX >= el.left+w && e.touches[0].clientX < el.left+w+w ) {
+            indx = 1;
+        } else if ( e.touches[0].clientX >= el.left+w+w && e.touches[0].clientX < el.left+w+w+w ) {
+            indx = 2;
+        } else if ( e.touches[0].clientX >= el.left+w+w+w && e.touches[0].clientX <= el.right) {
+            indx = 3;
+        }
+        
+        $(item).find('.vehicle-card-images-item-container').hide()
+        $(item).find('.vehicle-card-images-item-container[data-index="'+indx+'"]').show()
+        $(item).find('.vehicle-card-images-row-item').removeClass('active')
+        $(item).find('.vehicle-card-images-row-item[data-index="'+indx+'"]').addClass('active')
+    })
+});

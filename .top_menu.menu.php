@@ -1,0 +1,39 @@
+<?
+$aMenuLinks = Array(
+	Array(
+		"Витрина", 
+		"/cars/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Программы", 
+		"/offers/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Услуги", 
+		"/services/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"О компании", 
+		"/about/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Автосалоны", 
+		"/dealerships/", 
+		Array(), 
+		Array(), 
+		"" 
+	)
+);
+?>

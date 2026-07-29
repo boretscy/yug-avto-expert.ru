@@ -1,0 +1,47 @@
+.sum {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+}
+.vacancies-phone {
+    --icon-size: 30px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--icon-size) /2);
+}
+.vacancies-phone svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--yayellow);
+}
+.vacancies ul  {
+    padding-left: 1em !important;
+    margin-left: 0 !important;
+}
+.vacancies ul li {
+    margin-bottom: 1em;
+    color: var(--yablack);
+}
+.vacancies ul li:before {
+    content: "\2022";
+    list-style: none;
+    color: var(--yablue);
+    margin-right: 0.5em;
+    margin-left: -1em;
+}
+.vacancies_footer_form {}
+.vacancies_footer_form svg {
+    width: 180px;
+    height: 150px;
+}
+@media (max-width: 1000px) {
+    .vacancies_footer_form a {
+        width: 50% !important;
+    }
+}
+@media (max-width: 425px) {
+    .vacancies_footer_form a {
+        width: 100% !important;
+    }
+}

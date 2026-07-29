@@ -1,0 +1,454 @@
+.cis-offers svg {
+    fill: var(--yayellow);
+    width: 30px;
+    height: 30px;
+    margin-left: 15px;
+    top: 0;
+    right: 0;
+}
+.offer-item:hover {
+    border-color: var(--yayellow);
+}
+
+.swiper-cis-offers {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-cis-offers .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-cis-offers .swiper-button-next, .swiper-cis-offers .swiper-button-prev {
+    color: var(--yablue);
+}
+
+.swiper-cis-offers-button-prev, .swiper-cis-offers-button-next {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: var(--yawhite);
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+}
+.swiper-cis-offers-button-prev svg, .swiper-cis-offers-button-next svg {
+    width: 35px;
+    height: 35px;
+    margin-left: 0;
+    fill: var(--yablue);
+}
+.swiper-cis-offers-button-prev {
+    left: -75px;
+}
+.swiper-cis-offers-button-next {
+    right: -75px;
+}
+
+.swiper-cis-offers .swiper-pagination {
+    bottom: 0;
+    font-size: .8rem;
+}
+.swiper-cis-offers .swiper-pagination-current {
+    color: var(--yablue);
+    font-size: 1rem;
+}
+.webkit_box {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 1024px) {
+    .swiper-cis-offers-button-next {
+        right: -15px;
+        z-index: 50;
+    }
+    .swiper-cis-offers-button-prev {
+        left: -15px;
+        z-index: 50;
+    }
+}
+@media (max-width: 768px) {
+    .swiper-cis-offers-button-next {
+        right: -10px;
+        z-index: 50;
+    }
+    .swiper-cis-offers-button-prev {
+        left: -10px;
+        z-index: 50;
+    }
+}
+@media (max-width: 650px) {
+    .swiper-cis-offers-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-cis-offers-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+
+
+.swiper-cis-others {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-cis-others .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-cis-others .swiper-button-next, .swiper-cis-others .swiper-button-prev {
+    color: var(--yablue);
+}
+
+.swiper-cis-others-button-prev, .swiper-cis-others-button-next {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: var(--yawhite);
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+}
+.swiper-cis-others-button-prev svg, .swiper-cis-others-button-next svg {
+    width: 35px;
+    height: 35px;
+    margin-left: 0;
+    fill: var(--yablue);
+}
+.swiper-cis-others-button-prev {
+    left: -75px;
+}
+.swiper-cis-others-button-next {
+    right: -75px;
+}
+
+.swiper-cis-others .swiper-pagination {
+    bottom: 0;
+    font-size: .8rem;
+}
+.swiper-cis-others .swiper-pagination-current {
+    color: var(--yablue);
+    font-size: 1rem;
+}
+.other-item-image {
+    height: 230px;
+    overflow: hidden;
+}
+.webkit_box {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*card cards available__grid-item*/
+.available__grid-item__detail-cis {
+    text-decoration: none;
+    border: solid 1px var(--yagray);
+    display: block;
+    padding: 0 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: 200ms;
+    overflow: hidden;
+    border-radius: 3px;
+}
+.available__grid-item__detail-cis:hover {
+    color: var(--yablack);
+    border: solid 1px var(--yayellow);
+}
+.available__grid-item:hover .button::before {
+    bottom: -199px;
+    left: -240px;
+}
+.liner_model .available__grid-item {
+    padding: 0 0;
+}
+.grid-item__head {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
+.grid-item__head-img {
+    --heigth: 200px;
+    background: var(--yawhite);
+    min-height: var(--heigth);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+}
+.grid-item__head-img img {
+    max-height: var(--heigth);
+    object-fit: cover !important;
+    width: 100%;
+}
+.head_items-box {
+    padding: 1em 1em;
+    text-align: left;
+}
+.grid-item__title {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1em;
+    margin-bottom: 1em;
+    display: block;
+    min-height: 35px;
+    max-height: 40px;
+    text-transform: uppercase;
+    color: var(--yablack) !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    color: var(--yadarkgray);
+}
+.model__grid-card__content--list {
+    --margin-bottom: 2em;
+    margin-bottom: var(--margin-bottom);
+    word-break: break-all;
+    min-height: 70px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4rem;
+}
+.model__grid-card__content--list-item {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1em;
+    color: var(--yadarkgray);
+    display: inline-block;
+}
+.model__grid-card__content--list-item::before {
+    content: '\2022';
+    color: var(--yadarkblue);
+    margin-right: 0.3rem;
+    margin-left: 0.3rem;
+    font-size: 20px;
+    vertical-align: middle;
+}
+.model__grid-card__content--list-item:nth-child(1)::before {
+    content: '';
+    margin-left: 0;
+    margin-right: 0;
+}
+.model__grid-card__footer {
+    padding: var(--padding);
+    padding-top: 0;
+}
+.model__grid-card__content--price {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.model__grid-card__content--price_curent {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1em;
+}
+.button {
+    --ui-color: var(--yadarkblue);
+    --border-color: var(--ui-color);
+    --background: transparen;
+    --color: var(--ui-color);
+    --font-size: 14px;
+    --padding-top-bottom: 12px;
+    --padding-left-right: 40px;
+    --margin-inner: 15px;
+    --icon-size: calc(1em * 1.2);
+    --transition: 100ms;
+    line-height: calc(1em * 1);
+    display: inline-flex;
+    border: 1px solid var(--yadarkblue);
+    color: var(--yawhite);
+    background: var(--color);
+    font-size: var(--font-size);
+    padding: var(--padding-top-bottom) var(--padding-left-right);
+    border-radius: 3px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    /*margin-bottom: 10px;*/
+    align-content: space-between;
+    transition: var(--transition);
+    text-decoration: none;
+    /*box-shadow: inset 0 0 1px 1px var(--yablack)00038, 0px 1px 0px 0px var(--yablack)0002b;*/
+}
+.button:active {
+    box-shadow: inset 0 0 3px 2px var(--yablack)00020;
+}
+.button:hover {
+    --ui-color: var(--yayellow);
+    color: var(--yablack);
+    background: var( --ui-color);
+    border: solid 1px var(--yadarkblue);
+    /*
+     Создать медиа запрос на кастомный скрин вот так
+     */
+}
+.button span {
+    z-index: 50;
+}
+.transparent{
+    --ui-color: var(--yadarkblue);
+    position: relative;
+    overflow: hidden;
+    transition: 300ms;
+    background: var(--yawhite);
+    color: var(--ui-color);
+}
+.transparent:hover {
+    --ui-color: var(--yadarkblue);
+    background: var(--yawhite);
+    color: var(--ui-color);
+    border: solid 1px var(--ui-color);
+}
+.transparent::before {
+    content: "";
+    background-color: var(--yayellow);
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    bottom: -300px;
+    left: -300px;
+    transition: .2s;
+    z-index: 0;
+}
+.transparent:hover::before{
+    bottom: -199px;
+    left: -240px;
+}
+
+/*card cards available__grid-item*/
+@media (max-width: 1024px) {
+    .swiper-cis-others-button-next {
+        right: -15px;
+        z-index: 50;
+    }
+    .swiper-cis-others-button-prev {
+        left: -15px;
+        z-index: 50;
+    }
+}
+@media (max-width: 768px) {
+    .swiper-cis-others-button-next {
+        right: -10px;
+        z-index: 50;
+    }
+    .swiper-cis-others-button-prev {
+        left: -10px;
+        z-index: 50;
+    }
+}
+@media (max-width: 650px) {
+    .swiper-cis-others-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-cis-others-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+
+.cis-dealership-image {
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+}
+#dealershipMap {
+    height: 210px;
+}
+.offers-item-title {
+    min-height: 60px;
+}
+.others-item-title {
+    min-height: 60px;
+}
+@media (max-width: 375px) {
+    .swiper-cis-offers-button-prev, .swiper-cis-offers-button-next {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .swiper-cis-others-button-prev, .swiper-cis-others-button-next {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .swiper-button-inner-circle {
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .swiper-cis-others-button-prev svg, .swiper-cis-others-button-next svg {
+        width: 15px;
+        height: 15px;
+    }
+}

@@ -1,0 +1,205 @@
+.cars-card-on-main {
+	position: relative;
+	overflow: hidden;
+/*	min-height: 240px;
+	max-height: 240px;*/
+	padding: 1em;
+	display: block;
+	text-decoration: none;
+}
+.cars-card-on-main:hover {
+	border: solid 1px var(--yayellow);
+}
+.cards_car--link img {
+	--trand3d: 7px;
+	transition: 400ms;
+}
+.cars-card-on-main:hover .cards_car--link img {
+	/*transform: scale(1.04);*/
+	transform: translate3d(var(--trand3d), var(--trand3d), var(--trand3d));
+	image-rendering: optimizeQuality;
+}
+.cars-card-on-main::after {
+	content: "";
+	background-color: var(--yayellow);
+	border-radius: 50%;
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	bottom: -300px;
+	left: -300px;
+	transition: .2s;
+	z-index: 10;
+}
+.cars-card-on-main:hover::after {
+	/*bottom: -150px;
+	left: -200px;*/
+	bottom: -255px;
+	left: -215px;
+	transition: .2s;
+}
+.cards_car--link {
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	z-index: 0;
+	margin-bottom: 1em;
+}
+/* .cars-card-on-main p {
+	display: block;
+	position: absolute;
+	top: 20px;
+	left: 30px;
+	width: calc(100% - 60px);
+} */
+.cars-card-on-main p
+.cards_car--text {
+	z-index: 50;
+}
+.cards_car--text svg {
+	fill: var(--yayellow);
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	top: 0;
+	right: -1em;
+}
+@media (max-width: 1024px) {
+	.cars-card-on-main p svg {
+		right: -15px;
+	}
+}
+@media (max-width: 991px) {
+	.cards_car--text {
+		min-height: inherit;
+	}
+	.cars-card-on-main {
+		min-height: inherit;
+	}
+}
+@media (max-width: 500px) {
+	.form--hidden .text {
+		font-size: 13px;
+	}
+}
+@media (max-width: 375px) {
+	.form--hidden .text {
+		font-size: 12px;
+	}
+}
+@media (max-width: 320px) {
+	.form--hidden .text {
+		font-size: 10px;
+	}
+}
+
+
+
+/*car cards*/
+.car-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+}
+.car-cards__item {
+    --heigth: 250px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: var(--heigth);
+    align-items: start;
+    padding: 0.5em 20px;
+}
+.car-card__item-head {
+    /* min-height: calc(var(--heigth) - 140px); */
+    padding-top: 1em;
+}
+.car-cards__item-title {
+    --icon-size: 12px !important;
+    display: grid;
+    grid-template-columns: 1fr var(--icon-size);
+    gap: var(--icon-size);
+    color: var(--yablack);
+    font-size: 16px !important;
+    font-weight: normal !important;
+    position: relative;
+}
+.car-cards__item-title .icon {
+    --icon-size: 12px !important;
+    fill: var(--yayellow);
+    position: absolute;
+    right: 0;
+    top: 5px;
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+.car-cards__item-title h1, .car-cards__item-title h2 {
+    font-weight: bold;
+    font-size: 16px;
+}
+/*.car-cards__item-title:after {
+    content: url("/assets/img/svg/arrow.svg");
+    position: absolute;
+}*/
+.car-cards__item-sub {
+    color: var(--yamiddlegray);
+    font-size: 13px;
+    margin-bottom: 0.5em;
+}
+.car-card__item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10px;
+    align-self: center;
+}
+.car-card__item-footer img {
+    --trand3d: 7px;
+    transition: 400ms;
+}
+.car-cards__item:hover .car-card__item-footer img {
+    /* transform: translate3d(calc(-1 * var(--trand3d)), var(--trand3d), var(--trand3d)); */
+	transform: scale(1.09);
+}
+/*car cards*/
+@media (max-width: 425px) {
+    .car-cards {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+    .car-cards__item {
+        --heigth: 200px;
+		padding: 0.5em 10px !important;
+    }
+    .car-card__item-head {
+        padding: .5em 10px;
+    }
+    .car-card__item-footer {
+        display: flex;
+        align-items: center;
+        /* margin-top: -10px; */
+        align-self: center;
+        align-content: center;
+    }
+    .car-cards__item-title .icon {
+        --icon-size: 15px;
+        fill: var(--yayellow);
+        position: absolute;
+        right: 0;
+        top: 5px;
+    }
+    .car-card__item-footer img {
+        width: 100%;
+    }
+    .car-cards__item-title {
+        font-size: 14px;
+    }
+    .car-cards__item-sub {
+        font-size: 13px;
+    }
+    .car-cards__item-title .icon {
+        --icon-size: 10px;
+    }
+}

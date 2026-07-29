@@ -1,0 +1,131 @@
+.offer-on-main svg {
+	fill: var(--yayellow);
+	width: 30px;
+	height: 30px;
+	margin-left: 15px;
+	top: 0;
+	right: 0;
+}
+
+.swiper-offer-on-main {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-offer-on-main .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.swiper-offer-on-main-item-title {
+    min-height: 55px;
+}
+
+.swiper-offer-on-main .swiper-button-next, .swiper-offer-on-main .swiper-button-prev {
+    color: var(--yablue);
+}
+
+.swiper-offer-on-main-button-prev, .swiper-offer-on-main-button-next {
+    --size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--size);
+    height: var(--size);
+    position: absolute;
+    background-color: var(--yawhite);
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--size) - 10px) !important;
+    height: calc(var(--size) - 10px) !important;
+    border-radius: 50%;
+}
+.swiper-offer-on-main-button-prev svg, .swiper-offer-on-main-button-next svg {
+    width: calc(var(--size) - 15px) !important;
+    height: calc(var(--size) - 15px) !important;
+	margin-left: 0;
+    fill: var(--yablue);
+}
+.swiper-offer-on-main-button-prev {
+    left: -75px;
+}
+.swiper-offer-on-main-button-next {
+    right: -75px;
+}
+
+.swiper-offer-on-main .swiper-pagination {
+	bottom: 0;
+	font-size: .8rem;
+}
+.swiper-offer-on-main .swiper-pagination-current {
+	color: var(--yablue);
+	font-size: 1rem;
+}
+.webkit_box {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 1024px) {
+    .swiper-offer-on-main-button-next {
+        right: -15px;
+        z-index: 50;
+    }
+    .swiper-offer-on-main-button-prev {
+        left: -15px;
+        z-index: 50;
+    }
+}
+@media (max-width: 768px) {
+    .swiper-offer-on-main-button-next {
+        right: -10px;
+        z-index: 50;
+    }
+    .swiper-offer-on-main-button-prev {
+        left: -10px;
+        z-index: 50;
+    }
+    .swiper-offer-on-main-button-prev, .swiper-offer-on-main-button-next  {
+        --size: 40px;
+    }
+}
+@media (max-width: 650px) {
+    .swiper-offer-on-main-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-offer-on-main-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+@media (max-width: 425px) {
+    .swiper-offer-on-main-button-prev, .swiper-offer-on-main-button-next  {
+        --size: 35px;
+    }
+}

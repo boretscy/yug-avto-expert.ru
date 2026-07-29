@@ -1,0 +1,82 @@
+.dealerships-on-main .col {
+    min-height: 210px;
+}
+.dealerships-on-main-item {
+    width: 9.58%;
+    height: 80px;
+    padding: 15px;
+    display: inline-block;
+}
+.dealerships-on-main-item:last-child {
+    width: 20.58%;
+}
+.dealerships-on-main-item:last-child figure {
+    background-size: 50%;
+}
+@media (max-width: 991px) {
+	.dealerships-on-main-item {
+        width: 20%;
+	}
+}
+.dealerships-on-main-item figure {
+    width: 100%;
+    height: 50px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+
+.remodal.city-modal {
+	max-width: 230px;
+}
+.city-modal a svg {
+    fill: var(--yamiddlegray);
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    transition: .2s;
+}
+.city-modal a:hover svg {
+    fill: var(--yablue);
+    transition: .2s;
+}
+
+
+@media (max-width: 768px) {
+    .dealerships-on-main-item:last-child figure {
+        background-size: contain;
+    }
+    .dealerships-on-main-item:last-child {
+        width: 20%;
+    }
+
+}
+@media (max-width: 425px) {
+    .dealerships-on-main-title {
+        display: block !important;
+    }
+    .dealerships-on-main-title .text-end{
+        text-align: left !important;
+    }
+}
+@media (max-width: 375px) {
+    .dealerships-on-main-item {
+        width: 28%;
+    }
+    .dealerships-on-main-item:last-child {
+        width: 28%;
+    }
+}
+
+@media (max-width: 320px) {
+    .dealerships-on-main-item {
+        --width: 27%;
+        width: var(--width);
+        margin-right: 0!important;
+        margin-left: 0!important;
+    }
+    .dealerships-on-main-item:last-child {
+        width: var(--width);
+    }
+}

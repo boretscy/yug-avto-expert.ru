@@ -1,0 +1,50 @@
+.vacancies {
+    border: var(--yagray) 1px solid;
+    transition: 200ms;
+}
+.vacancies:hover {
+    border: solid 1px var(--yayellow);
+}
+.vacancies {
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--yablack);
+}
+.vacancies svg {
+    top: 1em;
+    right: 1em;
+    width: 20px;
+    height: 20px;
+    fill: var(--yadarkgray);
+    transition: 200ms;
+}
+.vacancies__head {
+    min-height: 145px;
+}
+.vacancies:hover svg {
+    fill: var(--yablue);
+}
+.vacancies:after {
+    content: "";
+    background-color: var(--yayellow);
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    bottom: -300px;
+    left: -300px;
+    transition: .2s;
+    z-index: -1;
+}
+.vacancies:hover::after {
+    bottom: -230px;
+    left: -230px;
+    transition: .2s;
+}
+.vacancies .vacancies__footer span {
+    color: var(--yablack) !important;
+}
+.vacancies:hover .vacancies__footer span {
+    color: var(--yablack) !important;
+}

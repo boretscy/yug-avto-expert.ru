@@ -1,0 +1,120 @@
+.swiper-on-main {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-on-main .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-on-main .swiper-button-next, .swiper-on-main .swiper-button-prev {
+    color: var(--yablue);
+}
+
+.swiper-on-main-button-prev, .swiper-on-main-button-next {
+    --size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--size);
+    height: var(--size);
+    position: absolute;
+    background-color: var(--yawhite);
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--size) - 10px) !important;
+    height: calc(var(--size) - 10px) !important;
+    border-radius: 50%;
+}
+.swiper-on-main-button-prev svg, .swiper-on-main-button-next svg {
+    width: calc(var(--size) - 15px) !important;
+    height: calc(var(--size) - 15px) !important;
+    fill: var(--yablue);
+}
+.swiper-on-main-button-prev {
+    left: -75px;
+}
+.swiper-on-main-button-next {
+    right: -75px;
+}
+.swiper-on-main .swiper-pagination {
+	bottom: 0 !important;
+    font-size: .8rem;
+}
+.swiper-pagination-current {
+    color: var(--yablue);
+    font-size: 1rem;
+}
+@media (max-width: 1050px) {
+    .swiper-on-main-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-on-main-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+@media (max-width: 1000px) {
+    .swiper-on-main-button-next {
+        right: -50px;
+        z-index: 50;
+    }
+    .swiper-on-main-button-prev {
+        left: -50px;
+        z-index: 50;
+    }
+}
+@media (max-width: 768px) {
+    .swiper-on-main-button-next {
+        right: -10px;
+        z-index: 50;
+    }
+    .swiper-on-main-button-prev {
+        left: -10px;
+        z-index: 50;
+    }
+    .swiper-on-main-button-prev, .swiper-on-main-button-next {
+        --size: 40px;
+    }
+}
+@media (max-width: 650px) {
+    .swiper-on-main-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-on-main-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+@media (max-width: 425px) {
+    .swiper-on-main-button-prev, .swiper-on-main-button-next {
+        --size: 35px;
+    }
+}
