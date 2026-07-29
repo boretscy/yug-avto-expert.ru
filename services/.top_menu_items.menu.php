@@ -1,0 +1,53 @@
+<?
+$aMenuLinks = Array(
+    Array(
+        "Кредитование",
+        "/services/credit/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Страхование",
+        "/services/insurance/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Выкуп авто",
+        "/services/buyout/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Обмен (Трейд-ин)",
+        "/services/trade-in/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Комиссионная продажа",
+        "/services/commission/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Аукцион",
+        "/services/auction/",
+        Array(),
+        Array(),
+        ""
+    ),
+    Array(
+        "Сервис",
+        "/services/service/",
+        Array(),
+        Array(),
+        ""
+    )
+);
+?>

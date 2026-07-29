@@ -1,0 +1,275 @@
+.compilations-on-main svg {
+	fill: var(--yayellow);
+	width: 30px;
+	height: 30px;
+	margin-left: 5px;
+	top: 0;
+	right: 0;
+}
+
+.swiper-cis-compilations {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-cis-compilations .swiper-slide {
+    text-align: left;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+/**/
+.swiper-cis-compilations-button-prev, .swiper-cis-compilations-button-next {
+    --size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--size);
+    height: var(--size);
+    position: absolute;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--size) - 10px) !important;
+    height: calc(var(--size) - 10px) !important;
+    border-radius: 50%;
+    background-color: var(--yawhite);
+}
+.swiper-cis-compilations-button-prev svg, .swiper-cis-compilations-button-next svg {
+    width: calc(var(--size) - 15px) !important;
+    height: calc(var(--size) - 15px) !important;
+    margin-left: 0;
+    fill: var(--yayellow);
+}
+.swiper-cis-compilations-button-prev:hover svg, .swiper-cis-compilations-button-next:hover svg {
+    fill: var(--yawhite);
+}
+.swiper-cis-compilations-button-prev {
+    left: -75px;
+}
+.swiper-cis-compilations-button-next {
+    right: -75px;
+}
+
+
+/**/
+.swiper-cis-compilations .swiper-pagination {
+	bottom: 0;
+	font-size: .8rem;
+}
+.swiper-cis-compilations .swiper-pagination-current {
+	color: var(--yayellow);
+	font-size: 1rem;
+}
+
+
+
+
+
+.swiper-compilations-title {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-compilations-title .swiper-slide {
+    text-align: left;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: start;
+    justify-content: start;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    -webkit-align-items: center;
+    align-items: start;
+}
+
+
+
+.cis-new-item-image {
+    height: 230px;
+    overflow: hidden;
+}
+.new-item-title {
+    height: 60px;
+}
+.webkit_box {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 1024px) {
+    .swiper-cis-compilations-button-next {
+        right: -15px;
+        z-index: 50;
+    }
+    .swiper-cis-compilations-button-prev {
+        left: -15px;
+        z-index: 50;
+    }
+}
+@media (max-width: 768px) {
+    .swiper-cis-compilations-button-next {
+        right: -10px;
+        z-index: 50;
+    }
+    .swiper-cis-compilations-button-prev {
+        left: -10px;
+        z-index: 50;
+    }
+    .swiper-cis-compilations-button-prev, .swiper-cis-compilations-button-next  {
+        --size: 40px;
+    }
+}
+@media (max-width: 650px) {
+    .swiper-cis-compilations-button-next {
+        right: 0px;
+        z-index: 50;
+    }
+    .swiper-cis-compilations-button-prev {
+        left: 0px;
+        z-index: 50;
+    }
+}
+@media (max-width: 425px) {
+    .swiper-cis-compilations-button-prev, .swiper-cis-compilations-button-next  {
+        --size: 35px;
+    }
+}
+
+
+
+
+.vehicle-card {
+    overflow: hidden;
+    font-size: 14px;
+
+}
+.vehicle-card-images, .vehicle-card-images a {
+    height: auto;
+    cursor: ew-resize;
+}
+.vehicle-card-images a .vehicle-card-images-item-container {
+    position: relative;
+}
+.vehicle-card-images a .vehicle-card-images-item-container-image::after {
+    display: block;
+    content: '';
+    padding-bottom: 78.865%;
+    background-size: cover;
+    background-position: center center;
+}
+ .vehicle-card-discount-row {
+    top: 0;
+    width: calc(100% - 32px);
+    z-index: 10;
+}
+.vehicle-card-discount-item {
+    padding: 6px;
+    cursor: pointer !important;
+}
+.vehicle-card-images-row {
+    bottom: 0;
+    width: calc(100% - 32px);
+}
+.vehicle-card-images-row-item {
+    width: 52px;
+    height: 6px;
+    border-radius: 3px;
+    opacity: .6;
+    background-color: var(--yawhite);
+    cursor: pointer;
+}
+.vehicle-card-images-row-item.active {
+    background-color: var(--yayellow);
+}
+.vehicle-card-content-title {
+    min-height: 80px;
+}
+.vehicle-card-futures img {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+}
+.vehicle-card-specification {
+    min-height: 45px;
+}
+.vehicle-card-specification-item {
+    position: relative;
+}
+.vehicle-card-specification-item::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background-color: var(--yayellow);
+    border-radius: 50%;
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 2px);
+}
+.vehicle-card-specification-item:last-child:after {
+    content: unset;
+}
+.vehicle-card-button {
+    padding: 9.5px;
+}
+.vehicle-card-futures {
+    height: 35px;
+}
+
+@media (max-width: 1199.98px) {
+    .collections__list {
+        display: flex;
+        overflow-x: scroll;
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+    }
+}
+@media (max-width: 991.98px) {
+    .vehicle-card-images {
+        height: auto;
+    }
+    .collections__list {
+        display: flex;
+        overflow-x: scroll;
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+    }
+}
+@media (max-width: 767.98px) {
+    .vehicle-card {
+        width: 98%;
+    }
+    .vehicle-card-images {
+        height: auto;
+    }
+}

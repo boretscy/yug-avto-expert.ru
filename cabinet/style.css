@@ -1,0 +1,274 @@
+.cabinet-sign-title {
+    font-size: 20px;
+}
+.cabinet-sign-description {
+    font-size: 12px;
+}
+.cabinet-form-icon {
+    padding-left: 60px !important;
+}
+.cabinet-text-size-button {
+    font-size: 14px;
+}
+.cabinet-vehicle-offers-count {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+}
+
+.form-group.position-relative img {
+    position: absolute;
+    left: 20px;
+    top: calc(50% - 10px);
+}
+
+.cabinet-vehicle-attention {
+    width: 65px;
+    height: 50px;
+}
+.cabinet-vehicle-attention span:first-child {
+    font-size: 20px;
+}
+.cabinet-vehicle-attention span:last-child {
+    font-size: 14px;
+    display: none;
+}
+.cabinet-vehicle-attention.cabinet-vehicle-attention-active span:first-child, .cabinet-vehicle-attention:hover span:first-child {
+    font-size: 14px;
+}
+.cabinet-vehicle-attention.cabinet-vehicle-attention-active span:last-child, .cabinet-vehicle-attention:hover span:last-child {
+    display: block;
+}
+ul.cabinet-vehicle-documents {column-count: 2;}
+
+
+
+
+.swiper {
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.swiper-slide {
+    text-align: left;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.vehicle-swiper {
+    height: 80%;
+    width: 100%;
+    z-index: auto;
+}
+.vehicle-swiper-thumbs {
+    height: 20%;
+    box-sizing: border-box;
+    padding: 0;
+}
+.vehicle-swiper-thumbs .swiper-slide {
+    width: 25%;
+    height: 100%;
+    opacity: 0.4;
+}
+.vehicle-swiper-thumbs .swiper-slide-thumb-active {
+    opacity: 1;
+}
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.vehicle-swiper .vehicle-swiper-next, .vehicle-swiper .vehicle-swiper-prev {
+    width: 32px;
+    height: 32px;
+    top: calc(50% - 16px);
+    z-index: 10;
+    cursor: pointer;
+}
+.vehicle-swiper .vehicle-swiper-next img, .vehicle-swiper .vehicle-swiper-prev img {
+    width: 9px;
+    height: 15px;
+}
+.vehicle-swiper .vehicle-swiper-next {
+    right: 12px;
+}
+.vehicle-swiper .vehicle-swiper-prev {
+    left: 12px;
+}
+.vehicle-swiper-thumds-photo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 151.5px;
+    height: 105px;
+    background-color: rgba(0,0,0,.5);
+}
+
+
+
+.swiper-cis-cabinet {
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+.swiper-cis-cabinet .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-cis-cabinet-button-prev, 
+.swiper-cis-cabinet-button-next,
+.swiper-news-button-prev, 
+.swiper-news-button-next {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    top: calc(50% - 25px);
+    z-index: 50;
+}
+.swiper-button-inner-circle {
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 50%;
+    background-color: var(--yawhite);
+}
+.swiper-button-inner-circle:hover {
+    background-color: var(--yayellow);
+}
+.swiper-cis-cabinet-button-prev svg, 
+.swiper-cis-cabinet-button-next svg,
+.swiper-news-button-prev svg, 
+.swiper-news-button-next svg {
+    width: 25px!important;
+    height: 25px!important;
+    margin-left: 0;
+    fill: var(--yayellow);
+}
+.swiper-cis-cabinet-button-prev:hover svg, 
+.swiper-cis-cabinet-button-next:hover svg,
+.swiper-news-button-prev:hover svg, 
+.swiper-news-button-next:hover svg {
+    fill: var(--yawhite);
+}
+.swiper-cis-cabinet-button-prev {
+    left: 0;
+}
+.swiper-cis-cabinet-button-next {
+    right: 0;
+}
+.swiper-news-button-prev {
+    left: 0;
+}
+.swiper-news-button-next {
+    right: 0;
+}
+.vehicle-card {
+    overflow: hidden;
+    font-size: 14px;
+    width: 100%;
+}
+.vehicle-card-images, .vehicle-card-images a {
+    height: auto;
+    cursor: ew-resize;
+}
+.vehicle-card-images a .vehicle-card-images-item-container {
+    position: relative;
+}
+.vehicle-card-images a .vehicle-card-images-item-container-image::after {
+    display: block;
+    content: '';
+    padding-bottom: 78.865%;
+    background-size: cover;
+    background-position: center center;
+}
+ .vehicle-card-discount-row {
+    top: 0;
+    width: calc(100% - 32px);
+    z-index: 10;
+}
+.vehicle-card-discount-item {
+    padding: 6px;
+    cursor: pointer !important;
+}
+.vehicle-card-images-row {
+    bottom: 0;
+    width: calc(100% - 32px);
+}
+.vehicle-card-images-row-item {
+    width: 52px;
+    height: 6px;
+    border-radius: 3px;
+    opacity: .6;
+    background-color: var(--yawhite);
+    cursor: pointer;
+}
+.vehicle-card-images-row-item.active {
+    background-color: var(--yayellow);
+}
+.vehicle-card-content-title {
+    min-height: 80px;
+}
+.vehicle-card-futures img {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+}
+.vehicle-card-specification {
+    min-height: 45px;
+}
+.vehicle-card-specification-item {
+    position: relative;
+}
+.vehicle-card-specification-item::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background-color: var(--yayellow);
+    border-radius: 50%;
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 2px);
+}
+.vehicle-card-specification-item:last-child:after {
+    content: unset;
+}
+.vehicle-card-button {
+    padding: 9.5px;
+}
+.vehicle-card-futures {
+    height: 35px;
+}

@@ -1,0 +1,21 @@
+@media (max-width: 768px) {
+    .form-group .but {
+        height: auto;
+    }
+    .mobile {
+        display: block;
+    }
+    .desktop {
+        display: none;
+    }
+
+}
+.multiselect__tags {
+    padding: 10px 40px 0 16px !important;
+    border-radius: 15px !important;
+}
+.blue-form-cover {
+    height: 185px; 
+    z-index: -1; 
+    bottom: 0;
+}

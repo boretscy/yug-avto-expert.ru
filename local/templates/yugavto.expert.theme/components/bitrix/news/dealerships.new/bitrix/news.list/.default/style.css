@@ -1,0 +1,245 @@
+.dealerships-filter-select {
+	user-select: none;
+}
+.dealerships-filter-select svg {
+    fill: var(--yamiddlegray);
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 12px;
+    right: 10px;
+}
+.dealerships-filter-select-list {
+	position: absolute;
+    width: 100%;
+    top: 55px;
+    z-index: 100;
+    display: none;
+	max-height: 500px;
+	overflow-y: auto;
+	user-select: none;
+}
+.dealerships-filter-select-list::before {
+	content: '';
+	position: absolute;
+	top: -10px;
+	left: 10px;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px 0 0 10px;
+	border-color: transparent transparent transparent var(--yalightgray);
+}
+
+.dealerships-filter-select-list-item svg {
+	position: unset;
+	fill: var(--yamiddlegray);
+	width: 18px;
+	height: 18px;
+	transition: .2s;
+	margin-right: 10px;
+}
+.dealerships-filter-select-list-item img {
+	width: 24x;
+	height: 18px;
+	margin-right: 20px;
+}
+.dealerships-filter-mode svg {
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+}
+
+
+
+.dealerships-item {
+	overflow: hidden;
+}
+.dealerships-item-image {
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: cover;
+}
+.dealerships-item-image-cover {
+	background-color: rgba(0,0,0,.5);
+	transition: .2s;
+	display: none;
+}
+.dealerships-item-image:hover .dealerships-item-image-cover {
+	transition: .2s;
+	display: flex!important;
+}
+.dealerships-item-image-cover svg {
+	fill: var(--yawhite);
+	width: 70px;
+	height: 70px;;
+}
+.dealerships-item-content svg {
+	fill: var(--yablue);
+	width: 30px;
+	height: 30px;
+}
+.dealerships-item-content-cta {
+	height: 30px;
+}
+.dealerships-item-content-title {
+	min-height: 75px;
+}
+.dealerships-item-content-title svg {
+	fill: var(--yablue);
+	width: 16px;
+	height: 16px;
+}
+.dealership-contacts-content .text-phone {
+    font-size: 18px;
+}
+
+.dealerships-item-history {
+	overflow-y: auto;
+	max-height: 353px;
+}
+
+.dealerships-item-history svg {
+	width: 19px;
+	height: 21px;
+}
+.dealerships-item-history-line {
+	position: absolute;
+	top: 0;
+    right: -5px;
+    width: 1px;
+    height: 100%;
+    background-color: var(--yayellow);
+}
+.dealerships-item-history-arrow {
+    border: solid var(--yayellow);
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    top: 0;
+    position: absolute;
+    right: -8px;
+}
+
+
+.dealerships-map-items {
+	height: 500px;
+	overflow-y: auto;
+}
+#dealershipsMap {
+	height: 500px;
+}
+.custom-m {
+	margin-top: -15px;
+}
+picture img{
+	height: 100%;
+	object-fit: cover;
+}
+@media (max-width: 1024px) {
+	.mobile {
+		display: block;
+	}
+	.desktop {
+		display: none;
+	}
+	.dealerships-map-items .text-plus-plus {
+		font-size: 1em;
+	}
+	.mobile_button .text-minus-minus{
+		font-size: .5rem;
+	}
+	.m-img {
+		height: 250px;
+		margin-bottom: 1em;
+	}
+}
+@media (max-width: 768px) {
+	.dealerships-item .text-minus-minus {
+		font-size: .5rem;
+	}
+}
+@media (max-width: 768px) {
+	.dealerships-item .text-minus-minus {
+		font-size: .5rem;
+	}
+	.mobile_button .text-minus-minus{
+		font-size: .8rem;
+	}
+
+}
+@media (max-width: 767px) {
+	.dealerships-item-image {
+		height: 250px;
+	}
+	.dealerships-item .text-minus-minus {
+		font-size: .8rem;
+	}
+}
+@media (max-width: 340px) {
+	.dealerships-map-items .col-6 a{
+		font-size: .8em;
+	}
+}
+
+
+.filter {
+	font-size: 14px;
+}
+.filter-dropcontainer {
+	font-size: 14px;
+}
+.filter-button {
+    padding: 10.5px;
+	font-size: 14px;
+}
+.filter-button-sm {
+    padding: 9.5px;
+	font-size: 14px;
+}
+.filter-dropdown {
+    padding: 11px 15.5px;
+    cursor: pointer;
+    transition: none;
+}
+.filter-dropdown-opened {
+    border-radius: var(--yaradius15) var(--yaradius15) 0 0 !important;
+    transition: none !important;
+}
+.filter-droplist {
+    left: 0;
+    top: 42px;
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 10;
+}
+.filter-droplist.active {
+    display: block;
+}
+.filter-droplist-item {
+    padding: 0 11px;
+    cursor: pointer;
+}
+.filter-droplist-item:hover:after {
+    content: 'Выбрать';
+    float: right;
+    color: var(--yadarkgray);
+    font-size: var(--yatextminusminus);
+    font-weight: normal;
+}
+.filter-droplist-item.selected:hover:after {
+    content: 'Удалить';
+    float: right;
+    color: var(--yadarkgray);
+    font-size: var(--yatextminusminus);
+    font-weight: normal;
+}
+.filter .check {
+    width: 20px;
+    height: 20px;
+}
+
+.ymaps-2-1-79-map {border-radius: var(--yaradius25);}
+.ymaps-2-1-79-inner-panes {border-radius: var(--yaradius25);}

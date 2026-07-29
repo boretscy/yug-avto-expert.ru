@@ -1,0 +1,29 @@
+<?php
+
+    // $arResult['SEO_TEXT'] = false;
+    // $arURI = explode('/', parse_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'])['path']);
+    // if ( $arURI[5] ) {
+    //     $seo_level = 'vehicle';
+    // } elseif ( $arURI[4] ) {
+    //     $seo_level = 'model';
+    // } elseif ( $arURI[3] ) {
+    //     $seo_level = 'brand';
+    // } else{
+    //     $seo_level = 'brands';
+    // }
+    // switch ( $seo_level ) {
+    //     case 'vehicle':
+    //         if  ($arResult['DETAIL_TEXT'] ) $arResult['SEO_TEXT'] = $arResult['DETAIL_TEXT'];
+    //         break;
+    //     case 'model':
+    //         $k = array_search($arURI[4], $arResult['PROPERTIES']['SEO_MODEL']['DESCRIPTION']);
+    //         if ( $k !== false ) $arResult['SEO_TEXT'] = $arResult['PROPERTIES']['SEO_MODEL']['~VALUE'][$k]['TEXT'];
+    //         break;
+    //     case 'brand':
+    //         $k = array_search($arURI[3], $arResult['PROPERTIES']['SEO_BRAND']['DESCRIPTION']);
+    //         if ( $k !== false ) $arResult['SEO_TEXT'] = $arResult['PROPERTIES']['SEO_BRAND']['~VALUE'][$k]['TEXT'];
+    //         break;
+    //     case 'brands':
+    //         if  ($arResult['PROPERTIES']['SEO_BRANDS']['~VALUE']) $arResult['SEO_TEXT'] = $arResult['PROPERTIES']['SEO_BRANDS']['~VALUE'];
+    //         break;
+    // }

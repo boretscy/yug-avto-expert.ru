@@ -1,0 +1,66 @@
+.footer-seo-text {
+	height: 95px;
+	overflow: hidden;
+	transition: .2s;
+}
+.footer-seo-text.full {
+	height: auto;
+	transition: .2s;
+}
+.footer-disclamer-text {
+	height: 85px;
+	overflow: hidden;
+	transition: .2s;
+}
+.footer-disclamer-text.full {
+	height: auto;
+	transition: .2s;
+}
+.footer-seo-text a, .footer-disclamer-text a {
+	color: var(--yawhite);
+}
+.footer-seo-text a:hover, .footer-disclamer-text a:hover {
+	color: var(--yayellow);
+}
+.footer-seo svg, .footer-disclamer svg {
+	fill: var(--yayellow);
+	width: 30px;
+	height: 30px;
+	margin-left: 10px;
+}
+.footer-social a {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	padding-top: 7px;
+}
+.footer-social a svg {
+	fill: var(--yablue);
+	width: 26px;
+	height: 26px;
+	transition: .2s;
+}
+.footer-social a:hover svg {
+	fill: var(--yayellow);
+	transition: .2s;
+}
+
+.cookie {
+	background-color: rgba(0, 0, 0, .8);
+	z-index: 1000;
+	display: none;
+}
+.cookie [role="close-cookie"] {
+	right: 15px;
+	top: 15px;
+}
+.cookie [role="close-cookie"] svg {
+	fill: var(--yagray);
+	width: 30px;
+	height: 30px;
+}
+@media (max-width: 991px) {
+	.cookie {
+		min-height: 200px;
+	}
+}

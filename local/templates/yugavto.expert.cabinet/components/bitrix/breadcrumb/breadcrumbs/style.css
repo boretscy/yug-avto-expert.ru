@@ -1,0 +1,9 @@
+.breadcrumbs svg {
+	fill: var(--yablue);
+	width: 15px;
+	height: 15px;
+	margin: 0 10px;
+}
+.breadcrumbs-item {
+	display: inline-block;;
+}
