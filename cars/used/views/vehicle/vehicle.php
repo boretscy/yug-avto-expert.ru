@@ -2,7 +2,11 @@
     <div class="sticky-top" style="top: 7rem;">
         <div class="swiper vehicle-swiper position-relative">
             <div class="swiper-wrapper">
-                <?php foreach ( $data['_images'] as $k => $item ) { ?>
+                <?php 
+                    $detailTitle = $data['brand']['name'].' '.$data['model']['name'].' '.(($data['equipment'])?:'');
+                    foreach ( $data['_images'] as $k => $item ) { 
+                        $imgAlt = YApp::getCleanAltText($detailTitle . (($k > 0) ? ' - фото ' . ($k + 1) : ''));
+                ?>
                 <div class="swiper-slide">
                     <a 
                         data-fancybox="gallery-<?= $data['id'];?>"
@@ -14,8 +18,8 @@
                         ><img 
                             src="<?= $item['detail'];?>" 
                             class="b-radius-yaradius-25" 
-                            title="<?= $data['brand']['name'];?> <?= $data['model']['name'];?>  <?= (($data['equipment'])?:'');?>" 
-                            alt="<?= $data['brand']['name'];?> <?= $data['model']['name'];?>  <?= (($data['equipment'])?:'');?>" 
+                            title="<?= htmlspecialchars($imgAlt);?>" 
+                            alt="<?= htmlspecialchars($imgAlt);?>" 
                             <?= (($k==0)?'itemprop="image"':'');?> />
                         </a>
                 </div>

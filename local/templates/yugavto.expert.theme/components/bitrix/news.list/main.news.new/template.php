@@ -30,14 +30,16 @@ $this->setFrameMode(true);
 			<div class="swiper-news-on-main pb-5">
 				<div class="swiper-wrapper">
 					<!-- Slides -->
-					<?php foreach ( $arResult['ITEMS'] as $arItem ) { ?>
+					<?php foreach ( $arResult['ITEMS'] as $arItem ) { 
+						$newsTitle = YApp::getCleanAltText($arItem['NAME']);
+					?>
 					<div class="swiper-slide">
 						<div class="w-100 b-yagray b-radius-yaradius-25 news-on-main-card overflow-hidden">
 							<a 
 								href="<?= $arItem['DETAIL_PAGE_URL'];?>" 
-								alt="<?= $arItem['NAME'];?>"
+								title="<?= htmlspecialchars($newsTitle);?>"
 								>
-								<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100" alt="<?= $arItem['NAME'];?>">
+								<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100" alt="<?= htmlspecialchars($newsTitle);?>" title="<?= htmlspecialchars($newsTitle);?>">
 							</a>
 							<div class="p-4">
 								<p class="text-minus c-yamiddlegray text-start"><?= $arItem['DISPLAY_ACTIVE_FROM'];?></p>

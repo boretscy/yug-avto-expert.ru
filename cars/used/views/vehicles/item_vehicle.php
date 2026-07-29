@@ -1,5 +1,19 @@
-<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); ?>
-<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4" <?php /* itemscope itemtype="https://schema.org/Product" */ ?>>
+<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); 
+$carBrand = $item['brand']['name'] ?? '';
+$carModel = $item['model']['name'] ?? '';
+$carYear = $item['year'] ?? '';
+$carMileage = (!empty($item['mileage'])) ? number_format($item['mileage'], 0, '.', ' ') . ' км' : '';
+$carEquipment = (!empty($item['equipment']) ? $item['equipment'] : '');
+
+$pageH1 = $GLOBALS['META']['meta']['h1'] ?? $data['meta']['meta']['h1'] ?? '';
+if (!empty($pageH1)) {
+	$carImgText = $pageH1;
+} else {
+	$imgAltParts = array_filter([$carBrand, $carModel, $carEquipment, $carYear ? $carYear . ' года' : '', $carMileage ? 'с пробегом ' . $carMileage : 'с пробегом']);
+	$carImgText = implode(' ', $imgAltParts) . ' купить в Краснодаре';
+}
+?>
+<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4">
     <div class="vehicle-card-images position-relative">
         <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
             <?php if ( !empty($item['images']) ) { ?>
@@ -11,14 +25,15 @@
                     <img 
                         src="<?= (($i['preview'])?:$i['preview_large']);?>"
                         class="vehicle-card-images-item-container-image"
-                        alt="<?= $item['brand']['name'];?> <?= $item['model']['name'];?>"
+                        alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+                        title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
                         loading="<?= ($k==0)?'eager':'lazy';?>"
                         <?= (($k==0)?'itemprop="image"':'');?>
                     >
                 </div>
                 <?php } ?>
             <?php } else { ?>
-                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" itemprop="image" class="w-100" />
+                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" itemprop="image" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" />
             <?php } ?>
         </a>
         <div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">
