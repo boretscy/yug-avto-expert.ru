@@ -827,10 +827,21 @@
 								<a href="/cars/used/<?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
 									<?php if ( !empty($item['images']) ) { ?>
 										<?php foreach ( $item['images'] as $k => $i ) { ?>
-										<img src="<?= (($i['preview'])?:$i['preview_large']);?>" class="w-100" style="<?= (($k!=0)?'display:none;':'');?>" data-index="<?= $k;?>" />
+											<div 
+												class="vehicle-card-images-item-container" 
+												style="<?= (($k!=0)?'display:none;':'');?>" 
+												data-index="<?= $k;?>">
+												<img 
+													src="<?= (($i['preview'])?:$i['preview_large']);?>"
+													class="vehicle-card-images-item-container-image"
+													alt="<?= htmlspecialchars(YApp::getCleanAltText($item['brand']['name'].' '.$item['model']['name'].(($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+													title="<?= htmlspecialchars(YApp::getCleanAltText($item['brand']['name'].' '.$item['model']['name'].(($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+													loading="<?= ($k==0)?'eager':'lazy';?>"
+												/>
+											</div>
 										<?php } ?>
 									<?php } else { ?>
-										<img src="https://apps.yug-avto.ru/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.jpg" class="w-100" />
+										<img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.jpg" class="w-100" />
 									<?php } ?>
 								</a>
 								<div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">
@@ -1271,11 +1282,32 @@ const swiper_cis_new = new Swiper('.swiper-cis-new', {
 })
 
 ///////////// Vehicle card
-$(document).on('mouseover', '.vehicle-card-images-row-item', function() {
-    $(this).parent().parent().find('[role="vehicle-image"] img').hide()
-    $(this).parent().parent().find('[role="vehicle-image"] img[data-index="'+$(this).data('index')+'"]').show()
-    $(this).siblings('.vehicle-card-images-row-item').removeClass('active');
-    $(this).addClass('active');
+$(document).on('mousemove', '.vehicle-card-images', function(e) {
+    let el = e.currentTarget.getBoundingClientRect();
+    let count = $(this).find('.vehicle-card-images-row-item').length || 4;
+    let w = el.width / count;
+    let indx = Math.floor((e.clientX - el.left) / w);
+    if (indx >= count) indx = count - 1;
+    if (indx < 0) indx = 0;
+    
+    $(this).find('.vehicle-card-images-item-container').hide();
+    $(this).find('.vehicle-card-images-item-container[data-index="'+indx+'"]').show();
+    $(this).find('.vehicle-card-images-row-item').removeClass('active');
+    $(this).find('.vehicle-card-images-row-item[data-index="'+indx+'"]').addClass('active');
+});
+
+$(document).on('touchmove', '.vehicle-card-images', function(e) {
+    let el = e.currentTarget.getBoundingClientRect();
+    let count = $(this).find('.vehicle-card-images-row-item').length || 4;
+    let w = el.width / count;
+    let indx = Math.floor((e.touches[0].clientX - el.left) / w);
+    if (indx >= count) indx = count - 1;
+    if (indx < 0) indx = 0;
+    
+    $(this).find('.vehicle-card-images-item-container').hide();
+    $(this).find('.vehicle-card-images-item-container[data-index="'+indx+'"]').show();
+    $(this).find('.vehicle-card-images-row-item').removeClass('active');
+    $(this).find('.vehicle-card-images-row-item[data-index="'+indx+'"]').addClass('active');
 });
 
 const swiper_brands = new Swiper('.swiper-brands', {
