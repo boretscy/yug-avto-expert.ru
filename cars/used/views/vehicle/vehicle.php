@@ -20,6 +20,9 @@
                             class="b-radius-yaradius-25" 
                             title="<?= htmlspecialchars($imgAlt);?>" 
                             alt="<?= htmlspecialchars($imgAlt);?>" 
+                            loading="<?= ($k==0)?'eager':'lazy';?>"
+                            <?= ($k==0)?'fetchpriority="high"':'';?>
+                            decoding="async"
                             <?= (($k==0)?'itemprop="image"':'');?> />
                         </a>
                 </div>
