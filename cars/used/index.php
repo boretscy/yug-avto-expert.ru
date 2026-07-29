@@ -91,41 +91,39 @@ $data['OnWay'] = false;
 $data['InStock'] = false;
 $data['Discount'] = false;
 ?>
+<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { ?>
 <script type='application/ld+json'>
-    {
-		"@context": "http://schema.org/",
-        "name": "<?= $data['meta']['meta']['title'];?>",
-        "description": "<?= $data['meta']['meta']['description'];?>",
-        "image": "<?= (($data['meta']['meta']['image'])?explode('?', $data['meta']['meta']['image'])[0]:$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>",
-
-        "speakable": {
-            "@type": "SpeakableSpecification",
-            "xpath": [
-                "/html/head/title",
-                "/html/head/meta[@name='description_page']/@content"
-            ]
-        },
-
-		<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { ?>
-		"@type": "Product",
-		"brand": {
-			"@type": "Brand",
-			"name": "<?= $data['meta']['meta']['brand'];?>"
-		},
-		"offers": {
-			"@type": "Offer",
-			"priceCurrency": "RUB",
-			"price": "<?= $data['meta']['meta']['price'];?>",
-			"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
-			"availability": "https://schema.org/InStock",
-			"itemCondition": "https://schema.org/NewCondition"
-		}
-		<?php } else { ?>
-        "@type": "Organization",
-        "url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
-		<?php } ?>
-    }
+{
+	"@context": "http://schema.org/",
+	"@type": "Product",
+	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
+	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
+	"image": "<?= (($data['meta']['meta']['image'])?explode('?', $data['meta']['meta']['image'])[0]:$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>",
+	"brand": {
+		"@type": "Brand",
+		"name": "<?= htmlspecialchars($data['meta']['meta']['brand']);?>"
+	},
+	"offers": {
+		"@type": "Offer",
+		"priceCurrency": "RUB",
+		"price": "<?= $data['meta']['meta']['price'];?>",
+		"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
+		"availability": "https://schema.org/InStock",
+		"itemCondition": "https://schema.org/UsedCondition"
+	}
+}
 </script>
+<?php } else { ?>
+<script type='application/ld+json'>
+{
+	"@context": "http://schema.org/",
+	"@type": "ItemList",
+	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
+	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
+	"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>"
+}
+</script>
+<?php } ?>
 
 <div id="YappsShowroom" class="position-relative">
     <div class="cover bg-yawhite position-absolute w-100 h-100 d-none"></div>

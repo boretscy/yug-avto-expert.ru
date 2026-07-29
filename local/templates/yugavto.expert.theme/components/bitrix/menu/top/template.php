@@ -15,18 +15,19 @@
                 </a>
             </div>
             <div class="col text-minus text-uppercase d-none d-md-flex align-items-center">
-                <ul class="list-inline m-0">
+                <ul class="list-inline m-0" itemscope itemtype="http://schema.org/SiteNavigationElement">
                     <?php foreach ( $arResult['MENU'] as $k => $arItem ) { ?>
                     <li class="list-inline-item me-3 line-height-one">
                         <a 
                             href="<?= $arItem['LINK'];?>"
                             alt="<?= $arItem['TEXT'];?>" 
+                            itemprop="url"
                             class="text-decoration-none c-yablackgray c-h-yablack fw-bold <?if (!$arItem['SUBMENU']) {?>single_menu<?}?>"
                             <?php if ($arItem['SUBMENU']) { ?>
                             role="submenu"
                             data-menu="<?= 'submenu-'.$k;?>"
                             <?php } // if SUBMENU?>
-                            ><?= $arItem['TEXT'];?></a>
+                            ><span itemprop="name"><?= $arItem['TEXT'];?></span></a>
                     </li>
                     <?php } // foreact ITEMS ?>
                     <li class="list-inline-item ms-4 line-height-one">

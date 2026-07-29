@@ -89,6 +89,69 @@
         <meta property="og:url" content="<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>"/>
         <meta property="og:image" content="<?= $APPLICATION->ShowProperty('image', $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>">
 
+        <?php if ($APPLICATION->GetCurPage(false) === '/') { ?>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Юг-Авто Эксперт",
+          "url": "https://yug-avto-expert.ru/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://yug-avto-expert.ru/cars/used/?brand={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+        </script>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "AutoDealer",
+          "name": "Юг-Авто Эксперт",
+          "image": "https://yug-avto-expert.ru/local/templates/yugavto.expert.theme/assets/images/logo.svg",
+          "@id": "https://yug-avto-expert.ru/#autodealer",
+          "url": "https://yug-avto-expert.ru/",
+          "telephone": "+78612600000",
+          "priceRange": "$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "ул. Новороссийская, 210",
+            "addressLocality": "Краснодар",
+            "postalCode": "350059",
+            "addressCountry": "RU"
+          },
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "opens": "08:00",
+            "closes": "20:00"
+          },
+          "sameAs": [
+            "https://vk.com/yugavtoexpert",
+            "https://t.me/yugavtoexpert"
+          ]
+        }
+        </script>
+        <?php } else { ?>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "<?= htmlspecialchars($APPLICATION->GetTitle());?>",
+          "description": "<?= htmlspecialchars($APPLICATION->GetProperty('description'));?>",
+          "url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>"
+        }
+        </script>
+        <?php } ?>
+
     </head>
 
     <body>

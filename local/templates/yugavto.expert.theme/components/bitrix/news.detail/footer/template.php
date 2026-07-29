@@ -12,7 +12,9 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<footer class="c-yalightgray bg-yablue py-5 text-minus" style="margin-top: -1px;">
+<footer itemscope itemtype="http://schema.org/WPFooter" class="c-yalightgray bg-yablue py-5 text-minus" style="margin-top: -1px;">
+	<meta itemprop="copyrightYear" content="<?= date('Y');?>">
+	<meta itemprop="copyrightHolder" content="Юг-Авто Эксперт">
 	<div class="container">
 		
 		<!-- Footer SEO -->
