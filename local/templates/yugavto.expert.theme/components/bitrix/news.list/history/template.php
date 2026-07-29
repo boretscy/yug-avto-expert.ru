@@ -60,11 +60,15 @@ $this->setFrameMode(true);
 				<div class="row ms-2 history-item-block b-radius-yaradius-15 b-yagray position-relative <?= (($arItem['PROPERTIES']['YELLOW_BLOCK']['VALUE'])?'bg-yayellow':'bg-yawhite');?>">
 					<svg class="block-corner" xmlns="http://www.w3.org/2000/svg"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#history-block-corner-<?= (($arItem['PROPERTIES']['YELLOW_BLOCK']['VALUE'])?'yellow':'white');?>"></use></svg>
 					<div class="col-4 col-md-2 p-3 d-flex">
-						<?php foreach ( $arItem['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'] as $arBrand ) { ?>
-						<div class="px-1 flex-fill d-flex align-items-center justify-content-center"><img class="w-100" src="<?= CFile::GetPath($arBrand['PREVIEW_PICTURE']);?>" alt="<?= $arBrand['NAME'];?>" /></div>
+						<?php foreach ( $arItem['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'] as $arBrand ) { 
+							$brandAlt = YApp::getCleanAltText($arBrand['NAME']);
+						?>
+						<div class="px-1 flex-fill d-flex align-items-center justify-content-center"><img class="w-100" src="<?= CFile::GetPath($arBrand['PREVIEW_PICTURE']);?>" alt="<?= htmlspecialchars($brandAlt);?>" title="<?= htmlspecialchars($brandAlt);?>" /></div>
 						<?php } // foreach BRANDS ?>
-						<?php foreach ( $arItem['PROPERTIES']['OLD_BRAND']['VALUE'] as $item ) { ?>
-						<div class="px-1 flex-fill d-flex align-items-center justify-content-center"><img class="w-100" src="<?= CFile::GetPath($item);?>" /></div>
+						<?php foreach ( $arItem['PROPERTIES']['OLD_BRAND']['VALUE'] as $item ) { 
+							$oldBrandAlt = YApp::getCleanAltText($arItem['NAME']);
+						?>
+						<div class="px-1 flex-fill d-flex align-items-center justify-content-center"><img class="w-100" src="<?= CFile::GetPath($item);?>" alt="<?= htmlspecialchars($oldBrandAlt);?>" title="<?= htmlspecialchars($oldBrandAlt);?>" /></div>
 						<?php } // if OLD LOGO ?>
 					</div>
 					<div class="col col-md p-3 d-flex align-items-center name"><?= $arItem['~NAME'];?></div>
