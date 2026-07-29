@@ -24,21 +24,34 @@
 
         <title><?php $APPLICATION->ShowTitle();?></title>
 
+        <link rel="dns-prefetch" href="//apps.yug-avto.ru">
+        <link rel="preconnect" href="https://apps.yug-avto.ru" crossorigin>
+
         <?php 
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/bootstrap.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/swiper-bundle.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/remodal.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/remodal-default-theme.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/hint.min.css');
-            $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/app.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/app.css'));
-            $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/style.css'));
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/font.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/fonts/font.css'));
+            
+            if (defined('ENABLE_FRONTEND_OPTIMIZATION') && ENABLE_FRONTEND_OPTIMIZATION && file_exists($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/bundle.app.min.css')) {
+                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bundle.app.min.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/bundle.app.min.css'));
+            } else {
+                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/app.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/app.css'));
+                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/style.css'));
+            }
 
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/jquery.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/remodal.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/swiper-bundle.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/mask.min.js');
-            $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/app.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/app.js'));
+            
+            if (defined('ENABLE_FRONTEND_OPTIMIZATION') && ENABLE_FRONTEND_OPTIMIZATION && file_exists($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/bundle.app.min.js')) {
+                $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/bundle.app.min.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/bundle.app.min.js'));
+            } else {
+                $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/app.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/app.js'));
+            }
         ?>
 
         <!-- Favicon -->

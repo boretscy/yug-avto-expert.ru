@@ -19,7 +19,7 @@ $arResult = array_merge(
 	$arResult
 );
 
-$strReturn = '<div class="container mt-3 mb-2 breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList"><div class="row"><div class="col text-minus">';
+$strReturn = '<div class="container mt-3 mb-2 breadcrumbs"><div class="row"><div class="col text-minus">';
 
 $itemSize = count($arResult);
 for($index = 0; $index < $itemSize; $index++)
@@ -43,13 +43,10 @@ for($index = 0; $index < $itemSize; $index++)
 		}
 		else
 		{
-			$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
 			$strReturn .= '
-				<div class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+				<div class="breadcrumbs-item">
 					'.$arrow.'
-					<span itemprop="name">'.$title.'</span>
-					<meta itemprop="item" content="'.$currentUrl.'" />
-					<meta itemprop="position" content="'.($index + 1).'" />
+					<span>'.$title.'</span>
 				</div>';
 		}
 	}
