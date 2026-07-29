@@ -455,7 +455,28 @@
 			return true;
 		}
 
-
+		public static function getCleanAltText($title, $limit = 55, $maxLimit = 60) {
+			$title = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
+			$title = trim(strip_tags($title));
+			$title = preg_replace('/\s+/', ' ', $title);
+			
+			if (mb_strlen($title) <= $limit) {
+				return $title;
+			}
+			
+			$nextSpace = mb_strpos($title, ' ', $limit);
+			if ($nextSpace !== false && $nextSpace <= $maxLimit) {
+				return mb_substr($title, 0, $nextSpace);
+			}
+			
+			$subLimit = mb_substr($title, 0, $limit);
+			$lastSpace = mb_strrpos($subLimit, ' ');
+			if ($lastSpace !== false) {
+				return mb_substr($subLimit, 0, $lastSpace);
+			}
+			
+			return $subLimit;
+		}
 	}
 
 
