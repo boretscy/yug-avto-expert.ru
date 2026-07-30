@@ -47,7 +47,7 @@ if ( $data['force_404'] ) {
 }
 
 $GLOBALS['META'] = $data['meta'];
-if ( (!$filter['vehicle'] && $data['items'] == NULL) || ($filter['vehicle'] && $data == NULL)  ) {
+if ( (!$filter['vehicle'] && $data['items'] == NULL)  ) {
     // if ( !$filter['vehicle'] && !$filter['model'] && $filter['brand'] ) {
 	// 	unset($filter['brand']);
 	// } elseif ( !$filter['vehicle'] && $filter['model'] ) {
@@ -63,6 +63,14 @@ if ( (!$filter['vehicle'] && $data['items'] == NULL) || ($filter['vehicle'] && $
 	@define("ERROR_404","Y");
 	if ($APPLICATION->RestartWorkarea()) {
 		require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
+		die();
+	}
+} elseif ( ($filter['vehicle'] && $data == NULL) ) {
+	$GLOBALS['CIS_FILTER'] = $filter;
+	CHTTP::SetStatus("404 Not Found");
+	@define("ERROR_404","Y");
+	if ($APPLICATION->RestartWorkarea()) {
+		require(\Bitrix\Main\Application::getDocumentRoot()."/404Cis.php");
 		die();
 	}
 }
