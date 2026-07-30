@@ -44,7 +44,7 @@ if (empty($modelName) && !empty($modelCode)) {
 ?>
 <div class="container text-center">
     <div class="row my-5">
-        <div class="col text-start"><img src="/404.png" alt="404" class="w-auto"></div>
+        <div class="col text-start"><img src="/404.png" alt="404" class="mw-100"></div>
     </div>
     <div class="row my-5">
         <div class="col"><div class="h2">К сожалению, запрашиваемый Вами автомобиль уже продан...</div></div>
