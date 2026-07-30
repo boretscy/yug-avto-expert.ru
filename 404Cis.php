@@ -51,14 +51,14 @@ if (empty($modelName) && !empty($modelCode)) {
     </div>
     <div class="row my-5">
         <div class="col text-center">
-            <a href="/cars/used/" class="text-center text-uppercase c-yawhite c-h-yawhite text-decoration-none b-radius-yaradius-15 bg-yablue bg-h-yadarkblue py-2 px-4 d-inline-block me-3 mb-2"><span>Все автомобили</span></a>
+            <a href="/cars/used/" class="text-center text-uppercase c-yalightblack c-h-yalightblack text-decoration-none b-radius-yaradius-15 bg-yayellow bg-h-yadarkyellow py-2 px-4 d-inline-block me-3 mb-2"><span>Все автомобили</span></a>
             
             <?php if (!empty($brandCode)) { ?>
-                <a href="/cars/used/<?= htmlspecialchars($brandCode); ?>/" class="text-center text-uppercase c-yawhite c-h-yawhite text-decoration-none b-radius-yaradius-15 bg-yablue bg-h-yadarkblue py-2 px-4 d-inline-block me-3 mb-2"><span><?= htmlspecialchars($brandName); ?></span></a>
+                <a href="/cars/used/<?= htmlspecialchars($brandCode); ?>/" class="text-center text-uppercase c-yalightblack c-h-yalightblack text-decoration-none b-radius-yaradius-15 bg-yayellow bg-h-yadarkyellow py-2 px-4 d-inline-block me-3 mb-2"><span><?= htmlspecialchars($brandName); ?></span></a>
             <?php } ?>
             
             <?php if (!empty($brandCode) && !empty($modelCode)) { ?>
-                <a href="/cars/used/<?= htmlspecialchars($brandCode); ?>/<?= htmlspecialchars($modelCode); ?>/" class="text-center text-uppercase c-yawhite c-h-yawhite text-decoration-none b-radius-yaradius-15 bg-yablue bg-h-yadarkblue py-2 px-4 d-inline-block me-3 mb-2"><span><?= htmlspecialchars($brandName . ' ' . $modelName); ?></span></a>
+                <a href="/cars/used/<?= htmlspecialchars($brandCode); ?>/<?= htmlspecialchars($modelCode); ?>/" class="text-center text-uppercase c-yalightblack c-h-yalightblack text-decoration-none b-radius-yaradius-15 bg-yayellow bg-h-yadarkyellow py-2 px-4 d-inline-block me-3 mb-2"><span><?= htmlspecialchars($brandName . ' ' . $modelName); ?></span></a>
             <?php } ?>
 
             <a href="/" class="text-center text-uppercase c-yalightblack c-h-yalightblack text-decoration-none b-radius-yaradius-15 bg-yayellow bg-h-yadarkyellow py-2 px-4 d-inline-block mb-2"><span>На главную</span></a>
