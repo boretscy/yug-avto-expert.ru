@@ -1,10 +1,11 @@
 <?php
 #!/usr/bin/php
 
-$dd = '/var/www/admin/data/www/yug-avto-expert.ru';
+$dd = dirname(__DIR__);
+$domain = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yug-avto-expert.ru';
 require_once $dd.'/local/php_interface/vendor/autoload.php';
 
-$url = 'https://apps.yug-avto.ru/API/get/cis/vehicles/used?token=34b5ac8b71018c0bc7e5c050ed90b243';
+$url = 'https://' . YApp::GO_API_DOMAIN . '/API/get/cis/vehicles/used?token=34b5ac8b71018c0bc7e5c050ed90b243';
 $vehicles = json_decode( file_get_contents($url), true)['items'];
 $google = []; $log = [];
 
@@ -22,13 +23,13 @@ if ( is_countable($vehicles) && count($vehicles) ) {
     $ss = file_get_contents($dd.'/sitemap.xml');
     if ( mb_stripos($ss, 'sitemap-cis.xml') === false ) {
         $arSS = explode('</sitemap><sitemap>', $ss);
-        array_splice( $arSS, count($arSS)-1, 0, ['<loc>https://yug-avto-expert.ru/sitemap-cis.xml</loc><lastmod>'.date('c').'</lastmod>'] );
+        array_splice( $arSS, count($arSS)-1, 0, ['<loc>https://'.$domain.'/sitemap-cis.xml</loc><lastmod>'.date('c').'</lastmod>'] );
         file_put_contents($dd.'/sitemap.xml', implode('</sitemap><sitemap>', $arSS));
     }
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    $xml .= '<sitemap><loc>https://yug-avto-expert.ru/sitemap-brands.xml</loc><lastmod>'.date('c').'</lastmod></sitemap>';
-    $xml .= '<sitemap><loc>https://yug-avto-expert.ru/sitemap-vehicles.xml</loc><lastmod>'.date('c').'</lastmod></sitemap>';
+    $xml .= '<sitemap><loc>https://'.$domain.'/sitemap-brands.xml</loc><lastmod>'.date('c').'</lastmod></sitemap>';
+    $xml .= '<sitemap><loc>https://'.$domain.'/sitemap-vehicles.xml</loc><lastmod>'.date('c').'</lastmod></sitemap>';
     $xml .= '</sitemapindex>';
     file_put_contents($dd.'/sitemap-cis.xml', $xml);
 
@@ -43,13 +44,13 @@ if ( is_countable($vehicles) && count($vehicles) ) {
     $yml .= '<company>ООО "Юг-Авто Эксперт"</company>'.PHP_EOL;
     $yml .= '<currencies><currency rate="1" id="RUR"/></currencies>'.PHP_EOL;
     $yml .= '<categories><category id="1">Автомобили с пробегом Юг-Авто Эксперт</category></categories>'.PHP_EOL;
-    $yml .= '<url>https://yug-avto-expert.ru/cars/used/</url>'.PHP_EOL;
+    $yml .= '<url>https://'.$domain.'/cars/used/</url>'.PHP_EOL;
     $yml .= '<sets>'.PHP_EOL;
-    $yml .= '<set id="premium"><name>Премиум</name><url>https://yug-avto-expert.ru/cars/used/?dealership=1502</url></set>'.PHP_EOL;
-    $yml .= '<set id="business"><name>Для бизнеса</name><url>https://yug-avto-expert.ru/cars/used/?dealership=1489</url></set>'.PHP_EOL;
-    $yml .= '<set id="bigfamily"><name>Для больших семей</name><url>https://yug-avto-expert.ru/cars/used/?body=minivan</url></set>'.PHP_EOL;
-    $yml .= '<set id="offroad"><name>Покорители бездорожья</name><url>https://yug-avto-expert.ru/cars/used/?body=suv&amp;drive=full</url></set>'.PHP_EOL;
-    $yml .= '<set id="city"><name>Для города</name><url>https://yug-avto-expert.ru/cars/used/?body=sedan,hatchback,liftback</url></set>'.PHP_EOL;
+    $yml .= '<set id="premium"><name>Премиум</name><url>https://'.$domain.'/cars/used/?dealership=1502</url></set>'.PHP_EOL;
+    $yml .= '<set id="business"><name>Для бизнеса</name><url>https://'.$domain.'/cars/used/?dealership=1489</url></set>'.PHP_EOL;
+    $yml .= '<set id="bigfamily"><name>Для больших семей</name><url>https://'.$domain.'/cars/used/?body=minivan</url></set>'.PHP_EOL;
+    $yml .= '<set id="offroad"><name>Покорители бездорожья</name><url>https://'.$domain.'/cars/used/?body=suv&amp;drive=full</url></set>'.PHP_EOL;
+    $yml .= '<set id="city"><name>Для города</name><url>https://'.$domain.'/cars/used/?body=sedan,hatchback,liftback</url></set>'.PHP_EOL;
     $yml .= '</sets>'.PHP_EOL;
     $yml .= '<offers>'.PHP_EOL;
     */
@@ -57,7 +58,7 @@ if ( is_countable($vehicles) && count($vehicles) ) {
     foreach ( $vehicles as $v ) {
         // sitemap
         $xml .= '<url><loc>';
-        $xml .= 'https://yug-avto-expert.ru/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/';
+        $xml .= 'https://'.$domain.'/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/';
         $xml .= '</loc><lastmod>'.date('c', (int)$v['created']).'</lastmod></url>';
 
         $brands[$v['brand']['ext_id']] = $v['brand'];
@@ -66,7 +67,7 @@ if ( is_countable($vehicles) && count($vehicles) ) {
         if ( $v['type'] == 'vehicle' && in_array($v['dealership']['id'], [1364,1367,1489,1492,1499,1502,1533]) ) {
             /*
             $yml .= '<offer id="'.$v['id'].'" available="true">'.PHP_EOL;
-            $yml .= '<url>https://yug-avto-expert.ru/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/</url>'.PHP_EOL;
+            $yml .= '<url>https://'.$domain.'/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/</url>'.PHP_EOL;
             $yml .= '<picture>'.$v['image'].'</picture>'.PHP_EOL;
             $yml .= '<name>'.$v['brand']['name'].' '.$v['model']['name'].' '.(($v['equipment'])?str_replace('&', '-', $v['equipment']):'').' '.(($v['_general'][2])?:'').'</name>'.PHP_EOL;
             $yml .= '<price>'.$v['min_price'].'</price>'.PHP_EOL;
@@ -104,7 +105,7 @@ if ( is_countable($vehicles) && count($vehicles) ) {
             */
 
             // Google
-            if ( (int)$v['created'] > time()-3600 ) $google[] = 'https://yug-avto-expert.ru/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/</url>';
+            if ( (int)$v['created'] > time()-3600 ) $google[] = 'https://'.$domain.'/cars/used/'.$v['brand']['code'].'/'.$v['model']['code'].'/'.$v['id'].'/';
         }
     }
     // sitemap
@@ -123,11 +124,11 @@ if ( is_countable($vehicles) && count($vehicles) ) {
     $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     foreach ( $brands as $b ) {
         $xml .= '<url><loc>';
-        $xml .= 'https://yug-avto-expert.ru/cars/used/'.$b['code'].'/';
+        $xml .= 'https://'.$domain.'/cars/used/'.$b['code'].'/';
         $xml .= '</loc><lastmod>'.date('c').'</lastmod></url>';
         foreach ( $b['models'] as $m ) {
             $xml .= '<url><loc>';
-            $xml .= 'https://yug-avto-expert.ru/cars/used/'.$b['code'].'/'.$m['code'].'/';
+            $xml .= 'https://'.$domain.'/cars/used/'.$b['code'].'/'.$m['code'].'/';
             $xml .= '</loc><lastmod>'.date('c').'</lastmod></url>';
         }
     }

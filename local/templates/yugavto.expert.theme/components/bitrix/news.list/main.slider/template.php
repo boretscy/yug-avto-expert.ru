@@ -19,13 +19,11 @@ $this->setFrameMode(true);
 			<div class="swiper-on-main pb-4">
 				<div class="swiper-wrapper">
 					<!-- Slides -->
-					<?php foreach ( $arResult['ITEMS'] as $arItem ) { 
-						$slideTitle = YApp::getCleanAltText($arItem['NAME']);
-					?>
+					<?php foreach ( $arResult['ITEMS'] as $arItem ) { ?>
 					<div class="swiper-slide">
-						<a href="<?= $arItem['PROPERTIES']['LINK']['VALUE'];?>" title="<?= htmlspecialchars($slideTitle);?>">
-							<img src="<?= $arItem['DETAIL_PICTURE']['SRC'];?>" class="w-100 desktop" alt="<?= htmlspecialchars($slideTitle);?>" title="<?= htmlspecialchars($slideTitle);?>">
-							<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100 mobile" alt="<?= htmlspecialchars($slideTitle);?>" title="<?= htmlspecialchars($slideTitle);?>">
+						<a href="<?= $arItem['PROPERTIES']['LINK']['VALUE'];?>" alt="<?= $arItem['NAME'];?>">
+							<img src="<?= $arItem['DETAIL_PICTURE']['SRC'];?>" class="w-100 desktop" alt="<?= $arItem['NAME'];?>">
+							<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100 mobile" alt="<?= $arItem['NAME'];?>">
 						</a>
 					</div>
 					<?php } // foreasch ITEMS ?>
