@@ -1,5 +1,6 @@
 <div class="container my-2">
-    <div class="row vehicle-list">
+    <div class="row vehicle-list" itemscope itemtype="https://schema.org/ItemList">
+        <meta itemprop="numberOfItems" content="<?= count($data['items'] ?? []);?>" />
         <?php foreach ($data['items'] as $item) { ?>
         <div class="col-md-6 col-lg-4 col-xl-3 vehicle-list-item">
             <?php if ( $item['type'] == 'vehicle' ) { ?>

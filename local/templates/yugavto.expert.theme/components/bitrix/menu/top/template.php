@@ -1,6 +1,6 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
 
-<div class="position-relative mt-4 mb-0 mb-md-4">
+<div class="position-relative mt-4 mb-0 mb-md-4" itemscope itemtype="https://schema.org/WPHeader">
     <div class="container top-menu">
         <div class="row align-items-center">
             <div class="col-2 pb-3 d-flex d-lg-none align-items-center">
@@ -17,16 +17,17 @@
             <div class="col text-minus text-uppercase d-none d-md-flex align-items-center">
                 <ul class="list-inline m-0">
                     <?php foreach ( $arResult['MENU'] as $k => $arItem ) { ?>
-                    <li class="list-inline-item me-3 line-height-one">
+                    <li class="list-inline-item me-3 line-height-one" itemscope itemtype="https://schema.org/SiteNavigationElement">
                         <a 
                             href="<?= $arItem['LINK'];?>"
                             alt="<?= $arItem['TEXT'];?>" 
+                            itemprop="url"
                             class="text-decoration-none c-yablackgray c-h-yablack fw-bold <?if (!$arItem['SUBMENU']) {?>single_menu<?}?>"
                             <?php if ($arItem['SUBMENU']) { ?>
                             role="submenu"
                             data-menu="<?= 'submenu-'.$k;?>"
                             <?php } // if SUBMENU?>
-                            ><?= $arItem['TEXT'];?></a>
+                            ><span itemprop="name"><?= $arItem['TEXT'];?></span></a>
                     </li>
                     <?php } // foreact ITEMS ?>
                     <li class="list-inline-item ms-4 line-height-one">
@@ -130,13 +131,14 @@
                 <div class="col-2"></div>
                 <div class="col pt-3" style="padding-top: 1.25rem! important;">
                     <ul class="list-inline">
-                        <?php foreach ( $arItem['SUBMENU'] as $k => $item ) { ?>
-                        <li class="list-inline-item me-4">
+                        <?php foreach ( $arResult['MENU'][$k]['SUBMENU'] as $k2 => $item ) { ?>
+                        <li class="list-inline-item me-4" itemscope itemtype="https://schema.org/SiteNavigationElement">
                             <a 
                                 href="<?= $item[1];?>"
                                 alt="<?= $item[0];?>" 
+                                itemprop="url"
                                 class="text-decoration-none text-minus c-yablackgray c-h-yablack"
-                                ><?= $item[0];?></a>
+                                ><span itemprop="name"><?= $item[0];?></span></a>
                         </li>
                         <?php } // foreact ITEMS ?>
                     </ul>
@@ -156,6 +158,7 @@
                 <?php foreach ( $arResult['MENU'] as $k => $arItem ) { ?>
                     <li 
                         class="py-2"
+                        itemscope itemtype="https://schema.org/SiteNavigationElement"
                         <?php if ($arItem['SUBMENU']) { ?>
                         role="submenu-mobile"
                         data-menu="<?= 'submenu-'.$k;?>"
@@ -164,13 +167,14 @@
                         <div class="row c-yamiddlegray c-h-yablackgray">
                             <div class="col">
                                 <?php if ($arItem['SUBMENU']) { ?>
-                                    <?= $arItem['TEXT'];?>
+                                    <span itemprop="name"><?= $arItem['TEXT'];?></span>
                                 <?php } else {  ?>
                                 <a 
                                     href="<?= $arItem['LINK'];?>"
                                     alt="<?= $arItem['TEXT'];?>" 
+                                    itemprop="url"
                                     class="text-decoration-none c-yamiddlegray c-h-yablackgray <?if (!$arItem['SUBMENU']) {?>single_menu<?}?>"
-                                    ><?= $arItem['TEXT'];?></a>
+                                    ><span itemprop="name"><?= $arItem['TEXT'];?></span></a>
                                 <?php } // if SUBMENU?>
                             </div>
                             <?php if ($arItem['SUBMENU']) { ?>
@@ -180,13 +184,14 @@
                         <?php if ($arItem['SUBMENU']) { ?>
                         <div class="submenu-mobile">
                             <ul class="list-unstyled">
-                                <?php foreach ( $arItem['SUBMENU'] as $k => $item ) { ?>
-                                <li class="py-2 ps-2">
+                                <?php foreach ( $arItem['SUBMENU'] as $k2 => $item ) { ?>
+                                <li class="py-2 ps-2" itemscope itemtype="https://schema.org/SiteNavigationElement">
                                     <a 
                                         href="<?= $item[1];?>"
                                         alt="<?= $item[0];?>" 
+                                        itemprop="url"
                                         class="text-decoration-none c-yamiddlegray c-h-yablackgray"
-                                        ><?= $item[0];?></a>
+                                        ><span itemprop="name"><?= $item[0];?></span></a>
                                 </li>
                                 <?php } // foreact ITEMS ?>
                             </ul>

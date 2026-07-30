@@ -1,5 +1,17 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-07-30]
+### Added
+- Внедрена сквозная микроразметка Schema.org для улучшения поисковой оптимизации (п. 10 ТЗ):
+  - Хлебные крошки размечены по стандарту `BreadcrumbList` и `ListItem` (включая последнюю страницу).
+  - Элементы верхнего и мобильного меню размечены как `SiteNavigationElement`, а шапка страницы как `WPHeader`.
+  - Футер размечен как `WPFooter` с указанием `copyrightHolder` и `copyrightYear`.
+  - На главной странице добавлена JSON-LD разметка `WebSite` (с потенциальным действием поиска `SearchAction`) и `AutoDealer`.
+  - В детальный шаблон новостей внедрена микроразметка `NewsArticle` со свойствами `headline`, `image`, `datePublished`, `dateModified`, `publisher` и `articleBody`.
+  - Список автомобилей в каталоге обернут в родительскую сущность `ItemList` с указанием `numberOfItems`.
+  - Карточки объявлений приведены к формату `Product` с вложенным объектом `Offer` (раскомментированы и скорректированы `price`, `priceCurrency` и `availability`).
+  - Детальная страница автомобиля приведена к стандарту `Product` со вложенным `Offer` для корректной индексации.
+
 ## [2026-07-29]
 ### Added
 - Добавлен нетрекаемый конфигурационный файл `/local/php_interface/yapps_config.php` для локальной настройки доменов Go API на DEV и PROD серверах.

@@ -13,9 +13,11 @@ if (!empty($pageH1)) {
 	$carImgText = implode(' ', $imgAltParts) . ' купить в Краснодаре';
 }
 ?>
-<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4">
+<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4" itemprop="itemListElement" itemscope itemtype="https://schema.org/Product">
+    <meta itemprop="brand" content="<?= htmlspecialchars($item['brand']['name'] ?? '');?>" />
+    <meta itemprop="model" content="<?= htmlspecialchars($item['model']['name'] ?? '');?>" />
     <div class="vehicle-card-images position-relative">
-        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
+        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image" itemprop="url">
             <?php if ( !empty($item['images']) ) { ?>
                 <?php foreach ( $item['images'] as $k => $i ) { ?>
                 <div 
@@ -97,13 +99,13 @@ if (!empty($pageH1)) {
         </div>
         <div class="vehicle-card-status text-uppercase my-3 fw-bold <?= (($item['status']['id']==1)?'c-yablue':'c-yayellow');?>"><?= $item['status']['name'];?></div>
         <div class="vehicle-card-price my-3 d-flex justify-content-between" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <?php /*
             <meta itemprop="price" content="<?= $item['min_price'];?>">
             <meta itemprop="priceCurrency" content="RUB">
-            <?php if ($item['status']['id']==1) { ?>
-            <link itemprop="availability" href="http://schema.org/InStock">
+            <?php if ($item['status']['id'] == 1) { ?>
+            <link itemprop="availability" href="https://schema.org/InStock">
+            <?php } else { ?>
+            <link itemprop="availability" href="https://schema.org/OutOfStock">
             <?php } ?>
-            */ ?>
             <span class="text-plus c-yalightblack fw-bold"><?= number_format($item['min_price'], 0, '.', ' ');?> ₽</span>
             <?php if ( $item['min_price'] < $item['price'] ) { ?>
             <span class="text-plus c-yadarkgray text-decoration-line-through"><?= number_format($item['price'], 0, '.', ' ');?> ₽</span>
