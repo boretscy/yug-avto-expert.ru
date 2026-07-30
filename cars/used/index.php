@@ -142,7 +142,11 @@ $data['Discount'] = false;
             $APPLICATION->SetPageProperty('image', explode('?', $data['meta']['meta']['image'])[0]);
             $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].explode('?', $_SERVER['REQUEST_URI'])[0]);
             $Asset->addJs('https://api-maps.yandex.ru/2.1/?apikey=34ddb940-0941-4b80-ab80-b0aa351b6560&lang=ru_RU');
-            $data['_dealership'] = json_decode( file_get_contents('https://yug-avto-expert.ru/api/dealership?code='.$data['dealership']['id']), true );
+            $dealershipJson = file_get_contents('https://'.$_SERVER['HTTP_HOST'].'/api/dealership?code='.$data['dealership']['id']);
+            if ($dealershipJson) {
+                $dealershipJson = preg_replace('/^\xEF\xBB\xBF/', '', $dealershipJson);
+                $data['_dealership'] = json_decode($dealershipJson, true);
+            }
             foreach ( $app->makeVehicleBreadcrumbs($data) as $item ) $APPLICATION->AddChainItem($item['text'], $item['link']);
             include __DIR__.'/views/vehicle.php';
         } else {
