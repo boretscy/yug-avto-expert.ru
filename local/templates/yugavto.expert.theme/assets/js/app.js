@@ -53,7 +53,7 @@ function deleteCookie(name) {
     })
 }
 
-CONNECTOR.SELECTED_CITY = JSON.parse(getCookie('SELECTED_CITY')) || [];
+CONNECTOR.SELECTED_CITY = JSON.parse(getCookie('SELECTED_CITY') || '[]');
 CONNECTOR.CIS_FAVORITES = JSON.parse(getCookie('CIS_FAVORITES') || '[]');
 CONNECTOR.CIS_COMPARE = JSON.parse(getCookie('CIS_COMPARE') || '[]');
 
