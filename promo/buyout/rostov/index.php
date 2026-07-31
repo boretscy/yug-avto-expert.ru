@@ -16,13 +16,7 @@ $APPLICATION->SetTitle("Выкуп и оценка автомобиля");
     if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
         $vehicles = $cache->getVars();
     } elseif ($cache->startDataCache()) {
-        $ctx = stream_context_create([
-            'http' => [
-                'timeout' => 2,
-                'ignore_errors' => true,
-            ]
-        ]);
-        $raw = @file_get_contents('https://apps.yug-avto.ru/API/get/cis/random/used/?token=34b5ac8b71018c0bc7e5c050ed90b243', false, $ctx);
+        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random/used/?token=34b5ac8b71018c0bc7e5c050ed90b243');
         $data = !empty($raw) ? json_decode($raw, true) : null;
         $vehicles = is_array($data) ? $data : [];
 

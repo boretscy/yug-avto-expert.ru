@@ -477,6 +477,33 @@
 			
 			return $subLimit;
 		}
+
+		public static function httpGet($url) {
+			$attempts = 6;
+			$resp = false;
+			for ($i = 0; $i < $attempts; $i++) {
+				$ch = curl_init($url);
+				curl_setopt_array($ch, [
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_TIMEOUT => 3,
+					CURLOPT_SSL_VERIFYPEER => false,
+					CURLOPT_SSL_VERIFYHOST => false,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
+				]);
+				$resp = curl_exec($ch);
+				$err = curl_errno($ch);
+				curl_close($ch);
+				
+				if ($resp !== false && $err === 0) {
+					break;
+				}
+				if ($i < $attempts - 1) {
+					usleep(100000); // 100 мс
+				}
+			}
+			return $resp;
+		}
 	}
 
 

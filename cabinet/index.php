@@ -9,7 +9,7 @@ $APPLICATION->SetTitle("Личный кабинет");
     if ( !!$GLOBALS['CABINET_USER']['PROPERTY_CHANGE_PASSWD_VALUE'] ) header('Location: /cabinet/me/#cabinet-me-passwd');
     if ( !$GLOBALS['CABINET_USER']['INFO']['Status'] ) header('Location: /cabinet/verify/');
 	foreach ( $GLOBALS['CABINET_USER']['INFO']['MassAvto'] as $k => $item) {
-		$GLOBALS['CABINET_USER']['INFO']['MassAvto'][$k]['CIS'] = json_decode( file_get_contents('https://apps.yug-avto.ru/API/get/cis/vehicles/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&vin='.$item['Avto']), true )['items'][0];
+		$GLOBALS['CABINET_USER']['INFO']['MassAvto'][$k]['CIS'] = json_decode( YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/vehicles/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&vin='.$item['Avto']), true )['items'][0];
 		$GLOBALS['CABINET_USER']['INFO']['MassAvto'][$k]['CarInfo'] = $cab::getCarInfo($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $item['Avto']);
 		// if ($item['Request']) $GLOBALS['CABINET_USER']['INFO']['MassAvto'][$k]['OFFERS'] = $cab::getOffersForCarRevaluation($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $item['Avto']);
 	}
