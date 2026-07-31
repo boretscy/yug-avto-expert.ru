@@ -4,7 +4,6 @@
 ### Added
 - Оптимизация PageSpeed:
   - Внедрена ленивая (отложенная) загрузка сторонних виджетов (Calltouch, Talk-Me, widgets3-script) по первому пользовательскому действию для снижения Total Blocking Time (TBT).
-  - Интегрирована константа `ENABLE_FRONTEND_OPTIMIZATION` в `header.php` Эксперта для автоматического подключения сжатых бандлов стилей `bundle.app.min.css` и скриптов `bundle.app.min.js`.
 
 ### Changed
 - Обновлено формирование атрибутов `alt` и `title` для изображений автомобилей:

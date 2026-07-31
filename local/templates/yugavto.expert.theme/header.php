@@ -30,23 +30,15 @@
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/remodal.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/remodal-default-theme.min.css');
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/lib/hint.min.css');
-            if (defined('ENABLE_FRONTEND_OPTIMIZATION') && ENABLE_FRONTEND_OPTIMIZATION) {
-                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bundle.app.min.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/bundle.app.min.css'));
-            } else {
-                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/app.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/app.css'));
-                $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/style.css'));
-            }
+            $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/app.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/app.css'));
+            $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/style.css'));
             $Asset->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/font.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/fonts/font.css'));
 
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/jquery.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/remodal.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/swiper-bundle.min.js');
             $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/lib/mask.min.js');
-            if (defined('ENABLE_FRONTEND_OPTIMIZATION') && ENABLE_FRONTEND_OPTIMIZATION) {
-                $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/bundle.app.min.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/bundle.app.min.js'));
-            } else {
-                $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/app.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/app.js'));
-            }
+            $Asset->addJs(SITE_TEMPLATE_PATH.'/assets/js/app.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/js/app.js'));
         ?>
 
         <!-- Favicon -->
