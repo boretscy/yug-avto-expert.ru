@@ -1,8 +1,34 @@
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php"); ?>
 <?php 
     use Bitrix\Main\Page\Asset;
+    use Bitrix\Main\Data\Cache;
     $Asset = Asset::getInstance();
-    $vehicles = json_decode(file_get_contents('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=34b5ac8b71018c0bc7e5c050ed90b243'), true)['items'];
+
+    $cache = Cache::createInstance();
+    $cacheTime = 300;
+    $cacheId = 'buyout_random_vehicles_v2';
+    $cacheDir = '/buyout_vehicles';
+    $vehicles = [];
+
+    if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
+        $vehicles = $cache->getVars();
+    } elseif ($cache->startDataCache()) {
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout' => 2,
+                'ignore_errors' => true,
+            ]
+        ]);
+        $raw = @file_get_contents('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=34b5ac8b71018c0bc7e5c050ed90b243', false, $ctx);
+        $data = !empty($raw) ? json_decode($raw, true) : null;
+        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
+
+        if (!empty($vehicles)) {
+            $cache->endDataCache($vehicles);
+        } else {
+            $cache->abortDataCache();
+        }
+    }
 
     $brands = array_slice(scandir(__DIR__.'/brands'), 2);
     shuffle($brands);
