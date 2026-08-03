@@ -7,11 +7,9 @@ $carEquipment = (!empty($item['equipment']) ? $item['equipment'] : '');
 
 $carImgText = $carBrand . ' ' . $carModel;
 ?>
-<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4" itemprop="itemListElement" itemscope itemtype="https://schema.org/Product">
-    <meta itemprop="brand" content="<?= htmlspecialchars($item['brand']['name'] ?? '');?>" />
-    <meta itemprop="model" content="<?= htmlspecialchars($item['model']['name'] ?? '');?>" />
+<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4">
     <div class="vehicle-card-images position-relative">
-        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image" itemprop="url">
+        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
             <?php if ( !empty($item['images']) ) { ?>
                 <?php foreach ( $item['images'] as $k => $i ) { ?>
                 <div 
@@ -24,12 +22,11 @@ $carImgText = $carBrand . ' ' . $carModel;
                         alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
                         title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
                         loading="<?= ($k==0)?'eager':'lazy';?>"
-                        <?= (($k==0)?'itemprop="image"':'');?>
                     >
                 </div>
                 <?php } ?>
             <?php } else { ?>
-                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" itemprop="image" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" />
+                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" />
             <?php } ?>
         </a>
         <div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">
@@ -68,7 +65,7 @@ $carImgText = $carBrand . ' ' . $carModel;
     <div class="vehicle-card-content p-3">
         <a 
             href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" 
-            class="c-yalightblack c-h-yalightblack text-decoration-none h5 line-height-one d-block fw-bold vehicle-card-content-title" itemprop="name"
+            class="c-yalightblack c-h-yalightblack text-decoration-none h5 line-height-one d-block fw-bold vehicle-card-content-title"
             ><div class="h5 line-height-one d-block fw-bold"><?= $item['brand']['name'];?> <?= $item['model']['name'];?></div></a>
         <div class="vehicle-card-futures">
             <?php foreach ( $item['_tags'] as $tag ) { ?>
@@ -77,7 +74,7 @@ $carImgText = $carBrand . ' ' . $carModel;
                 </a>
             <?php } ?>
         </div>
-        <div class="vehicle-card-specification my-3 c-yadarkgray" itemprop="description">
+        <div class="vehicle-card-specification my-3 c-yadarkgray">
             <?php foreach (array_chunk($item['_general'], 3) as $s_row) { ?>
             <div>
                 <?php foreach ( $s_row as $k => $i ) { ?>
@@ -92,14 +89,7 @@ $carImgText = $carBrand . ' ' . $carModel;
             <?php } ?>
         </div>
         <div class="vehicle-card-status text-uppercase my-3 fw-bold <?= (($item['status']['id']==1)?'c-yablue':'c-yayellow');?>"><?= $item['status']['name'];?></div>
-        <div class="vehicle-card-price my-3 d-flex justify-content-between" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <meta itemprop="price" content="<?= $item['min_price'];?>">
-            <meta itemprop="priceCurrency" content="RUB">
-            <?php if ($item['status']['id'] == 1) { ?>
-            <link itemprop="availability" href="https://schema.org/InStock">
-            <?php } else { ?>
-            <link itemprop="availability" href="https://schema.org/OutOfStock">
-            <?php } ?>
+        <div class="vehicle-card-price my-3 d-flex justify-content-between">
             <span class="text-plus c-yalightblack fw-bold"><?= number_format($item['min_price'], 0, '.', ' ');?> ₽</span>
             <?php if ( $item['min_price'] < $item['price'] ) { ?>
             <span class="text-plus c-yadarkgray text-decoration-line-through"><?= number_format($item['price'], 0, '.', ' ');?> ₽</span>
