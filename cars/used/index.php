@@ -99,32 +99,85 @@ $data['OnWay'] = false;
 $data['InStock'] = false;
 $data['Discount'] = false;
 ?>
-<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { ?>
+<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { 
+    $brandName = trim($data['brand']['name'] ?? $data['meta']['meta']['brand'] ?? '');
+    $modelName = trim($data['model']['name'] ?? '');
+    $prodYear = $data['general'][4]['value'] ?? $data['year'] ?? '';
+    
+    $cleanTitle = trim($brandName . ' ' . $modelName);
+    if ($prodYear) {
+        $cleanTitle .= ' ' . $prodYear . ' года';
+    }
+
+    $imagesList = [];
+    if (!empty($data['images']) && is_array($data['images'])) {
+        foreach ($data['images'] as $imgItem) {
+            $urlStr = '';
+            if (is_string($imgItem)) {
+                $urlStr = $imgItem;
+            } elseif (is_array($imgItem)) {
+                $urlStr = $imgItem['src'] ?? $imgItem['url'] ?? $imgItem[0] ?? '';
+            }
+            if ($urlStr && is_string($urlStr)) {
+                $imagesList[] = explode('?', $urlStr)[0];
+            }
+        }
+    }
+    if (empty($imagesList) && !empty($data['meta']['meta']['image']) && is_string($data['meta']['meta']['image'])) {
+        $imagesList[] = explode('?', $data['meta']['meta']['image'])[0];
+    }
+    if (empty($imagesList)) {
+        $imagesList[] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg';
+    }
+
+    $descText = trim($data['meta']['meta']['description'] ?? '');
+    if (!empty($data['general']) && is_array($data['general'])) {
+        $specs = [];
+        foreach ($data['general'] as $spec) {
+            if (!empty($spec['name']) && !empty($spec['value'])) {
+                $specs[] = $spec['name'] . ': ' . $spec['value'];
+            }
+        }
+        if (!empty($specs)) {
+            $descText .= "\n\nХарактеристики:\n• " . implode("\n• ", $specs);
+        }
+    }
+
+    $schemaData = [
+        "@context" => "https://schema.org/",
+        "@type" => "Product",
+        "name" => $cleanTitle ?: htmlspecialchars($data['meta']['meta']['title'] ?? ''),
+        "description" => $descText,
+        "image" => count($imagesList) === 1 ? $imagesList[0] : $imagesList,
+        "brand" => [
+            "@type" => "Brand",
+            "name" => $brandName
+        ],
+        "offers" => [
+            "@type" => "Offer",
+            "priceCurrency" => "RUB",
+            "price" => (float)($data['min_price'] ?? $data['price'] ?? $data['meta']['meta']['price'] ?? 0),
+            "url" => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+            "availability" => ($data['status']['id'] == 1 || !isset($data['status']['id'])) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition" => "https://schema.org/UsedCondition",
+            "seller" => [
+                "@type" => "AutoDealer",
+                "name" => "ООО «Юг-Авто Эксперт»",
+                "url" => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
+            ]
+        ]
+    ];
+    if ($prodYear) {
+        $schemaData['productionDate'] = (string)$prodYear;
+    }
+?>
 <script type='application/ld+json'>
-{
-	"@context": "http://schema.org/",
-	"@type": "Product",
-	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
-	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
-	"image": "<?= (($data['meta']['meta']['image'])?explode('?', $data['meta']['meta']['image'])[0]:$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>",
-	"brand": {
-		"@type": "Brand",
-		"name": "<?= htmlspecialchars($data['meta']['meta']['brand']);?>"
-	},
-	"offers": {
-		"@type": "Offer",
-		"priceCurrency": "RUB",
-		"price": "<?= $data['meta']['meta']['price'];?>",
-		"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
-		"availability": "https://schema.org/InStock",
-		"itemCondition": "https://schema.org/UsedCondition"
-	}
-}
+<?= json_encode($schemaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
 </script>
 <?php } else { ?>
 <script type='application/ld+json'>
 {
-	"@context": "http://schema.org/",
+	"@context": "https://schema.org/",
 	"@type": "ItemList",
 	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
 	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
