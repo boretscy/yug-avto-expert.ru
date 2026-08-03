@@ -446,44 +446,47 @@
 		public function makeApiUrl( $arQ = [], $entity = 'vehicles' ) {
 
 			switch ( $entity ) {
-				
 				case 'filter': 
 				case 'brands': 
 					unset($arQ['page']); break;
 				default: break;
 			}
 
-			if ( $entity == 'vehicle' ) {
-				$url = 
-					$this->Conf['Api']['baseURL'].
-					'/'.
-					$entity.
-					'/'.
-					$this->Conf['Api']['mode'].
-					'/'.
-					$arQ['vehicle'].
-					'/?'.
-					http_build_query(['token'=>$this->Conf['Api']['token'], 'site'=>((class_exists('YApp') && defined('YApp::SITE_DOMAIN')) ? YApp::SITE_DOMAIN : $_SERVER['HTTP_HOST'])]);
-			} else {
-				$url = 
-					$this->Conf['Api']['baseURL'].
-					'/'.
-					$entity.
-					'/'.
-					$this->Conf['Api']['mode'].
-					'/?'.
-					http_build_query(
-						array_merge(
-							$arQ, 
-							array_merge(
-								['token'=>$this->Conf['Api']['token'], 'uri'=>$_SERVER['REQUEST_URI']],
-								$this->Conf['Api']['Params']
-							)
-						)
-					);
-			}
-			return $url;
+			$type = $this->Conf['Api']['mode'];
+			$baseURL = $this->Conf['Api']['baseURL'];
 
+			// Convert old range params to Go API format
+			foreach ( ['price','volume','power','year'] as $p ) {
+				if ( isset($arQ[$p]) ) {
+					$parts = explode(',', $arQ[$p]);
+					if ( count($parts) == 2 ) {
+						$arQ[$p.'_from'] = $parts[0];
+						$arQ[$p.'_to'] = $parts[1];
+					}
+					unset($arQ[$p]);
+				}
+			}
+
+			// Convert comma-separated multi-value filter parameters to array format for Go API
+			foreach ( ['engine', 'color', 'body', 'drive', 'transmission', 'brand', 'model', 'dealership'] as $p ) {
+				if ( isset($arQ[$p]) && is_string($arQ[$p]) && strpos($arQ[$p], ',') !== false ) {
+					$arQ[$p] = explode(',', $arQ[$p]);
+				}
+			}
+
+			if ( $entity == 'vehicle' ) {
+				$url = $baseURL.'/vehicle/'.$arQ['vehicle'].'?type='.$type.'&token='.$this->Conf['Api']['token'];
+			} else {
+				unset($arQ['vehicle'], $arQ['mode'], $arQ['site']);
+				$params = array_merge(
+					['type' => $type, 'token' => $this->Conf['Api']['token']],
+					$arQ,
+					$this->Conf['Api']['Params']
+				);
+				$url = $baseURL.'/'.$entity.'?'.http_build_query($params);
+			}
+
+			return $url;
 		}
 
 		public function makeFilterUrl( $filter, $params = [], $page = false, $expand = false ) {
