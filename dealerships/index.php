@@ -106,7 +106,7 @@ if ($_GET['dealership']) $arFilterDealerships = ['CODE' => explode(',', $_GET['d
 		"SET_LAST_MODIFIED" => "N",
 		"SET_STATUS_404" => "Y",
 		"SET_TITLE" => "Y",
-		"SHOW_404" => "N",
+		"SHOW_404" => "Y",
 		"SORT_BY1" => (($_GET["dealership"]?"SORT":"NAME")),
 		"SORT_BY2" => "SORT",
 		"SORT_ORDER1" => "ASC",
@@ -131,6 +131,7 @@ if ($_GET['dealership']) $arFilterDealerships = ['CODE' => explode(',', $_GET['d
 		],
 		"COMPOSITE_FRAME_MODE" => "A",
 		"COMPOSITE_FRAME_TYPE" => "AUTO",
+		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => [
 			"news" => "",
 			"section" => "",

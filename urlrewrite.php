@@ -16,6 +16,14 @@ $arUrlRewrite=array (
     'PATH' => '/about/career/vacancies/index.php',
     'SORT' => 100,
   ),
+  32 => 
+  array (
+    'CONDITION' => '#^/dealerships/new/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/dealerships/new/index.php',
+    'SORT' => 100,
+  ),
   44 => 
   array (
     'CONDITION' => '#^/dealerships/#',
@@ -24,12 +32,36 @@ $arUrlRewrite=array (
     'PATH' => '/dealerships/index.php',
     'SORT' => 100,
   ),
+  35 => 
+  array (
+    'CONDITION' => '#^/offers/new/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/offers/new/index.php',
+    'SORT' => 100,
+  ),
   10 => 
   array (
     'CONDITION' => '#^/vacancies/#',
     'RULE' => '',
     'ID' => 'bitrix:news',
     'PATH' => '/vacancies/index.php',
+    'SORT' => 100,
+  ),
+  33 => 
+  array (
+    'CONDITION' => '#^/news/new/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/news/new/index.php',
+    'SORT' => 100,
+  ),
+  34 => 
+  array (
+    'CONDITION' => '#^/blog/new/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/blog/new/index.php',
     'SORT' => 100,
   ),
   12 => 

@@ -47,7 +47,7 @@ if ( $data['force_404'] ) {
 }
 
 $GLOBALS['META'] = $data['meta'];
-if ( (!$filter['vehicle'] && $data['items'] == NULL) || ($filter['vehicle'] && $data == NULL)  ) {
+if ( (!$filter['vehicle'] && $data['items'] == NULL)  ) {
     // if ( !$filter['vehicle'] && !$filter['model'] && $filter['brand'] ) {
 	// 	unset($filter['brand']);
 	// } elseif ( !$filter['vehicle'] && $filter['model'] ) {
@@ -63,6 +63,14 @@ if ( (!$filter['vehicle'] && $data['items'] == NULL) || ($filter['vehicle'] && $
 	@define("ERROR_404","Y");
 	if ($APPLICATION->RestartWorkarea()) {
 		require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
+		die();
+	}
+} elseif ( ($filter['vehicle'] && $data == NULL) ) {
+	$GLOBALS['CIS_FILTER'] = $filter;
+	CHTTP::SetStatus("404 Not Found");
+	@define("ERROR_404","Y");
+	if ($APPLICATION->RestartWorkarea()) {
+		require(\Bitrix\Main\Application::getDocumentRoot()."/404Cis.php");
 		die();
 	}
 }
@@ -91,41 +99,39 @@ $data['OnWay'] = false;
 $data['InStock'] = false;
 $data['Discount'] = false;
 ?>
+<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { ?>
 <script type='application/ld+json'>
-    {
-		"@context": "http://schema.org/",
-        "name": "<?= $data['meta']['meta']['title'];?>",
-        "description": "<?= $data['meta']['meta']['description'];?>",
-        "image": "<?= (($data['meta']['meta']['image'])?explode('?', $data['meta']['meta']['image'])[0]:$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>",
-
-        "speakable": {
-            "@type": "SpeakableSpecification",
-            "xpath": [
-                "/html/head/title",
-                "/html/head/meta[@name='description_page']/@content"
-            ]
-        },
-
-		<?php if ( $data['meta']['meta']['level'] == 'vehicle' ) { ?>
-		"@type": "Product",
-		"brand": {
-			"@type": "Brand",
-			"name": "<?= $data['meta']['meta']['brand'];?>"
-		},
-		"offers": {
-			"@type": "Offer",
-			"priceCurrency": "RUB",
-			"price": "<?= $data['meta']['meta']['price'];?>",
-			"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
-			"availability": "https://schema.org/InStock",
-			"itemCondition": "https://schema.org/NewCondition"
-		}
-		<?php } else { ?>
-        "@type": "Organization",
-        "url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
-		<?php } ?>
-    }
+{
+	"@context": "http://schema.org/",
+	"@type": "Product",
+	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
+	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
+	"image": "<?= (($data['meta']['meta']['image'])?explode('?', $data['meta']['meta']['image'])[0]:$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].SITE_TEMPLATE_PATH.'/assets/images/logo-25.jpg');?>",
+	"brand": {
+		"@type": "Brand",
+		"name": "<?= htmlspecialchars($data['meta']['meta']['brand']);?>"
+	},
+	"offers": {
+		"@type": "Offer",
+		"priceCurrency": "RUB",
+		"price": "<?= $data['meta']['meta']['price'];?>",
+		"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>",
+		"availability": "https://schema.org/InStock",
+		"itemCondition": "https://schema.org/UsedCondition"
+	}
+}
 </script>
+<?php } else { ?>
+<script type='application/ld+json'>
+{
+	"@context": "http://schema.org/",
+	"@type": "ItemList",
+	"name": "<?= htmlspecialchars($data['meta']['meta']['title']);?>",
+	"description": "<?= htmlspecialchars($data['meta']['meta']['description']);?>",
+	"url": "<?= $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>"
+}
+</script>
+<?php } ?>
 
 <div id="YappsShowroom" class="position-relative">
     <div class="cover bg-yawhite position-absolute w-100 h-100 d-none"></div>
@@ -136,7 +142,11 @@ $data['Discount'] = false;
             $APPLICATION->SetPageProperty('image', explode('?', $data['meta']['meta']['image'])[0]);
             $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].explode('?', $_SERVER['REQUEST_URI'])[0]);
             $Asset->addJs('https://api-maps.yandex.ru/2.1/?apikey=34ddb940-0941-4b80-ab80-b0aa351b6560&lang=ru_RU');
-            $data['_dealership'] = json_decode( file_get_contents('https://yug-avto-expert.ru/api/dealership?code='.$data['dealership']['id']), true );
+            $dealershipJson = file_get_contents('https://'.$_SERVER['HTTP_HOST'].'/api/dealership?code='.$data['dealership']['id']);
+            if ($dealershipJson) {
+                $dealershipJson = preg_replace('/^\xEF\xBB\xBF/', '', $dealershipJson);
+                $data['_dealership'] = json_decode($dealershipJson, true);
+            }
             foreach ( $app->makeVehicleBreadcrumbs($data) as $item ) $APPLICATION->AddChainItem($item['text'], $item['link']);
             include __DIR__.'/views/vehicle.php';
         } else {

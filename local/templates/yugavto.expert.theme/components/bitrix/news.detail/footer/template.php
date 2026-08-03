@@ -12,7 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<footer class="c-yalightgray bg-yablue py-5 text-minus" style="margin-top: -1px;">
+<footer class="c-yalightgray bg-yablue py-5 text-minus" style="margin-top: -1px;" itemscope itemtype="https://schema.org/WPFooter">
 	<div class="container">
 		
 		<!-- Footer SEO -->
@@ -109,7 +109,7 @@ $this->setFrameMode(true);
 				<a href="/" class="text-decoration-none">
 					<img src="<?= SITE_TEMPLATE_PATH;?>/assets/images/svg/logo-white.svg?<?= md5_file($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/images/svg/logo-white.svg');?>" style="width: 150px;" />
 				</a>
-				<p class="mt-3">&copy; Юг-Авто Эксперт <?= date('Y');?><br />Все права защищены</p>
+				<p class="mt-3">&copy; <span itemprop="copyrightHolder">Юг-Авто Эксперт</span> <span itemprop="copyrightYear"><?= date('Y');?></span><br />Все права защищены</p>
 			</div>
 			<?php /*
 			<!-- <div class="col-lg-3 mb-3 mb-lg-0">

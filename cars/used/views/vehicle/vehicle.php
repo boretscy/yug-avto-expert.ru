@@ -2,7 +2,11 @@
     <div class="sticky-top" style="top: 7rem;">
         <div class="swiper vehicle-swiper position-relative">
             <div class="swiper-wrapper">
-                <?php foreach ( $data['_images'] as $k => $item ) { ?>
+                <?php 
+                    $detailTitle = $data['brand']['name'].' '.$data['model']['name'].' '.$data['general'][4]['value'].' года с пробегом '.number_format($data['general'][5]['value'], 0, '.', ' ').' км';
+                    foreach ( $data['_images'] as $k => $item ) { 
+                        $imgAlt = YApp::getCleanAltText($detailTitle . (($k > 0) ? ' - фото ' . ($k + 1) : ''));
+                ?>
                 <div class="swiper-slide">
                     <a 
                         data-fancybox="gallery-<?= $data['id'];?>"
@@ -14,8 +18,11 @@
                         ><img 
                             src="<?= $item['detail'];?>" 
                             class="b-radius-yaradius-25" 
-                            title="<?= $data['brand']['name'];?> <?= $data['model']['name'];?>  <?= (($data['equipment'])?:'');?>" 
-                            alt="<?= $data['brand']['name'];?> <?= $data['model']['name'];?>  <?= (($data['equipment'])?:'');?>" 
+                            title="<?= htmlspecialchars($imgAlt);?>" 
+                            alt="<?= htmlspecialchars($imgAlt);?>" 
+                            loading="<?= ($k==0)?'eager':'lazy';?>"
+                            <?= ($k==0)?'fetchpriority="high"':'';?>
+                            decoding="async"
                             <?= (($k==0)?'itemprop="image"':'');?> />
                         </a>
                 </div>
@@ -45,9 +52,11 @@
         </div>
         <div class="swiper vehicle-swiper-thumbs mt-4">
             <div class="swiper-wrapper">
-                <?php foreach ( $data['_images'] as $item ) { ?>
+                <?php foreach ( $data['_images'] as $k => $item ) { 
+                    $thumbAlt = YApp::getCleanAltText($detailTitle . ' - превью ' . ($k + 1));
+                ?>
                 <div class="swiper-slide">
-                    <img src="<?= $item['preview'];?>" class="b-radius-yaradius-15" />
+                    <img src="<?= $item['preview'];?>" class="b-radius-yaradius-15" title="<?= htmlspecialchars($thumbAlt);?>" alt="<?= htmlspecialchars($thumbAlt);?>" />
                 </div>
                 <?php } ?>
                 <?php /*

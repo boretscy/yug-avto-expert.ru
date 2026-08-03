@@ -19,6 +19,30 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
 
 include __DIR__.'/vendor/YAApi.php';
 
+// CIS API proxy — forward /api/v1/cis/* to Go API
+$route = YAApi::Route();
+if ($route['entity'] === 'v1' && $route['id'] === 'cis') {
+    $path = $_SERVER['REQUEST_URI'];
+    $goUrl = 'https://' . YApp::GO_API_DOMAIN . $path;
+    $ch = curl_init($goUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+    ]);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
+    }
+    $resp = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    http_response_code($httpCode);
+    echo $resp !== false ? $resp : '{"error":"proxy error"}';
+    return;
+}
+
 switch ( YAApi::Route()['id'] ) {
 
     case 'render':

@@ -21,7 +21,8 @@ $APPLICATION->SetTitle("Партнерам - Юг-Авто");
                 </div>
             </div>
             <div class="col-md-6">
-                <img src="/upload/img/partners-1.jpg" alt="<?$APPLICATION->ShowTitle()?>" class="w-100 b-radius-small" />
+                <?php $pageTitle = YApp::getCleanAltText($APPLICATION->GetTitle(false)); ?>
+                <img src="/upload/img/partners-1.jpg" alt="<?= htmlspecialchars($pageTitle);?>" title="<?= htmlspecialchars($pageTitle);?>" class="w-100 b-radius-small" />
             </div>
         </div>
     </div>

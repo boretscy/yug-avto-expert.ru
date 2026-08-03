@@ -317,3 +317,17 @@
         right: -10px;
     }
 }
+
+/* Стили для тега img в карточках автомобилей и плавного масштабирования при наведении */
+.vehicle-card-images-item-container-image {
+    transition: transform 0.3s ease;
+}
+.vehicle-card-images a .vehicle-card-images-item-container img.vehicle-card-images-item-container-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 100 / 78.865;
+    object-fit: cover;
+}
+.vehicle-card-images-item-container:hover .vehicle-card-images-item-container-image {
+    transform: scale(1.08);
+}

@@ -1,8 +1,28 @@
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php"); ?>
 <?php 
     use Bitrix\Main\Page\Asset;
+    use Bitrix\Main\Data\Cache;
     $Asset = Asset::getInstance();
-    $vehicles = json_decode(file_get_contents('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=34b5ac8b71018c0bc7e5c050ed90b243'), true)['items'];
+
+    $cache = Cache::createInstance();
+    $cacheTime = 300;
+    $cacheId = 'buyout_random_vehicles_v2';
+    $cacheDir = '/buyout_vehicles';
+    $vehicles = [];
+
+    if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
+        $vehicles = $cache->getVars();
+    } elseif ($cache->startDataCache()) {
+        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=34b5ac8b71018c0bc7e5c050ed90b243');
+        $data = !empty($raw) ? json_decode($raw, true) : null;
+        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
+
+        if (!empty($vehicles)) {
+            $cache->endDataCache($vehicles);
+        } else {
+            $cache->abortDataCache();
+        }
+    }
 
     $brands = array_slice(scandir(__DIR__.'/brands'), 2);
     shuffle($brands);
@@ -11,7 +31,7 @@
     $title = 'Выкуп авто - срочный выкуп автомобилей в Краснодаре быстро и дорого | Юг-Авто Эксперт';
     $description = 'Срочный выкуп авто в Краснодаре от официального дилера Юг-Авто Эксперт за час. Быстрая оценка машины, справедливая цена, оформление договора, снятие с учета. 25 лет опыта на рынке авто. Получите оценку своего автомобиля в два клика.';
     $route = explode('/', parse_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'])['path']);
-    
+    $APPLICATION->SetPageProperty("canonical", "https://".$_SERVER['HTTP_HOST']."/services/buyout/");
 
     $titles = [
         'foreign' => [

@@ -19,7 +19,7 @@ $arResult = array_merge(
 	$arResult
 );
 
-$strReturn = '<div class="container mt-3 mb-2 breadcrumbs"><div class="row"><div class="col text-minus">';
+$strReturn = '<div class="container mt-3 mb-2 breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList"><div class="row"><div class="col text-minus">';
 
 $itemSize = count($arResult);
 for($index = 0; $index < $itemSize; $index++)
@@ -33,7 +33,7 @@ for($index = 0; $index < $itemSize; $index++)
 		{
 			
 			$strReturn .= '
-				<div class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+				<div class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 					'.$arrow.'
 					<a href="'.$arResult[$index]["LINK"].'" title="'.$title.'" itemprop="item" class="text-decoration-none c-yamiddlegray c-h-yablue">
 						<span itemprop="name">'.$title.'</span>
@@ -43,10 +43,14 @@ for($index = 0; $index < $itemSize; $index++)
 		}
 		else
 		{
+			$link = !empty($arResult[$index]["LINK"]) ? $arResult[$index]["LINK"] : $_SERVER['REQUEST_URI'];
 			$strReturn .= '
-				<div class="breadcrumbs-item">
+				<div class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 					'.$arrow.'
-					<span>'.$title.'</span>
+					<a href="'.$link.'" itemprop="item" class="text-decoration-none c-yamiddlegray">
+						<span itemprop="name">'.$title.'</span>
+					</a>
+					<meta itemprop="position" content="'.($index + 1).'" />
 				</div>';
 		}
 	}

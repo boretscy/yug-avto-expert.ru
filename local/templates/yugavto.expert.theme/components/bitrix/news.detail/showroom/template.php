@@ -203,5 +203,5 @@ var CTId = 20930, CTSess = 'e94ad128', YandexID = 31748036
 	// }
 ?>
 <script data-skip-moving="true">
-	<?= file_get_contents('https://apps.yug-avto.ru/API/get/cis/script/?token=34b5ac8b71018c0bc7e5c050ed90b243');?>
+	<?= YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/script/?token=34b5ac8b71018c0bc7e5c050ed90b243');?>
 </script>

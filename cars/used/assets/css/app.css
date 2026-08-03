@@ -287,6 +287,18 @@
     background-size: cover;
     background-position: center center;
 }
+#YappsShowroom .vehicle-card-images-item-container-image {
+    transition: transform 0.3s ease;
+}
+#YappsShowroom .vehicle-card-images a .vehicle-card-images-item-container img.vehicle-card-images-item-container-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 100 / 78.865;
+    object-fit: cover;
+}
+#YappsShowroom .vehicle-card-images-item-container:hover .vehicle-card-images-item-container-image {
+    transform: scale(1.08);
+}
 #YappsShowroom  .vehicle-card-discount-row {
     top: 0;
     width: calc(100% - 32px);
@@ -323,8 +335,8 @@
     display: inline-block;
 }
 #YappsShowroom .vehicle-card-specification {
-    min-height: 45px;
-    -webkit-line-clamp: 2;
+    min-height: 68px;
+    -webkit-line-clamp: 3;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -594,10 +606,11 @@
     height: 35px;
     display: inline-block;
 }
-#YappsShowroom .vehicle-recomended-swiper .swiper-slide .vehicle-card-discount-item img {
-    width: auto;
-    height: auto;
-    display: inline-block;
+#YappsShowroom .vehicle-card-discount-item img {
+    top: calc(50% - 9px);
+    left: calc(50% - 9px);
+    width: 18px;
+    height: 18px;
 }
 #YappsShowroom .vehicle-recomended-swiper-next, #YappsShowroom .vehicle-recomended-swiper-prev {
     width: 26px;

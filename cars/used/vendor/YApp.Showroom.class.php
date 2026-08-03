@@ -212,7 +212,7 @@
 				setcookie('SELECTED_CITY', json_encode($cookie), time()+3600*24*14, '/');
 			}
 
-			$res['site'] = $_SERVER['HTTP_HOST'];
+			$res['site'] = (class_exists('YApp') && defined('YApp::SITE_DOMAIN')) ? YApp::SITE_DOMAIN : $_SERVER['HTTP_HOST'];
 
             return $res;
         }
@@ -288,7 +288,7 @@
 				setcookie('SELECTED_CITY', json_encode($cookie), time()+3600*24*14, '/');
 			}
 
-			$res['site'] = $_SERVER['HTTP_HOST'];
+			$res['site'] = (class_exists('YApp') && defined('YApp::SITE_DOMAIN')) ? YApp::SITE_DOMAIN : $_SERVER['HTTP_HOST'];
 
             return $res;
         }
@@ -463,7 +463,7 @@
 					'/'.
 					$arQ['vehicle'].
 					'/?'.
-					http_build_query(['token'=>$this->Conf['Api']['token'], 'site'=>$_SERVER['HTTP_HOST']]);
+					http_build_query(['token'=>$this->Conf['Api']['token'], 'site'=>((class_exists('YApp') && defined('YApp::SITE_DOMAIN')) ? YApp::SITE_DOMAIN : $_SERVER['HTTP_HOST'])]);
 			} else {
 				$url = 
 					$this->Conf['Api']['baseURL'].

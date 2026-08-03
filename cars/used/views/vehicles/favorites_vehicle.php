@@ -1,19 +1,26 @@
-<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); ?>
+<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); 
+$carImgText = ($item['brand']['name'] ?? '') . ' ' . ($item['model']['name'] ?? '');
+?>
 <div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4">
     <div class="vehicle-card-images position-relative">
         <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
             <?php if ( !empty($item['images']) ) { ?>
                 <?php foreach ( $item['images'] as $k => $i ) { ?>
-                <style>#YappsShowroom .vehicle-card-images a .vehicle-card-images-item-container-image.img-<?= $item['id'];?>-<?= $k;?>::after{background-image: url(<?= (($i['preview'])?:$i['preview_large']);?>)}</style>
                 <div 
                     class="vehicle-card-images-item-container" 
                     style="<?= (($k!=0)?'display:none;':'');?>" 
                     data-index="<?= $k;?>">
-                    <div class="vehicle-card-images-item-container-image img-<?= $item['id'];?>-<?= $k;?>" ></div>
+                    <img 
+                        src="<?= (($i['preview'])?:$i['preview_large']);?>"
+                        class="vehicle-card-images-item-container-image"
+                        alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+                        title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+                        loading="<?= ($k==0)?'eager':'lazy';?>"
+                    >
                 </div>
                 <?php } ?>
             <?php } else { ?>
-                <img src="https://apps.yug-avto.ru/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.jpg" />
+                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" />
             <?php } ?>
         </a>
         <div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">

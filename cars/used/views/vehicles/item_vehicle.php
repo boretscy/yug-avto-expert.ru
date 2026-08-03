@@ -1,19 +1,35 @@
-<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); ?>
-<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4" <?php /* itemscope itemtype="https://schema.org/Product" */ ?>>
+<?php if ( $filter['city'] && !is_array($filter['city']) ) $city = $app->getCityAlias($filter['city']); 
+$carBrand = $item['brand']['name'] ?? '';
+$carModel = $item['model']['name'] ?? '';
+$carYear = $item['year'] ?? '';
+$carMileage = (!empty($item['mileage'])) ? number_format($item['mileage'], 0, '.', ' ') . ' км' : '';
+$carEquipment = (!empty($item['equipment']) ? $item['equipment'] : '');
+
+$carImgText = $carBrand . ' ' . $carModel;
+?>
+<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4" itemprop="itemListElement" itemscope itemtype="https://schema.org/Product">
+    <meta itemprop="brand" content="<?= htmlspecialchars($item['brand']['name'] ?? '');?>" />
+    <meta itemprop="model" content="<?= htmlspecialchars($item['model']['name'] ?? '');?>" />
     <div class="vehicle-card-images position-relative">
-        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
+        <a href="<?= $app->Conf()['baseUrl'];?>/<?= (($city)?$city.'/':'');?><?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image" itemprop="url">
             <?php if ( !empty($item['images']) ) { ?>
                 <?php foreach ( $item['images'] as $k => $i ) { ?>
-                <style>#YappsShowroom .vehicle-card-images a .vehicle-card-images-item-container-image.img-<?= $item['id'];?>-<?= $k;?>::after{background-image: url(<?= (($i['preview'])?:$i['preview_large']);?>)}</style>
                 <div 
                     class="vehicle-card-images-item-container" 
                     style="<?= (($k!=0)?'display:none;':'');?>" 
                     data-index="<?= $k;?>">
-                    <div class="vehicle-card-images-item-container-image img-<?= $item['id'];?>-<?= $k;?>" <?= (($k==0)?'itemprop="image"':'');?>></div>
+                    <img 
+                        src="<?= (($i['preview'])?:$i['preview_large']);?>"
+                        class="vehicle-card-images-item-container-image"
+                        alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+                        title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText . (($k > 0) ? ' - ракурс ' . ($k + 1) : '')));?>"
+                        loading="<?= ($k==0)?'eager':'lazy';?>"
+                        <?= (($k==0)?'itemprop="image"':'');?>
+                    >
                 </div>
                 <?php } ?>
             <?php } else { ?>
-                <img src="https://apps.yug-avto.ru/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.jpg" itemprop="image" />
+                <img src="https://<?= YApp::GO_API_DOMAIN ?>/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.webp" itemprop="image" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($carImgText));?>" />
             <?php } ?>
         </a>
         <div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">
@@ -77,13 +93,13 @@
         </div>
         <div class="vehicle-card-status text-uppercase my-3 fw-bold <?= (($item['status']['id']==1)?'c-yablue':'c-yayellow');?>"><?= $item['status']['name'];?></div>
         <div class="vehicle-card-price my-3 d-flex justify-content-between" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <?php /*
             <meta itemprop="price" content="<?= $item['min_price'];?>">
             <meta itemprop="priceCurrency" content="RUB">
-            <?php if ($item['status']['id']==1) { ?>
-            <link itemprop="availability" href="http://schema.org/InStock">
+            <?php if ($item['status']['id'] == 1) { ?>
+            <link itemprop="availability" href="https://schema.org/InStock">
+            <?php } else { ?>
+            <link itemprop="availability" href="https://schema.org/OutOfStock">
             <?php } ?>
-            */ ?>
             <span class="text-plus c-yalightblack fw-bold"><?= number_format($item['min_price'], 0, '.', ' ');?> ₽</span>
             <?php if ( $item['min_price'] < $item['price'] ) { ?>
             <span class="text-plus c-yadarkgray text-decoration-line-through"><?= number_format($item['price'], 0, '.', ' ');?> ₽</span>

@@ -4,8 +4,28 @@ $APPLICATION->SetTitle("Выкуп и оценка автомобиля");
 ?>
 <?php 
     use Bitrix\Main\Page\Asset;
+    use Bitrix\Main\Data\Cache;
     $Asset = Asset::getInstance();
-    $vehicles = json_decode(file_get_contents('https://apps.yug-avto.ru/API/get/cis/random/used/?token=34b5ac8b71018c0bc7e5c050ed90b243'), true);
+
+    $cache = Cache::createInstance();
+    $cacheTime = 300;
+    $cacheId = 'promo_buyout_sochi_vehicles';
+    $cacheDir = '/buyout_vehicles';
+    $vehicles = [];
+
+    if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
+        $vehicles = $cache->getVars();
+    } elseif ($cache->startDataCache()) {
+        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random/used/?token=34b5ac8b71018c0bc7e5c050ed90b243');
+        $data = !empty($raw) ? json_decode($raw, true) : null;
+        $vehicles = is_array($data) ? $data : [];
+
+        if (!empty($vehicles)) {
+            $cache->endDataCache($vehicles);
+        } else {
+            $cache->abortDataCache();
+        }
+    }
 
     $GLOBALS['TITLE'] = 'Выкуп авто';
     $GLOBALS['CITY'] = 'Сочи';

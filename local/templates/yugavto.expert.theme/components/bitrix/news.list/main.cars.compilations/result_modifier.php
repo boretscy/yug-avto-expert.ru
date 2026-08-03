@@ -3,7 +3,7 @@ $cities = ( json_decode($_COOKIE['SELECTED_CITY'], true) ) ?: [];
 foreach ( $cities as $c ) $res[] = YApp::getCityName($c);
 
 $arResult['VEHICLES'] = json_decode(
-    file_get_contents('https://apps.yug-avto.ru/API/get/cis/limit/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&limit=12'.((!empty($res))?'&city='.implode(',',$res):'')),
+    YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/limit/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&limit=12'.((!empty($res))?'&city='.implode(',',$res):'')),
     true
 );
 

@@ -39,7 +39,7 @@ if ( !empty($items) ) {
 	sort($items);
     setcookie(ENTITY, json_encode($items), time()+3600*24*14, '/');
 }
-$GLOBALS['META'] = $data['meta'] = json_decode( file_get_contents('https://apps.yug-avto.ru/API/get/cis/meta/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&site=yug-avto-expert.ru&entity=used&brand=compare'), true );
+$GLOBALS['META'] = $data['meta'] = json_decode( \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/meta/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&site=yug-avto-expert.ru&entity=used&brand=compare'), true );
 ?>
 <script type='application/ld+json'>
     {

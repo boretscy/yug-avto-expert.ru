@@ -551,4 +551,67 @@ $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SE
 	),
 	false
 );?>
+<?php
+$phoneRaw = $GLOBALS['itemHl']['UF_VALUE'] ?? '78612242222';
+$phoneFormatted = YApp::phoneOut($phoneRaw);
+$host = $_SERVER['HTTP_HOST'];
+?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://<?= $host ?>/#website",
+      "url": "https://<?= $host ?>/",
+      "name": "Юг-Авто Эксперт",
+      "alternateName": "Автомобили с пробегом Юг-Авто Эксперт",
+      "description": "Официальный дилер автомобилей с пробегом в Краснодаре, Новороссийске и Республике Адыгея",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://<?= $host ?>/cars/used/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "AutoDealer",
+      "@id": "https://<?= $host ?>/#autodealer",
+      "name": "Юг-Авто Эксперт",
+      "legalName": "ООО «Юг-Авто Эксперт»",
+      "url": "https://<?= $host ?>/",
+      "logo": "https://<?= $host ?>/local/templates/yugavto.expert.theme/assets/images/svg/logo.svg",
+      "image": "https://<?= $host ?>/local/templates/yugavto.expert.theme/assets/images/svg/logo.svg",
+      "telephone": "<?= $phoneFormatted ?>",
+      "priceRange": "₽₽₽",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ул. Уральская, 214",
+        "addressLocality": "Краснодар",
+        "addressRegion": "Краснодарский край",
+        "postalCode": "350080",
+        "addressCountry": "RU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "45.0355",
+        "longitude": "39.0538"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+          ],
+          "opens": "08:00",
+          "closes": "20:00"
+        }
+      ],
+      "sameAs": [
+        "https://vk.com/yugavto_expert",
+        "https://t.me/yugavto_expert"
+      ]
+    }
+  ]
+}
+</script>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

@@ -471,12 +471,26 @@
             }
             
         }
-        
+
+        private static function httpGet($url) {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
+            ]);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            return $resp;
+        }
 
         ////////////// RENDER //////////////
         public static function apiMainFilter($POST) {
 
-            $url = 'https://apps.yug-avto.ru/API/get/cis/filter/';
+            $url = 'https://'.YApp::API_DOMAIN.'/API/get/cis/filter/';
             // $url .= ( !empty($POST['brands']) ) ? 'models/' : 'brands/';
             $url .= (($POST['entity']) ?: 'new').'/';
             $url .= '?token=ef6541490c8bb9d481d37020b6a1953e';
@@ -504,7 +518,7 @@
             $url .= '&site='.$_SERVER['HTTP_HOST'];
             // $url .= '&site='.'yug-avto-expert.ru';
 
-            $res = json_decode( file_get_contents($url), true );
+            $res = json_decode( self::httpGet($url), true );
 
             return $res;
         }
@@ -608,14 +622,52 @@
             </div>
             <?php
         }
+
+        public static function transformImageUrl($url) {
+            $parts = parse_url($url);
+            if (!isset($parts['path'])) return $url;
+            $path = $parts['path'];
+            if (preg_match('#^/upload/Cis/vehicles/\d+/([^/]+)$#', $path, $m)
+                && !str_contains($path, '/sm/')) {
+                $path = dirname($path) . '/sm/' . $m[1];
+            }
+            if (preg_match('#^/upload/Cis/#', $path)) {
+                $host = YApp::API_DOMAIN;
+                $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+                $url = $scheme . '://' . $host . $path;
+                if (isset($parts['query'])) $url .= '?' . $parts['query'];
+            }
+            return $url;
+        }
+
         public static function apiRenderMainCompilations($POST) {
 
-            $url = 'https://apps.yug-avto.ru/API/get/cis/random_new/'.(($POST['entity'])?:'new').'/?token=34b5ac8b71018c0bc7e5c050ed90b243&limit=12';
+            $type = ($POST['entity'] == 'used') ? '2' : '1';
+            $url = 'https://'.YApp::GO_API_DOMAIN.'/api/v1/cis/random?token=ef6541490c8bb9d481d37020b6a1953e&type='.$type.'&limit=12';
             if ( $POST['query'] ) $url .= '&'.$POST['query'];
             if ( $POST['price'] ) $url .= '&price='.$POST['price'];
             if ( $POST['city'] ) $url .= '&city='.implode(',',$POST['city']);
-            // YApp::sp($url);
-            $res = json_decode( file_get_contents($url), true);
+            
+            $res = json_decode( self::httpGet($url), true);
+            if (is_array($res['items'] ?? null)) {
+                foreach ($res['items'] as &$item) {
+                    if (!empty($item['image'])) {
+                        $item['image'] = self::transformImageUrl($item['image']);
+                    }
+                    if (!empty($item['images'])) {
+                        foreach ($item['images'] as &$img) {
+                            if (!empty($img['preview'])) {
+                                $img['preview'] = self::transformImageUrl($img['preview']);
+                            }
+                            if (!empty($img['preview_large'])) {
+                                $img['preview_large'] = self::transformImageUrl($img['preview_large']);
+                            }
+                        }
+                        unset($img);
+                    }
+                }
+                unset($item);
+            }
             ?>
             <?php if ( $res['totalCount'] ) { ?>
             <div 
@@ -626,104 +678,14 @@
                 data-link="<?= $POST['link'];?>"
                 ></div>
             <?php foreach ( $res['items'] as $item ) { ?>
-            <?php
-                $data['FAVORITES'] = ( json_decode($_COOKIE['CIS_FAVORITES'], true) ) ?: [];
-                $data['COMPARE'] = ( json_decode($_COOKIE['CIS_COMPARE'], true) ) ?: [];
-            ?>
-			<?php $item['_general'] = $item['general']; ?>
-            <?php $item['id'] = $item['ext_id']; ?>
-            <?php $item['offer_link'] = true; ?>
 			<div class="swiper-slide">
-				<div class="b-radius-yaradius-25 b-yagray vehicle-card mb-4 text-start w-100">
-					<div class="vehicle-card-images position-relative">
-						<a href="/cars/<?= (($POST['entity'])?:'new');?>/<?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" role="vehicle-image">
-							<?php if ( !empty($item['images']) ) { ?>
-								<?php foreach ( $item['images'] as $k => $i ) { ?>
-									<style>.vehicle-card-images a .vehicle-card-images-item-container-image.img-<?= $item['id'];?>-<?= $k;?>::after{background-image: url(<?= (($i['preview'])?:$i['preview_large']);?>)}</style>
-									<div 
-										class="vehicle-card-images-item-container" 
-										style="<?= (($k!=0)?'display:none;':'');?>" 
-										data-index="<?= $k;?>">
-										<div class="vehicle-card-images-item-container-image img-<?= $item['id'];?>-<?= $k;?>" ></div>
-									</div>
-								<?php } ?>
-							<?php } else { ?>
-								<img src="https://apps.yug-avto.ru/upload/Cis/bodies/<?= $item['body']['code'];?>_sm.jpg" class="w-100" />
-							<?php } ?>
-						</a>
-						<div class="m-3 vehicle-card-discount-row position-absolute d-flex justify-content-between">
-							<div>
-								<?php if ( $item['min_price'] < $item['price'] ) { ?>
-								<span class="b-radius-yaradius-10 bg-yawhite c-yadarkgray vehicle-card-discount-item">до <strong><?= number_format($item['price']-$item['min_price'], 0, '.', ' ');?></strong> ₽</span>
-								<?php } ?>
-							</div>
-							<div class="text-end">
-                                <a 
-                                    href="#" 
-                                    role="toggle-fav-com" 
-                                    data-target="CIS_FAVORITES" 
-                                    data-vehicle="<?= $item['id'];?>"
-                                    aria-label="Избранное"
-                                    class="ms-1 b-radius-yaradius-7 hint--bottom-left <?= ((in_array($item['id'], $data['FAVORITES']))?'bg-yayellow':'bg-yawhite');?> vehicle-card-discount-item"
-                                    ><img src="<?= '/cars/used/assets/images/svg/favorites.svg';?>" /></a>
-                                <a 
-                                    href="#" 
-                                    role="toggle-fav-com" 
-                                    data-target="CIS_COMPARE" 
-                                    data-vehicle="<?= $item['id'];?>"
-                                    aria-label="Сравнение"
-                                    class="ms-1 b-radius-yaradius-7 hint--bottom-left <?= ((in_array($item['id'], $data['COMPARE']))?'bg-yayellow':'bg-yawhite');?>  vehicle-card-discount-item"
-                                    ><img src="<?= '/cars/used/assets/images/svg/compare.svg';?>" /></a>
-                            </div>
-						</div>
-						<div class="m-3 vehicle-card-images-row position-absolute d-flex justify-content-between">
-							<?php foreach ( $item['images'] as $k => $i ) { ?>
-							<span class="vehicle-card-images-row-item <?= (($k==0)?'active':'');?>" data-index="<?=$k;?>"></span>
-							<?php } ?>
-						</div>
-					</div>
-					<div class="vehicle-card-content p-3">
-						<a 
-							href="/cars/<?= (($POST['entity'])?:'new');?>/<?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/" 
-							class="c-yablack c-h-yablack text-decoration-none h5 line-height-one d-block vehicle-card-content-title fw-bold"
-							><?= $item['brand']['name'];?> <?= $item['model']['name'];?> <?= (($item['equipment'])?:'');?></a>
-                        <div class="vehicle-card-futures">
-                            <?php foreach ( $item['_tags'] as $tag ) { ?>
-                                <a href="#" onclick="return false" class="hint--top-right" aria-label="<?= $tag['name'];?>" role="not-cover"><img src="<?= $tag['icon'];?>" /></a>
-                            <?php } ?>
-                        </div>
-						<div class="vehicle-card-specification my-3 c-yadarkgray text-minus-minus">
-							<?php foreach (array_chunk($item['_general'], 3) as $s_row) { ?>
-							<div>
-								<?php foreach ( $s_row as $i ) { ?>
-									<?php if ( $i ) { ?><span class="vehicle-card-specification-item pe-2 me-2"><?= $i;?></span><?php } ?>
-								<?php } ?>
-							</div>
-							<?php } ?>
-						</div>
-						<div class="vehicle-card-status text-uppercase my-3 c-yadarkgray text-minus-minus"><?= $item['status']['name'];?></div>
-						<div class="vehicle-card-price my-3 d-flex justify-content-between">
-							<span class="text-plus c-yablack fw-bold"><?= number_format($item['min_price'], 0, '.', ' ');?> ₽</span>
-							<?php if ( $item['min_price'] < $item['price'] ) { ?>
-							<span class="text-plus c-yadarkgray text-decoration-line-through"><?= number_format($item['price'], 0, '.', ' ');?> ₽</span>
-							<?php } ?>
-						</div>
-						<div class="">
-							<a
-								href="/cars/<?= (($POST['entity'])?:'new');?>/<?= $item['brand']['code'];?>/<?= $item['model']['code'];?>/<?= $item['id'];?>/"
-								class="c-yablack c-h-yablack text-decoration-none d-block text-center b-radius-yaradius-15 bg-yayellow bg-h-yadarkyellow vehicle-card-button"
-								data-vehicle-name="<?= $item['brand']['name'];?> <?= $item['model']['name'];?> <?= (($item['equipment'])?:'');?>"
-								data-vehicle-id="<?= $item['id'];?>"
-								data-action="set-vehicle"
-								<?php if ( !$item['offer_link'] ) { ?>
-								data-remodal-target="offer-modal"
-								<?php } ?>
-								>Получить предложение</a>
-						</div>
-					</div>
-				</div>
-            </div>
-			<?php } // foreach new ?>
+				<?php
+				$vehicleMode = $POST['entity'] ?: 'new';
+				$templatePath = '/local/templates/yugavto.expert.theme';
+				include $_SERVER['DOCUMENT_ROOT'].$templatePath.'/include/item_vehicle.php';
+				?>
+			</div>
+			<?php } ?>
             <?php } else { ?>
             <div 
                 class="d-none compilations-on-main-data" 
