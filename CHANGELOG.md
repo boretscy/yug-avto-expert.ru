@@ -1,5 +1,9 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-08-03]
+### Deployed
+- Успешный перенос пакета СЕО-доработок, микроразметки Schema.org/JSON-LD, 301-редиректов, заголовков Last-Modified и оптимизаций производительности на PROD-сервер (yug-avto-expert.ru).
+
 ## [2026-07-31]
 ### Added
 - Оптимизация PageSpeed:
