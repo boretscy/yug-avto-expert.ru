@@ -1,5 +1,13 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-08-07]
+### Fixed
+- Удален неиспользуемый фильтр `dealership=1489` из компонента `main.cards.cars` (`result_modifier.php` и `script.js`).
+- Убрана жесткая канонизация на корень в `services/buyout/index.php`. Теперь подстраницы выкупа (`/services/buyout/citroen/` и т.д.) имеют правильный self-canonical.
+
+### Added
+- Внедрена дефолтная авто-генерация тега `<link rel="canonical" href="...">` на самого себя (self-canonical) в `header.php` для всех статических страниц сайта с отсечением GET-параметров.
+
 ## [2026-08-04]
 ### Fixed
 - Исправлена генерация URL в методе `makeFilterUrl` (`YApp.Showroom.class.php`):

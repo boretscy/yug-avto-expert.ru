@@ -31,7 +31,6 @@
     $title = 'Выкуп авто - срочный выкуп автомобилей в Краснодаре быстро и дорого | Юг-Авто Эксперт';
     $description = 'Срочный выкуп авто в Краснодаре от официального дилера Юг-Авто Эксперт за час. Быстрая оценка машины, справедливая цена, оформление договора, снятие с учета. 25 лет опыта на рынке авто. Получите оценку своего автомобиля в два клика.';
     $route = explode('/', parse_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'])['path']);
-    $APPLICATION->SetPageProperty("canonical", "https://".$_SERVER['HTTP_HOST']."/services/buyout/");
 
     $titles = [
         'foreign' => [

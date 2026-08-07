@@ -9,12 +9,10 @@ let count = new Intl.NumberFormat('ru', { currency: 'RUR' }), SELECTED_CITY_TOP 
 
 getCISCounts = function() {
     
-    $.get("https://apps.yug-avto.ru/API/get/cis/count/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&!dealership=1489&city="+CONNECTOR.SELECTED_CITY.toString(), function(data){
+    $.get("https://apps.yug-avto.ru/API/get/cis/count/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&city="+CONNECTOR.SELECTED_CITY.toString(), function(data){
         $('[role="carcount"][data-section="PASS"]').text(count.format(Number(data)));
+        $('[role="carcount"][data-section="COMM"]').text(count.format(Number(data)));
     });
-    // $.get("https://apps.yug-avto.ru/API/get/cis/count/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&dealership=1489&city="+CONNECTOR.SELECTED_CITY.toString(), function(data){
-    //     $('[role="carcount"][data-section="COMM"]').text(count.format(data));
-    // });
 
     let url = '/api/main_cards_links/';
     let data = {};

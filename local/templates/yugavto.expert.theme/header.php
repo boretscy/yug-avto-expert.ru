@@ -17,9 +17,16 @@
 
         <!-- Bitrix Head -->
         <?php $APPLICATION->ShowHead();?>
-        <?php /* if ( CSite::InDir('/cars/used/') ) { ?>
-        <link rel="canonical" href="<?=$APPLICATION->GetProperty("canonical")?>"/>
-        <?php } */ ?>
+        <?php 
+            $canonicalUrl = $APPLICATION->GetProperty('canonical');
+            if (empty($canonicalUrl)) {
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'] ?? 'etest.yug-avto.ru';
+                $requestUri = explode('?', $_SERVER['REQUEST_URI'])[0];
+                $canonicalUrl = $protocol . '://' . $host . $requestUri;
+            }
+        ?>
+        <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl);?>"/>
         <!-- // Bitrix Head -->
 
         <title><?php $APPLICATION->ShowTitle();?></title>
