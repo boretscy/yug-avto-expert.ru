@@ -28,11 +28,11 @@ $this->setFrameMode(true);
 					<?php foreach ( $arResult['ITEMS'] as $k => $arItem ) { ?>
 					<div class="col-md-4 mb-3 mb-xl-0">
                         <div class="b-radius-yaradius-25 p-3 bg-yawhite h-100">
-                            <div class=" d-flex d-mb-block align-items-center justify-content-start d-md-none">
-                                <span class="bullet-number c-yablack b-radius-small bg-yayellow d-flex align-items-center justify-content-center me-2"><?= $k+1;?></span>
-                                <div class="h5 text-uppercase  my-0 my-mb-4"><?= $arItem['NAME'];?></div>
+                            <div class="d-flex align-items-center justify-content-start d-md-none">
+                                <span class="bullet-number c-yablack b-radius-small bg-yayellow d-inline-flex align-items-center justify-content-center me-2"><?= $k+1;?></span>
+                                <div class="h5 text-uppercase my-0 my-mb-4"><?= $arItem['NAME'];?></div>
                             </div>
-                            <span class="bullet-number c-yablack b-radius-small bg-yayellow align-items-center justify-content-center me-2 d-none d-md-flex"><?= $k+1;?></span>
+                            <span class="bullet-number c-yablack b-radius-small bg-yayellow align-items-center justify-content-center me-2 d-none d-md-inline-flex"><?= $k+1;?></span>
                             <div class="h5 text-uppercase  my-3 my-mb-4 d-none d-md-block"><?= $arItem['NAME'];?></div>
                             <p class="text-minus-minus line-height-one c-yadarkgray mt-3 mb-0 mb-md-3"><?= $arItem['PREVIEW_TEXT'];?></p>
                         </div>
