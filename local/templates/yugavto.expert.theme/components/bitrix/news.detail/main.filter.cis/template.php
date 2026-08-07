@@ -21,11 +21,11 @@ $this->setFrameMode(true);
                         <div class="col-md-6 h4 fw-normal c-yawhite">Найти автомобиль</div>
                         <div class="col-md-6 text-md-end">
                             <ul class="list-inline text-minus-minus pt-0 pt-md-2 mb-0">
-                                <li class="list-inline-item ms-md-3 me-3 me-md-0 py-3 <?php // = (($arResult['FILTER']['counts']['pass'])?'':'disabled');?>" data-param="!dealership=1489" role="toggle" data-section="pass">
+                                <li class="list-inline-item ms-md-3 me-3 me-md-0 py-3 <?php // = (($arResult['FILTER']['counts']['pass'])?'':'disabled');?>" data-param="" role="toggle" data-section="pass">
                                     <a href="#" class="text-uppercase text-decoration-none fw-bold py-2 c-yawhite c-h-yawhite">Легковые</a>
                                 </li>
                                 <?php /*
-                                <li class="list-inline-item ms-md-3 me-3 me-md-0 py-3 <?= (($arResult['FILTER']['counts']['comm'])?'':'disabled');?>" data-param="dealership=1489" role="toggle" data-section="comm">
+                                <li class="list-inline-item ms-md-3 me-3 me-md-0 py-3 <?= (($arResult['FILTER']['counts']['comm'])?'':'disabled');?>" data-param="" role="toggle" data-section="comm">
                                     <a href="#" class="text-uppercase text-decoration-none fw-bold py-2 <?= (($arResult['FILTER']['counts']['comm'])?'c-yalightblack c-h-yalightblack':'c-yagray c-h-yagray');?>">Коммерческие</a>
                                 </li>
                                 */ ?>
@@ -137,7 +137,7 @@ $this->setFrameMode(true);
                         </div>
                         <div class="col-md-6 col-xl-3" role="link">
                             <a 
-                                href="/cars/used/?!dealership=1489" 
+                                href="/cars/used/" 
                                 class="d-block text-center c-yalightblack c-h-yalightblack bg-h-yayellow bg-yadarkyellow text-decoration-none b-radius-yaradius-15 but-lg fw-bold" 
                                 style="padding: 12px;">
                                 Показать <?= $arResult['FILTER']['totalCount'];?> авто</a>

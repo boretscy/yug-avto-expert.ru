@@ -702,8 +702,8 @@
         public static function apiMainCardsLinks($POST) {
             
             $res = [
-                'pass' => '/cars/used/'.((count($POST['city'])==1)?YApp::getCityAlias($POST['city'][0]).'/':'').'?!dealership=1489',
-                'comm' => '/cars/used/'.((count($POST['city'])==1)?YApp::getCityAlias($POST['city'][0]).'/':'').'?dealership=1489'
+                'pass' => '/cars/used/'.((count($POST['city'])==1)?YApp::getCityAlias($POST['city'][0]).'/':''),
+                'comm' => '/cars/used/'.((count($POST['city'])==1)?YApp::getCityAlias($POST['city'][0]).'/':'')
             ];
             return $res;
         }

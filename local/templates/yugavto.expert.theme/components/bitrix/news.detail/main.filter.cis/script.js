@@ -288,7 +288,7 @@ setInterval(() => {
         update.price = true;
         update.models = true;
         update.brands = true;
-        update.param = '!dealership=1489';
+        update.param = '';
         update.data = true;
         CONNECTOR.MAIN_FILTER.price = [];
         CONNECTOR.MAIN_FILTER.getData(update);
