@@ -16,9 +16,13 @@ $APPLICATION->SetTitle("Выкуп и оценка автомобиля");
     if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
         $vehicles = $cache->getVars();
     } elseif ($cache->startDataCache()) {
-        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random/used/?token=34b5ac8b71018c0bc7e5c050ed90b243');
+        $goApiBase = defined("YApp::GO_API_DOMAIN")
+            ? "https://" . YApp::GO_API_DOMAIN . "/api/v1/cis"
+            : "https://apps.yug-avto.ru/api/v1/cis";
+        $token = "ef6541490c8bb9d481d37020b6a1953e";
+        $raw = \YApp::httpGet($goApiBase . '/random?token=' . $token . '&type=used&limit=12');
         $data = !empty($raw) ? json_decode($raw, true) : null;
-        $vehicles = is_array($data) ? $data : [];
+        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
 
         if (!empty($vehicles)) {
             $cache->endDataCache($vehicles);
@@ -576,39 +580,12 @@ $APPLICATION->SetTitle("Выкуп и оценка автомобиля");
                 <div class="swiper-wrapper" role="cis-new-swiper">
                     <?php foreach ( $vehicles as $item ) { ?>
                     <div class="swiper-slide">
-                        <div class="available__grid-item">
-                            <div class="grid-item__head">
-                                <a class="grid-item__head-img"><img src="<?= $item['image'];?>" alt="<?= $item['name'];?>"></a>
-                            </div>
-                            <div  class="head_items-box">
-                                <div class="head_items">
-                                    <a class="grid-item__title"><?= $item['name'];?></a>
-                                </div>
-                                <div class="model__grid-card__content--list_box">
-                                    <div class="model__grid-card__content--list">
-                                        <?php foreach ( array_chunk($item['general'], 3)[0] as $g ) { ?>
-                                            <?php if ($g) { ?>
-                                                <span  class="model__grid-card__content--list-item"><?= $g?></span>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </div>
-                                    <div class="model__grid-card__content--list">
-                                        <?php foreach ( array_chunk($item['general'], 3)[1] as $g ) { ?>
-                                            <?php if ($g) { ?>
-                                                <span  class="model__grid-card__content--list-item"><?= $g?></span>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                                <div  class="model__grid-card__footer">
-                                    <div  class="model__grid-card__content--price">
-                                        <div  class="model__grid-card__content--price_curent"><?= YApp::formatNumber($item['price']);?> <span  class="rub">₽</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php 
+                        $vehicle = $item; 
+                        include $_SERVER['DOCUMENT_ROOT'] . '/local/templates/yugavto.expert.theme/include/item_vehicle.php'; 
+                        ?>
                     </div>
-                    <?php } // foreach USED ?>
+                    <?php } ?>
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
