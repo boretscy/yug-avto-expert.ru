@@ -15,7 +15,7 @@ if ( !$arResult['SEO_TEXT'] && $GLOBALS['META']['meta']['seo_text'] ) $arResult[
 
 $arResult['BRANDS'] = YApp::getCache('footer', 'brands', 3600);
 if ( !$arResult['BRANDS'] ) {
-    $brands = json_decode( YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/footerbrands/used/?token=34b5ac8b71018c0bc7e5c050ed90b243'), true );
+    $brands = json_decode( YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/footerbrands/used/?token=ef6541490c8bb9d481d37020b6a1953e'), true );
     array_multisort(array_column($brands, 'vehicles'), SORT_DESC, SORT_NUMERIC, $brands);
     $arResult['BRANDS'] = array_chunk($brands, 16)[0];
     YApp::setCache('footer', 'brands', $arResult['BRANDS']);

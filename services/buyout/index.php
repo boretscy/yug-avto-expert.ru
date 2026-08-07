@@ -6,14 +6,14 @@
 
     $cache = Cache::createInstance();
     $cacheTime = 300;
-    $cacheId = 'buyout_random_vehicles_v2';
+    $cacheId = 'buyout_random_vehicles_v3';
     $cacheDir = '/buyout_vehicles';
     $vehicles = [];
 
     if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
         $vehicles = $cache->getVars();
     } elseif ($cache->startDataCache()) {
-        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=34b5ac8b71018c0bc7e5c050ed90b243');
+        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=ef6541490c8bb9d481d37020b6a1953e&limit=12');
         $data = !empty($raw) ? json_decode($raw, true) : null;
         $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
 
