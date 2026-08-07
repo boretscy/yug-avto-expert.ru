@@ -7,7 +7,7 @@
     $cache = Cache::createInstance();
     $cacheTime = 300;
     $cacheId = 'buyout_random_vehicles_v3';
-    $cacheDir = '/buyout_vehicles';
+    $cacheDir = '/buyout_vehicles_v3';
     $vehicles = [];
 
     if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
@@ -15,7 +15,7 @@
     } elseif ($cache->startDataCache()) {
         $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=ef6541490c8bb9d481d37020b6a1953e&limit=12');
         $data = !empty($raw) ? json_decode($raw, true) : null;
-        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
+        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? array_slice($data['items'], 0, 12) : [];
 
         if (!empty($vehicles)) {
             $cache->endDataCache($vehicles);
@@ -832,7 +832,7 @@
             
             <div class="swiper-cis-new pb-5">
                 <div class="swiper-wrapper" role="cis-new-swiper">
-                <?php foreach ( $vehicles as $item ) { ?>
+                <?php foreach ( array_slice($vehicles, 0, 12) as $item ) { ?>
                     <?php
                         $data['FAVORITES'] = ( json_decode($_COOKIE['CIS_FAVORITES'], true) ) ?: [];
                         $data['COMPARE'] = ( json_decode($_COOKIE['CIS_COMPARE'], true) ) ?: [];
