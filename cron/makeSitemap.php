@@ -25,29 +25,36 @@ function generateLlmsTxt($dd, $domain, $brands)
     $lines[] = "### Все автомобили с пробегом";
     $lines[] = "[- [Все автомобили с пробегом](https://{$domain}/cars/used/) (Полный каталог проверенных б/у авто в наличии с гарантией и ценами.";
     $lines[] = "";
+    $lines[] = "### Категории автомобилей с пробегом (Трейд-ин / Б/у)";
 
     if (!empty($brands) && is_array($brands)) {
-        usort($brands, fn($a, $b) => strcmp($a['name'] ?? '', $b['name'] ?? ''));
+        uasort($brands, fn($a, $b) => strcmp(mb_strtolower($a['name'] ?? ''), mb_strtolower($b['name'] ?? '')));
 
         foreach ($brands as $b) {
             $bCode = $b['code'] ?? '';
             $bName = trim($b['name'] ?? '');
-            if (!$bCode || !$bName) continue;
+            if ($bCode && $bName) {
+                $lines[] = "[- [{$bName} с пробегом](https://{$domain}/cars/used/{$bCode}/) (Раздел автомобилей с пробегом марки {$bName}.";
+            }
+        }
 
-            $lines[] = "### Автомобили {$bName} с пробегом";
-            $lines[] = "[- [Каталог {$bName} с пробегом](https://{$domain}/cars/used/{$bCode}/) (Продажа и выкуп автомобилей {$bName}.";
+        $lines[] = "";
+        $lines[] = "### Модели автомобилей с пробегом в наличии";
 
+        foreach ($brands as $b) {
+            $bCode = $b['code'] ?? '';
+            $bName = trim($b['name'] ?? '');
             if (!empty($b['models']) && is_array($b['models'])) {
-                $models = array_values($b['models']);
-                usort($models, fn($a, $b) => strcmp($a['name'] ?? '', $b['name'] ?? ''));
+                $models = $b['models'];
+                uasort($models, fn($a, $b) => strcmp(mb_strtolower($a['name'] ?? ''), mb_strtolower($b['name'] ?? '')));
 
                 foreach ($models as $m) {
                     $mCode = $m['code'] ?? '';
                     $mName = trim($m['name'] ?? '');
-                    if (!$mCode || !$mName) continue;
-
-                    $title = "{$bName} {$mName}";
-                    $lines[] = "[- [Купить {$title} с пробегом](https://{$domain}/cars/used/{$bCode}/{$mCode}/) (Объявления о продаже автомобилей с пробегом модели {$title}.";
+                    if ($bCode && $mCode && $mName) {
+                        $title = trim("{$bName} {$mName}");
+                        $lines[] = "[- [Купить {$title} с пробегом](https://{$domain}/cars/used/{$bCode}/{$mCode}/) (Объявления о продаже автомобилей с пробегом модели {$title}.";
+                    }
                 }
             }
         }
