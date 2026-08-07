@@ -14,7 +14,7 @@ $goApiBase = defined("YApp::GO_API_DOMAIN")
 $token = "ef6541490c8bb9d481d37020b6a1953e";
 
 $url = $goApiBase . '/vehicles?token=' . $token . '&type=used&limit=10000';
-$raw = @file_get_contents($url);
+$raw = \YApp::httpGet($url);
 $data = !empty($raw) ? json_decode($raw, true) : null;
 $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
 $google = []; $log = [];
