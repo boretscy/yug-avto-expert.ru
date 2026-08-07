@@ -44,8 +44,14 @@
     $arResult['MAP']['rostov-na-donu']['CENTER'] = [47.226526, 39.682653];
     $arResult['MAP']['rostov-na-donu']['ZOOM'] = 13;
 
-    unset( $arResult['MAP']['stavropol'],$arResult['MAP']['all']['ITEMS'][9] );
-    sort( $arResult['MAP']['all']['ITEMS'] );
+    $arResult['MAP']['all']['ITEMS'] = $arResult['MAP']['all']['ITEMS'] ?? [];
+    if (isset($arResult['MAP']['all']['ITEMS'][9])) {
+        unset($arResult['MAP']['all']['ITEMS'][9]);
+    }
+    if (!empty($arResult['MAP']['all']['ITEMS']) && is_array($arResult['MAP']['all']['ITEMS'])) {
+        sort($arResult['MAP']['all']['ITEMS']);
+    }
+    unset($arResult['MAP']['stavropol']);
 
     unset( $arResult['CITIES']['stavropol'] );
 

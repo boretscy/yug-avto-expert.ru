@@ -12,7 +12,7 @@
             ],
             'BALLOON' => [
                 'TITLE' => $arItem['NAME'],
-                'CONTENT' => '<p>Адрес: '.$arItem['PROPERTIES']['ADDRESS']['VALUE'].'</p><ul><li>'.implode('</li><li>', $arItem['PROPERTIES']['SERVICES']['VALUE']).'</li></ul>',
+                'CONTENT' => '<p>Адрес: '.$arItem['PROPERTIES']['ADDRESS']['VALUE'].'</p><ul><li>'.(is_array($arItem['PROPERTIES']['SERVICES']['VALUE'])?implode('</li><li>', $arItem['PROPERTIES']['SERVICES']['VALUE']):($arItem['PROPERTIES']['SERVICES']['VALUE'] ?? '')).'</li></ul>',
                 'FOOTER' => '<a href="https://yandex.ru/maps/?pt='.(float)$arItem['PROPERTIES']['COORDS_LON']['VALUE'].','.(float)$arItem['PROPERTIES']['COORDS_LAT']['VALUE'].'&z=15&l=map" target="_blank" alt="'.$arItem['NAME'].'">Построить маршрут</a>'
             ]
         ];
@@ -24,7 +24,7 @@
             ],
             'BALLOON' => [
                 'TITLE' => $arItem['NAME'],
-                'CONTENT' => '<p>Адрес: '.$arItem['PROPERTIES']['ADDRESS']['VALUE'].'</p><ul><li>'.implode('</li><li>', $arItem['PROPERTIES']['SERVICES']['VALUE']).'</li></ul>',
+                'CONTENT' => '<p>Адрес: '.$arItem['PROPERTIES']['ADDRESS']['VALUE'].'</p><ul><li>'.(is_array($arItem['PROPERTIES']['SERVICES']['VALUE'])?implode('</li><li>', $arItem['PROPERTIES']['SERVICES']['VALUE']):($arItem['PROPERTIES']['SERVICES']['VALUE'] ?? '')).'</li></ul>',
                 'FOOTER' => '<a href="https://yandex.ru/maps/?pt='.(float)$arItem['PROPERTIES']['COORDS_LON']['VALUE'].','.(float)$arItem['PROPERTIES']['COORDS_LAT']['VALUE'].'&z=15&l=map" target="_blank" alt="'.$arItem['NAME'].'">Построить маршрут</a>'
             ]
         ];
@@ -47,8 +47,13 @@
     // YApp::sp($arResult['MAP']);
     // YApp::sp($arResult['ITEMS']);
 
-    unset( $arResult['MAP']['stavropol'],$arResult['MAP']['all']['ITEMS'][8],$arResult['MAP']['all']['ITEMS'][9] );
-    sort( $arResult['MAP']['all']['ITEMS'] );
+    $arResult['MAP']['all']['ITEMS'] = $arResult['MAP']['all']['ITEMS'] ?? [];
+    if (isset($arResult['MAP']['all']['ITEMS'][8])) unset($arResult['MAP']['all']['ITEMS'][8]);
+    if (isset($arResult['MAP']['all']['ITEMS'][9])) unset($arResult['MAP']['all']['ITEMS'][9]);
+    if (!empty($arResult['MAP']['all']['ITEMS']) && is_array($arResult['MAP']['all']['ITEMS'])) {
+        sort($arResult['MAP']['all']['ITEMS']);
+    }
+    unset($arResult['MAP']['stavropol']);
 
     unset( $arResult['CITIES']['stavropol'] );
 
