@@ -6,16 +6,30 @@
 
     $cache = Cache::createInstance();
     $cacheTime = 300;
-    $cacheId = 'buyout_random_vehicles_v3';
-    $cacheDir = '/buyout_vehicles_v3';
+    $cacheId = 'buyout_random_vehicles_v4';
+    $cacheDir = '/buyout_vehicles_v4';
     $vehicles = [];
 
     if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
         $vehicles = $cache->getVars();
     } elseif ($cache->startDataCache()) {
-        $raw = \YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/random_new/used/?token=ef6541490c8bb9d481d37020b6a1953e&limit=12');
+        $goApiBase = defined("YApp::GO_API_DOMAIN")
+            ? "https://" . YApp::GO_API_DOMAIN . "/api/v1/cis"
+            : "https://apps.yug-avto.ru/api/v1/cis";
+        $token = "ef6541490c8bb9d481d37020b6a1953e";
+
+        $raw = \YApp::httpGet($goApiBase . '/random?token=' . $token . '&type=used&limit=12');
         $data = !empty($raw) ? json_decode($raw, true) : null;
-        $vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? array_slice($data['items'], 0, 12) : [];
+        $items = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? array_slice($data['items'], 0, 12) : [];
+
+        foreach ($items as &$v) {
+            if (!is_array($v)) continue;
+            $v['equipment'] = $v['equipment'] ?? '';
+            $v['_general'] = $v['_general'] ?? $v['general'] ?? '';
+            $v['_tags'] = $v['_tags'] ?? $v['tags'] ?? [];
+        }
+        unset($v);
+        $vehicles = $items;
 
         if (!empty($vehicles)) {
             $cache->endDataCache($vehicles);

@@ -1,6 +1,9 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
 ## [2026-08-07]
+### Changed
+- Переведён вызов списка выкупленных автомобилей в `services/buyout/index.php` со старого эндпоинта PHP-монолита на современный высокопроизводительный эндпоинт Go API (v1) `/api/v1/cis/random` с лимитом `limit=12`.
+
 ### Fixed
 - Удален неиспользуемый фильтр `dealership=1489` из компонента `main.cards.cars` (`result_modifier.php` и `script.js`).
 - Убрана жесткая канонизация на корень в `services/buyout/index.php`. Теперь подстраницы выкупа (`/services/buyout/citroen/` и т.д.) имеют правильный self-canonical.
