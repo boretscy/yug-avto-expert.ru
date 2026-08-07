@@ -8,9 +8,15 @@ if (file_exists($dd.'/local/php_interface/YApp/YApp.php')) {
     require_once $dd.'/local/php_interface/YApp/YApp.php';
 }
 
-$apiDomain = class_exists('YApp') ? YApp::GO_API_DOMAIN : 'apps.yug-avto.ru';
-$url = 'https://' . $apiDomain . '/API/get/cis/vehicles/used?token=ef6541490c8bb9d481d37020b6a1953e&perpage=10000';
-$vehicles = json_decode( file_get_contents($url), true)['items'];
+$goApiBase = defined("YApp::GO_API_DOMAIN")
+    ? "https://" . YApp::GO_API_DOMAIN . "/api/v1/cis"
+    : "https://apps.yug-avto.ru/api/v1/cis";
+$token = "ef6541490c8bb9d481d37020b6a1953e";
+
+$url = $goApiBase . '/vehicles?token=' . $token . '&type=used&limit=10000';
+$raw = @file_get_contents($url);
+$data = !empty($raw) ? json_decode($raw, true) : null;
+$vehicles = (is_array($data) && isset($data['items']) && is_array($data['items'])) ? $data['items'] : [];
 $google = []; $log = [];
 
 function generateLlmsTxt($dd, $domain, $brands)
