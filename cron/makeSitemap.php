@@ -9,7 +9,7 @@ if (file_exists($dd.'/local/php_interface/YApp/YApp.php')) {
 }
 
 $apiDomain = class_exists('YApp') ? YApp::GO_API_DOMAIN : 'apps.yug-avto.ru';
-$url = 'https://' . $apiDomain . '/API/get/cis/vehicles/used?token=ef6541490c8bb9d481d37020b6a1953e';
+$url = 'https://' . $apiDomain . '/API/get/cis/vehicles/used?token=ef6541490c8bb9d481d37020b6a1953e&perpage=10000';
 $vehicles = json_decode( file_get_contents($url), true)['items'];
 $google = []; $log = [];
 
