@@ -8,7 +8,20 @@ $rs = CIBlockElement::GetList(
     false, false,
     ['CODE']
 );
-while ( $ob = $rs->GetNextElement() ) $arForms[] = CForm::GetBySID($ob->GetFields()['CODE'])->Fetch()['ID'];
+$arForms = [];
+while ( $ob = $rs->GetNextElement() ) {
+    $formRes = CForm::GetBySID($ob->GetFields()['CODE'])->Fetch();
+    if ( !empty($formRes['ID']) ) {
+        $arForms[] = (int)$formRes['ID'];
+    }
+}
+
+if (!\Bitrix\Main\Context::getCurrent()->getCulture()) {
+    $culture = \Bitrix\Main\Localization\CultureTable::getById(1)->fetchObject();
+    if ($culture) {
+        \Bitrix\Main\Context::getCurrent()->setCulture(new \Bitrix\Main\Context\Culture($culture));
+    }
+}
 ?>
 <div class="forms-modal-cover w-100 h-100 position-fixed top-0"></div>
 <?php foreach ( $arForms as $item ) {
