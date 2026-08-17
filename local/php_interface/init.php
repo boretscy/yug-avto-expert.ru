@@ -5,6 +5,23 @@
 		define('ENABLE_FRONTEND_OPTIMIZATION', true);
 	}
 
+	// Инициализация объекта сайта и Culture в контексте D7 при AJAX / неполных точках входа
+	if (defined('SITE_ID')) {
+		$context = \Bitrix\Main\Context::getCurrent();
+		if (!$context->getSite()) {
+			$site = \Bitrix\Main\SiteTable::getById(SITE_ID)->fetchObject();
+			if ($site) {
+				$context->setSite($site);
+			}
+		}
+		if (!$context->getCulture()) {
+			$culture = \Bitrix\Main\Localization\CultureTable::getById(1)->fetchObject();
+			if ($culture) {
+				$context->setCulture(new \Bitrix\Main\Context\Culture($culture));
+			}
+		}
+	}
+
 	// 301-редирект index.php, index.html, index.htm на главную (Пункт 1 ТЗ)
 	$requestUri = $_SERVER['REQUEST_URI'] ?? '';
 	$cleanPath = parse_url($requestUri, PHP_URL_PATH);

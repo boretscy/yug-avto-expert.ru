@@ -6,6 +6,19 @@
 		// Help  ///////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////
 		
+		public static function httpGet( $url, $timeout = 5 ) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+			$response = curl_exec($ch);
+			curl_close($ch);
+			return $response;
+		}
+
 		public static function sp( $q, $hide = false, $title = false ) {
 			
 			echo '<pre '.(($hide)?'style="display:none;"':'').'>';

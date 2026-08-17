@@ -1,5 +1,12 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-08-17]
+### Fixed
+- Перенесена валидация ответа Go API, условий 404 и редиректов 301 до вызова `prolog_after.php` в `/cars/used/index.php`, заменен ранний вызов `header.php` на `prolog_before.php`.
+- В `/cars/new/index.php` настроен мгновенный 301 редирект на `/cars/used/` до вызова `header.php`.
+- Защищен цикл `foreach` в `/cars/used/views/vehicles.php` проверкой `is_array()` от падения при пустом результате каталога.
+- Добавлена гарантированная инициализация D7 Culture в `init.php`.
+
 ## [2026-08-07]
 ### Added
 - Внедрена автоматическая генерация файла `llms.txt` в корне сайта Эксперта в составе регулярного крона `cron/makeSitemap.php`.

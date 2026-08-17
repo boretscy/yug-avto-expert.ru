@@ -17,7 +17,7 @@
 		header("Location: ".implode('/', $p)); 
     }
 ?>
-<?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+<?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
 use Bitrix\Main\Page\Asset;
 $Asset = Asset::getInstance();
@@ -30,77 +30,56 @@ $conf = require __DIR__.'/vendor/Config.php';
 require __DIR__.'/vendor/YApp.Showroom.class.php';
 $app = new YAppShowroom($conf);
 
+$filter = $app->makeFilter(CURRENT_URL, $_GET);
+if ( !$filter['city'] || $filter['city'] == 'Майкоп' || $filter['city'] == 'Новороссийск' ) $filter['city'] = $app->getCityCookie();
+
+$data = json_decode( YAppShowroom::httpGet($app->makeApiUrl($filter, (($filter['vehicle'])?'vehicle':'vehicles'))), true );
+
+// === Ранняя валидация и 404 / 301 (ДО отправки HTML и prolog_after.php) ===
+if ( $filter['vehicle'] && (!isset($data['id']) || isset($data['error']) || (isset($data['code']) && $data['code'] == 404) || $data == NULL) ) {
+	CHTTP::SetStatus("404 Not Found");
+	@define("ERROR_404","Y");
+	require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
+	die();
+}
+
+if ( !empty($data['force_404']) || (isset($data['code']) && $data['code'] == 404) || (isset($data['meta']['status']) && ($data['meta']['status'] === '404_vehicles' || $data['meta']['status'] === 404)) ) {
+	CHTTP::SetStatus("404 Not Found");
+	@define("ERROR_404","Y");
+	require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
+	die();
+}
+
+if ( $data == NULL ) {
+	CHTTP::SetStatus("404 Not Found");
+	@define("ERROR_404","Y");
+	require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
+	die();
+}
+
+$GLOBALS['META'] = $data['meta'] ?? [];
+
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_after.php");
+
 $Asset->addCss($app->Conf()['baseUrl'].'/assets/css/libs/hint.min.css');
 $Asset->addCss($app->Conf()['baseUrl'].'/assets/css/libs/jquery.fancybox.min.css');
 $Asset->addCss($app->Conf()['baseUrl'].'/assets/css/app.css?'.md5_file($_SERVER['DOCUMENT_ROOT'].$app->Conf()['baseUrl'].'/assets/css/app.css'));
 $Asset->addJs($app->Conf()['baseUrl'].'/assets/js/libs/jquery.fancybox.min.js');
-$Asset->addJs($app->Conf()['baseUrl'].'/assets/js/libs/share.js');
+$Asset->addJs($app->Conf()['assetsUrl'].'/assets/js/libs/share.js');
 $Asset->addJs($app->Conf()['baseUrl'].'/assets/js/app.js?'.md5_file($_SERVER['DOCUMENT_ROOT'].$app->Conf()['baseUrl'].'/assets/js/app.js'));
 
-$filter = $app->makeFilter(CURRENT_URL, $_GET);
-if ( !$filter['city'] || $filter['city'] == 'Майкоп' || $filter['city'] == 'Новороссийск' ) $filter['city'] = $app->getCityCookie();
-// YApp::sp($filter, true);
-
-$data = json_decode( file_get_contents($app->makeApiUrl($filter, (($filter['vehicle'])?'vehicle':'vehicles'))), true );
-// YApp::sp($app->makeApiUrl($filter, (($filter['vehicle'])?'vehicle':'vehicles')), true);
-
-if ( $data['force_404'] ) {
-	CHTTP::SetStatus("404 Not Found");
-	@define("ERROR_404","Y");
-	if ($APPLICATION->RestartWorkarea()) {
-		require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
-		die();
-	}
-}
-
-$GLOBALS['META'] = $data['meta'];
-if ( (!$filter['vehicle'] && $data['items'] == NULL)  ) {
-    // if ( !$filter['vehicle'] && !$filter['model'] && $filter['brand'] ) {
-	// 	unset($filter['brand']);
-	// } elseif ( !$filter['vehicle'] && $filter['model'] ) {
-	// 	unset($filter['model']);
-	// } elseif ( $filter['vehicle'] ) {
-	// 	unset($filter['vehicle']);
-	// }
-    // unset($filter['price'], $filter['dealership'], $filter['transmission'], $filter['engine'], $filter['drive'], $filter['body'], $filter['color'], $filter['volume'], $filter['power'], $filter['year']);
-	// header("HTTP/1.1 301 Moved Permanently"); 
-	// header("Location: ".$app->makeFilterUrl($filter));
-	// exit();
-    CHTTP::SetStatus("404 Not Found");
-	@define("ERROR_404","Y");
-	if ($APPLICATION->RestartWorkarea()) {
-		require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
-		die();
-	}
-} elseif ( ($filter['vehicle'] && $data == NULL) ) {
-	$GLOBALS['CIS_FILTER'] = $filter;
-	CHTTP::SetStatus("404 Not Found");
-	@define("ERROR_404","Y");
-	if ($APPLICATION->RestartWorkarea()) {
-		require(\Bitrix\Main\Application::getDocumentRoot()."/404Cis.php");
-		die();
-	}
-}
-// Yapp::sp($GLOBALS['META'], true);
-
-$data['FAVORITES'] = ( json_decode($_COOKIE['CIS_FAVORITES'], true) ) ?: [];
-$data['COMPARE'] = ( json_decode($_COOKIE['CIS_COMPARE'], true) ) ?: [];
+$data['FAVORITES'] = ( json_decode($_COOKIE['CIS_FAVORITES'] ?? '', true) ) ?: [];
+$data['COMPARE'] = ( json_decode($_COOKIE['CIS_COMPARE'] ?? '', true) ) ?: [];
 
 if ( !$filter['vehicle'] ) {    
-    $data['filter'] = json_decode( file_get_contents($app->makeApiUrl($filter, 'filter')), true );
-    $data['filter']['dropLists']['brands'] = $data['brands'] = json_decode( file_get_contents($app->makeApiUrl($filter, 'brands')), true )['dropLists']['brands'];
-    $data['current_page'] = ($_GET['page'] ) ? (int)$_GET['page'] : 1;
-    array_multisort(array_column($data['brands'], 'vehicles'), SORT_DESC, SORT_NUMERIC, $data['brands']);
+    $data['filter'] = json_decode( YAppShowroom::httpGet($app->makeApiUrl($filter, 'filter')), true );
+    $brandsData = json_decode( YAppShowroom::httpGet($app->makeApiUrl($filter, 'brands')), true );
+    $data['filter']['dropLists']['brands'] = $data['brands'] = $brandsData['dropLists']['brands'] ?? [];
+    $data['current_page'] = (!empty($_GET['page'])) ? (int)$_GET['page'] : 1;
+    if (is_array($data['brands']) && !empty($data['brands'])) {
+        array_multisort(array_column($data['brands'], 'vehicles'), SORT_DESC, SORT_NUMERIC, $data['brands']);
+    }
 } 
-
-if ( $data['meta']['status'] === '404_vehicles' || $data['meta']['status'] === 404 || ( !$filter['vehicle'] && !$data['items'] ) ) {
-	CHTTP::SetStatus("404 Not Found");
-	@define("ERROR_404","Y");
-	if ($APPLICATION->RestartWorkarea()) {
-		require(\Bitrix\Main\Application::getDocumentRoot()."/404.php");
-		die();
-	}
-}
 
 $data['OnWay'] = false;
 $data['InStock'] = false;
