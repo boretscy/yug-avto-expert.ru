@@ -55,3 +55,4 @@ Thumbs.db
 /vendor/
 /local/php_interface/vendor/
 /composer.lock
+robots.txt
