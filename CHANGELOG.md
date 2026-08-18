@@ -1,5 +1,14 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-08-18]
+### Changed
+- Переведена структура `sitemap.xml` на плоский одноуровневый индекс: файлы `sitemap-brands.xml` и `sitemap-vehicles.xml` внедряются напрямую в `sitemap.xml` без промежуточного `sitemap-cis.xml`.
+- Актуализированы директивы `Allow:` в `robots.txt` под плоскую структуру карт сайта.
+- Создан файл `robots.txt` на DEV-окружении (`etest.yug-avto.ru`) с полным запретом на индексацию `Disallow: /`.
+
+### Removed
+- Удалены устаревшие неактуальные sitemap-файлы инфоблоков (`sitemap-iblock-13.xml`, `sitemap-iblock-18.xml`) и неиспользуемые XML/YML фиды (`used-vehicles.xml`, `used-vehicles.yml`, `sitemap-cis.xml`).
+
 ## [2026-08-17]
 ### Fixed
 - Перенесена валидация ответа Go API, условий 404 и редиректов 301 до вызова `prolog_after.php` в `/cars/used/index.php`, заменен ранний вызов `header.php` на `prolog_before.php`.
