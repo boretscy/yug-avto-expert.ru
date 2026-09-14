@@ -5,7 +5,7 @@
         'nestLevel' => 2,
         'baseUrl' => '/cars/used',
         'Api' => [
-            'baseURL' => 'https://' . YApp::GO_API_DOMAIN . '/api/v1/cis',
+            'baseURL' => 'https://' . (class_exists('YApp') ? YApp::GO_API_DOMAIN : 'apps.yug-avto.ru') . '/api/v1/cis',
             'token' => 'ef6541490c8bb9d481d37020b6a1953e',
             'mode' => 'used',
             'Params' => [

@@ -1,5 +1,13 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-09-14]
+### Fixed
+- **AJAX-обработчик каталога автомобилей с пробегом (`/cars/used/api/index.php`):**
+  - Подключен легковесный пролог Битрикса (`prolog_before.php`) с отключением статистики и тяжелых проверок (`STOP_STATISTICS`, `NO_KEEP_STATISTIC`, `NO_AGENT_STATISTIC`, `NO_AGENT_CHECK`, `DisableEventsCheck`, `NOT_CHECK_PERMISSIONS`), аналогично витрине холдинга.
+  - Метод получения данных переведен с небезопасного прямого `file_get_contents()` на `YAppShowroom::httpGet()` с разбором параметров пагинации и защитой от зависания по таймауту. Ошибки HTTP 500 при скролле и пагинации каталога авто с пробегом полностью ликвидированы.
+- **Защита от сбоев в конфигурации каталога (`cars/used/vendor/Config.php`):**
+  - В конфиге каталога обращение к домену API обёрнуто в безопасную конструкцию `(class_exists('YApp') ? YApp::GO_API_DOMAIN : 'apps.yug-avto.ru')`, исключающую Fatal Error при вызове без инициализированного ядра Битрикса.
+
 ## [2026-08-18]
 ### Changed
 - Переведена структура `sitemap.xml` на плоский одноуровневый индекс: файлы `sitemap-brands.xml` и `sitemap-vehicles.xml` внедряются напрямую в `sitemap.xml` без промежуточного `sitemap-cis.xml`.
