@@ -1,5 +1,13 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-09-18]
+### Removed
+- **Удалена страница «Гарантия Юг-Авто Эксперт» (`/offers/garantiya-yug-avto-ekspert/`):**
+  - Создана полная резервная копия удаленной страницы в архиве `_backup/garantiya-yug-avto-ekspert_backup_20260918_161231.tar.gz`.
+  - Удалена директория `/offers/garantiya-yug-avto-ekspert/`.
+  - Удален пункт меню «Гарантия Юг-Авто Эксперт» из подменю акций (`/offers/.top_menu_items.menu.php`).
+  - Удалена запись из файла карты сайта `sitemap-files.xml`.
+
 ## [2026-09-14]
 ### Fixed
 - **AJAX-обработчик каталога автомобилей с пробегом (`/cars/used/api/index.php`):**

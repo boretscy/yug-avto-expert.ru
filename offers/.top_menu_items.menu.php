@@ -7,13 +7,6 @@ $aMenuLinks = Array(
     //     Array(),
     //     ""
     // ),
-    Array(
-        "Гарантия Юг-Авто Эксперт",
-        "/offers/garantiya-yug-avto-ekspert/",
-        Array(),
-        Array(),
-        ""
-    ),
 
     Array(
         "Программы от производителей",
