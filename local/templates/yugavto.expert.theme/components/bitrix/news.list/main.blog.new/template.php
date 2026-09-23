@@ -34,10 +34,11 @@ $this->setFrameMode(true);
 					<div class="swiper-slide">
 						<div class="b-yagray b-radius-yaradius-25 overflow-hidden blog-on-main-card">
 							<a 
-								href="<?= $arItem['DETAIL_PAGE_URL'];?>" 
-								alt="<?= $arItem['NAME'];?>"
-								>
-								<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100" alt="<?= $arItem['NAME'];?>">
+								href="<?= $arItem['DETAIL_PAGE_URL'];?>"
+							>
+								<?php if (!empty($arItem['PREVIEW_PICTURE']['SRC'])) { ?>
+								<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" class="w-100" alt="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>">
+								<?php } ?>
 							</a>
 							<div class="p-4">
 								<p class="text-minus c-yamiddlegray text-start"><?= $arItem['DISPLAY_ACTIVE_FROM'];?></p>

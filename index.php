@@ -466,7 +466,7 @@ $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SE
 	),
 	false
 );?>
-<? /* $APPLICATION->IncludeComponent(
+<?$APPLICATION->IncludeComponent(
 	"bitrix:news.list",
 	"main.blog.new",
 	Array(
@@ -525,7 +525,7 @@ $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SE
 		"SORT_ORDER2" => "ASC",
 		"STRICT_SECTION_CHECK" => "N"
 	)
-); */?>
+);?>
 <?$APPLICATION->IncludeComponent(
 	"bitrix:form.result.new", 
 	"form.block.semiblue.main", 

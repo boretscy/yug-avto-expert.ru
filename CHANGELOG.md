@@ -2,11 +2,12 @@
 
 ## [2026-09-23]
 ### Added
-- **Возобновление работы раздела «Блог» (`/blog/`):**
+- **Возобновление работы раздела «Блог» (`/blog/`) и блока на главной:**
   - Снят принудительный редирект `LocalRedirect("/")` в `/blog/index.php`.
   - Раскомментирован и возвращен пункт «Блог» (`/blog/`) в выпадающее меню шапки раздела «О компании» (`/about/.top_menu_items.menu.php`).
-  - В детальный шаблон статей блога (`blog.new/bitrix/news.detail`) внедрена микроразметка Schema.org `NewsArticle` (`headline`, `image`, `datePublished`, `dateModified`, `publisher`, `articleBody`), добавлены безопасные атрибуты `alt` и `title` для изображений через `YApp::getCleanAltText()`.
-  - В списочном шаблоне блога (`blog.new/bitrix/news.list`) добавлена проверка наличия изображения и оптимизированы теги `alt` и `title`.
+  - Раскомментирован вызов компонента `bitrix:news.list` (`main.blog.new`) на главной странице сайта (`index.php`).
+  - В списочном шаблоне главной (`main.blog.new`) и раздела блога (`blog.new`) добавлена проверка наличия изображения и оптимизированы теги `alt` и `title` через `YApp::getCleanAltText()`.
+  - В детальный шаблон статей блога (`blog.new/bitrix/news.detail`) внедрена микроразметка Schema.org `NewsArticle` (`headline`, `image`, `datePublished`, `dateModified`, `publisher`, `articleBody`), добавлены безопасные атрибуты `alt` и `title` для изображений.
   - Сброшен кэш компонентов Битрикса, композитный кэш и OPcache.
 
 ## [2026-09-18]
