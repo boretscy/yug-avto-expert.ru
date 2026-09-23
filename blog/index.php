@@ -1,6 +1,5 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-LocalRedirect("/");
 $APPLICATION->SetPageProperty("title", "Блог | Дилерский центр — Юг-Авто Эксперт");
 $APPLICATION->SetPageProperty("description", "Блог компании ЮГ-Авто, блог дилерского центра в Краснодаре");
 $APPLICATION->SetTitle("Блог Юг-Авто");

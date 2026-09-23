@@ -35,9 +35,10 @@ $this->setFrameMode(true);
 			<a 
 				href="<?= $arItem['DETAIL_PAGE_URL'];?>" 
 				class="b-radius-yaradius-25 overflow-hidden b-yagray bg-yawhite shadow-small-h d-block c-yablack c-h-yablack text-decoration-none"
-				alt="<?= $arItem['NAME'];?>"
-				>
-				<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" alt="<?= $arItem['NAME'];?>" class="w-100" />
+			>
+				<?php if (!empty($arItem['PREVIEW_PICTURE']['SRC'])) { ?>
+				<img src="<?= $arItem['PREVIEW_PICTURE']['SRC'];?>" alt="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" title="<?= htmlspecialchars(YApp::getCleanAltText($arItem['NAME']));?>" class="w-100" />
+				<?php } ?>
 				<p class="my-3 p-3 с-yamiddlegray">
 					<span class="c-yamiddlegray text-minus d-block mb-3"><?= $arItem['DISPLAY_ACTIVE_FROM'];?></span>
 					<span class="fw-bold d-block" style="min-height: 81px;"><?= $arItem['NAME'];?> &rarr;</span>

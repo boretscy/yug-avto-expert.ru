@@ -1,5 +1,14 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-09-23]
+### Added
+- **Возобновление работы раздела «Блог» (`/blog/`):**
+  - Снят принудительный редирект `LocalRedirect("/")` в `/blog/index.php`.
+  - Раскомментирован и возвращен пункт «Блог» (`/blog/`) в выпадающее меню шапки раздела «О компании» (`/about/.top_menu_items.menu.php`).
+  - В детальный шаблон статей блога (`blog.new/bitrix/news.detail`) внедрена микроразметка Schema.org `NewsArticle` (`headline`, `image`, `datePublished`, `dateModified`, `publisher`, `articleBody`), добавлены безопасные атрибуты `alt` и `title` для изображений через `YApp::getCleanAltText()`.
+  - В списочном шаблоне блога (`blog.new/bitrix/news.list`) добавлена проверка наличия изображения и оптимизированы теги `alt` и `title`.
+  - Сброшен кэш компонентов Битрикса, композитный кэш и OPcache.
+
 ## [2026-09-18]
 ### Removed
 - **Удалена страница «Гарантия Юг-Авто Эксперт» (`/offers/garantiya-yug-avto-ekspert/`):**
