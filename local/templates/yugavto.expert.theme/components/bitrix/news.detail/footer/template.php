@@ -153,7 +153,7 @@ $this->setFrameMode(true);
 		<div class="row">
 			<div class="col-12 col-md-9 text-center text-md-start"><?= $arResult['PROPERTIES']['COOKIE']['~VALUE']['TEXT'];?></div>
 			<div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end align-items-center pt-3 pt-md-0">
-				<a href="#" role="close-cookie" class="text-center c-yablack c-h-yablack bg-yayellow bg-h-yadarkyellow text-decoration-none b-radius-yaradius-15 but-lg">Я согласен</a>
+				<a href="#" role="close-cookie" class="text-center c-yablack c-h-yablack bg-yayellow bg-h-yadarkyellow text-decoration-none b-radius-yaradius-15 py-2 px-4">Я согласен</a>
 			</div>
 		</div>
 	</div>
