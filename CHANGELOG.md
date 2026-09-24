@@ -1,6 +1,14 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
 ## [2026-09-23]
+### Security & SEO
+- **Defense in Depth: нейтрализация клонов и фиксация канонических URL:**
+  - В `local/php_interface/init.php` внедрена проверка заголовка `HTTP_HOST` по белому списку разрешенных доменов (`yug-avto-expert.ru`, `etest.yug-avto.ru`, `localhost`, `127.0.0.1`) с отдачей `403 Forbidden` неавторизованным хостам.
+  - В `local/templates/yugavto.expert.theme/header.php` и `cars/used/index.php` ликвидирована небезопасная динамическая генерация канонических URL на базе `$_SERVER['HTTP_HOST']`. Домен жестко зафиксирован за `https://yug-avto-expert.ru`.
+  - В микроразметке Schema.org Offer на детальной странице авто (`cars/used/index.php`) URL предложения привязан к основному домену сайта.
+- **Размещение llms.txt:**
+  - В корне сайта опубликован манифест `llms.txt` для взаимодействия с поисковыми и диалоговыми LLM-системами.
+
 ### Added
 - **Адаптация плашки Cookie (`.cookie`) для мобильных устройств:**
   - Обновлены стили в `local/templates/yugavto.expert.theme/components/bitrix/news.detail/footer/style.css` по стандарту холдинга: установлены `min-height: 100px` (до 992px) и `min-height: 310px` (до 768px), исключающие перекрытие кнопки согласия фиксированными виджетами.

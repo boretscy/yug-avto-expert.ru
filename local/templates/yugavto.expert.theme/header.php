@@ -19,11 +19,13 @@
         <?php $APPLICATION->ShowHead();?>
         <?php 
             $canonicalUrl = $APPLICATION->GetProperty('canonical');
-            if (empty($canonicalUrl)) {
-                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-                $host = $_SERVER['HTTP_HOST'] ?? 'etest.yug-avto.ru';
-                $requestUri = explode('?', $_SERVER['REQUEST_URI'])[0];
-                $canonicalUrl = $protocol . '://' . $host . $requestUri;
+            if (!empty($canonicalUrl)) {
+                $parsedCanonical = parse_url($canonicalUrl);
+                $canonicalPath = ($parsedCanonical['path'] ?? '/') . (!empty($parsedCanonical['query']) ? '?' . $parsedCanonical['query'] : '');
+                $canonicalUrl = 'https://yug-avto-expert.ru' . $canonicalPath;
+            } else {
+                $requestUri = explode('?', $_SERVER['REQUEST_URI'] ?? '/')[0];
+                $canonicalUrl = 'https://yug-avto-expert.ru' . $requestUri;
             }
         ?>
         <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl);?>"/>

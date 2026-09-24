@@ -1,5 +1,24 @@
 <?php
 
+// Host Validation (Defense in Depth: block unauthorized hostnames/parasitic clones)
+if (php_sapi_name() !== 'cli') {
+    $allowedHosts = [
+        'yug-avto-expert.ru',
+        'www.yug-avto-expert.ru',
+        'etest.yug-avto.ru',
+        'localhost',
+        '127.0.0.1',
+    ];
+    $incomingHost = strtolower(explode(':', $_SERVER['HTTP_HOST'] ?? '')[0]);
+    if (!empty($incomingHost) && !in_array($incomingHost, $allowedHosts, true)) {
+        http_response_code(403);
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Connection: close');
+        exit('403 Forbidden: Unauthorized Host');
+    }
+}
+
+
 	// Глобальный тумблер оптимизации фронтенда
 	if (!defined('ENABLE_FRONTEND_OPTIMIZATION')) {
 		define('ENABLE_FRONTEND_OPTIMIZATION', true);

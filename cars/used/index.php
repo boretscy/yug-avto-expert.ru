@@ -143,7 +143,7 @@ $data['Discount'] = false;
             "@type" => "Offer",
             "priceCurrency" => "RUB",
             "price" => (float)($data['min_price'] ?? $data['price'] ?? $data['meta']['meta']['price'] ?? 0),
-            "url" => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+            "url" => 'https://yug-avto-expert.ru'.$_SERVER['REQUEST_URI'],
             "availability" => ($data['status']['id'] == 1 || !isset($data['status']['id'])) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             "itemCondition" => "https://schema.org/UsedCondition",
             "seller" => [
@@ -243,9 +243,9 @@ $data['Discount'] = false;
             $APPLICATION->SetPageProperty("description", $data['meta']['meta']['description']);
             $APPLICATION->SetPageProperty('title', $data['meta']['meta']['title']);
             $APPLICATION->SetPageProperty('image', explode('?', $data['meta']['meta']['image'])[0]);
-            $APPLICATION->SetPageProperty("canonical", $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].explode('?', $_SERVER['REQUEST_URI'])[0]);
+            $APPLICATION->SetPageProperty("canonical", 'https://yug-avto-expert.ru'.explode('?', $_SERVER['REQUEST_URI'])[0]);
             $Asset->addJs('https://api-maps.yandex.ru/2.1/?apikey=34ddb940-0941-4b80-ab80-b0aa351b6560&lang=ru_RU');
-            $dealershipJson = file_get_contents('https://'.$_SERVER['HTTP_HOST'].'/api/dealership?code='.$data['dealership']['id']);
+            $dealershipJson = file_get_contents('https://yug-avto-expert.ru/api/dealership?code='.$data['dealership']['id']);
             if ($dealershipJson) {
                 $dealershipJson = preg_replace('/^\xEF\xBB\xBF/', '', $dealershipJson);
                 $data['_dealership'] = json_decode($dealershipJson, true);
@@ -260,11 +260,11 @@ $data['Discount'] = false;
             if ( $filter['page'] ) {
                 $pfilter = $filter;
                 unset($pfilter['page']);
-                $c_url = parse_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$app->makeFilterUrl($pfilter, []));
+                $c_url = parse_url('https://yug-avto-expert.ru'.$app->makeFilterUrl($pfilter, []));
                 $canonical = $c_url['scheme'].'://'.$c_url['host'].$c_url['path'];
                 // YApp::sp($c_url, true);
             } else {
-                $canonical = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+                $canonical = 'https://yug-avto-expert.ru'.$_SERVER['REQUEST_URI'];
             }
             $APPLICATION->SetPageProperty("canonical", $canonical);
 
