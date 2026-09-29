@@ -32,7 +32,7 @@ $this->setFrameMode(true);
 					<!-- Slides -->
 					<?php foreach ( $arResult['ITEMS'] as $arItem ) { ?>
 					<div class="swiper-slide">
-						<div class="b-yagray b-radius-yaradius-25 overflow-hidden blog-on-main-card">
+						<div class="w-100 b-yagray b-radius-yaradius-25 overflow-hidden blog-on-main-card">
 							<a 
 								href="<?= $arItem['DETAIL_PAGE_URL'];?>"
 							>

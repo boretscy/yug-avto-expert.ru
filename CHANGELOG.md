@@ -1,5 +1,11 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-09-29]
+### Fixed
+- **Слайдер блока «Блог» на главной странице (`main.blog.new`):**
+  - Устранено вертикальное смещение слайдов: для `.swiper-blog-on-main .swiper-slide` выравнивание `align-items: center` заменено на `stretch`.
+  - Карточке `.blog-on-main-card` добавлены стили `width: 100%; height: 100%; display: flex; flex-direction: column;`, а в `template.php` добавлен класс `w-100`. Теперь карточки всегда выравниваются по единой верхней линии вне зависимости от количества строк в заголовке статьи.
+
 ## [2026-09-23]
 ### Security & SEO
 - **Defense in Depth: нейтрализация клонов и фиксация канонических URL:**
