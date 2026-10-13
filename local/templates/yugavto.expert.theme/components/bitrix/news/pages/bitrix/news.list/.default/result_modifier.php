@@ -40,27 +40,31 @@ if ( count($arSections) > 1) {
 
     foreach ( $arResult['ITEMS'] as $i ) $arModels[] = $i['PROPERTIES']['EXTERNAL_CODE']['VALUE'];
 
-    $arResult['VEHICLES'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/modelscount/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.implode(',',$arModels)),
-        true
+    $apiToken = '34b5ac8b71018c0bc7e5c050ed90b243';
+    $apiBase = 'https://' . (class_exists('YApp') ? YApp::API_DOMAIN : 'apps.yug-avto.ru') . '/API/get/cis';
+    $brandCode = urlencode((string)$arResult['SECTION']['CODE']);
+
+    $arResult['VEHICLES'] = YApp::safeJsonGet(
+        $apiBase . '/modelscount/new/?token=' . $apiToken . '&model=' . implode(',', $arModels),
+        []
     );
 
-	$arResult['USED'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/limit/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&brand='.$arResult['SECTION']['CODE'].'&limit=12'),
-        true
+	$arResult['USED'] = YApp::safeJsonGet(
+        $apiBase . '/limit/used/?token=' . $apiToken . '&brand=' . $brandCode . '&limit=12',
+        []
     );
-	$arResult['NEW_COUNT'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/count/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&brand='.$arResult['SECTION']['CODE']),
-        true
+	$arResult['NEW_COUNT'] = YApp::safeJsonGet(
+        $apiBase . '/count/new/?token=' . $apiToken . '&brand=' . $brandCode,
+        []
     );
-	$arResult['USED_COUNT'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/count/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&brand='.$arResult['SECTION']['CODE']),
-        true
+	$arResult['USED_COUNT'] = YApp::safeJsonGet(
+        $apiBase . '/count/used/?token=' . $apiToken . '&brand=' . $brandCode,
+        []
     );
 
-	$arDealerships = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/dealerships/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&brand='.$arResult['SECTION']['CODE']),
-        true
+	$arDealerships = YApp::safeJsonGet(
+        $apiBase . '/dealerships/new/?token=' . $apiToken . '&brand=' . $brandCode,
+        []
     );
 	// YApp::sp( $arDealerships );
 	foreach ( $arDealerships as $item ) $dealership_ext_ids[] = $item['id'];

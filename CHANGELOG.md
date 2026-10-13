@@ -1,5 +1,19 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-10-13]
+### Fixed
+- **Отказоустойчивость и защита от каскадных отказов при сбое yapps / Go API:**
+  - В `local/php_interface/YApp/YApp.php`:
+    - Переработан метод `YApp::httpGet`: число попыток сокращено до 1, таймаут соединения установлен в 1с (`CONNECTTIMEOUT = 1s`), общий таймаут — 2с (`TIMEOUT = 2s`).
+    - Внедрен паттерн **Circuit Breaker (Fail-Fast)**: при сетевом сбое или 5xx ошибке хост блокируется на 30 секунд с мгновенной отдачей `false` за 0.0001с без ожидания сокетов.
+    - Добавлен метод `YApp::safeJsonGet($url, $default = [])`.
+  - Устранены блокирующие вызовы `file_get_contents` без таймаута с переводом на `YApp::safeJsonGet` и `YApp::httpGet`:
+    - `local/templates/yugavto.expert.theme/components/bitrix/news.list/main.cards.cars/result_modifier.php` (счетчики автомобилей на главной)
+    - `local/templates/yugavto.expert.theme/components/bitrix/news/pages/bitrix/news.detail/.default/result_modifier.php` (детальные страницы моделей)
+    - `local/templates/yugavto.expert.theme/components/bitrix/news/pages/bitrix/news.list/.default/result_modifier.php` (каталог моделей)
+    - `local/templates/yugavto.expert.theme/components/bitrix/news/offers.new/bitrix/news.detail/.default/result_modifier.php` (акции)
+    - `local/templates/yugavto.expert.theme/components/bitrix/news/dealerships.new/bitrix/news.detail/.default/result_modifier.php` (страницы ДЦ)
+
 ## [2026-09-29]
 ### Fixed
 - **Слайдер блока «Блог» на главной странице (`main.blog.new`):**

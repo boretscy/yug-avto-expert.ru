@@ -50,14 +50,21 @@ while ( $ob = $rs->GetNextElement() ) {
 
 $arResult['MODE'] = ( $arResult['PROPERTIES']['IS_NEW']['VALUE'] == 'Да' ) ? 'new' : 'used';
 
-$arResult['VEHICLES'] = json_decode(
-    file_get_contents('https://apps.yug-avto.ru/API/get/cis/random_new/'.$arResult['MODE'].'/?token=34b5ac8b71018c0bc7e5c050ed90b243&dealership='.$arResult['PROPERTIES']['EXTERNAL_CODE']['VALUE'].(($arResult['MODE']=='new')?'&brand='.$arResult['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'][$arResult['PROPERTIES']['BRAND']['VALUE']]['CODE']:'').'&limit=12'),
-    true
-)['items'];
+$apiToken = '34b5ac8b71018c0bc7e5c050ed90b243';
+$apiBase = 'https://' . (class_exists('YApp') ? YApp::API_DOMAIN : 'apps.yug-avto.ru') . '/API/get/cis';
+$brandParam = ($arResult['MODE'] == 'new' && isset($arResult['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'][$arResult['PROPERTIES']['BRAND']['VALUE']]['CODE']))
+    ? '&brand=' . $arResult['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'][$arResult['PROPERTIES']['BRAND']['VALUE']]['CODE']
+    : '';
 
-$arResult['COUNT'] = json_decode(
-    file_get_contents('https://apps.yug-avto.ru/API/get/cis/count/'.$arResult['MODE'].'/?token=34b5ac8b71018c0bc7e5c050ed90b243&dealership='.$arResult['PROPERTIES']['EXTERNAL_CODE']['VALUE'].(($arResult['MODE']=='new')?'&brand='.$arResult['DISPLAY_PROPERTIES']['BRAND']['LINK_ELEMENT_VALUE'][$arResult['PROPERTIES']['BRAND']['VALUE']]['CODE']:'')),
-    true
+$randomVehicles = YApp::safeJsonGet(
+    $apiBase . '/random_new/' . $arResult['MODE'] . '/?token=' . $apiToken . '&dealership=' . $arResult['PROPERTIES']['EXTERNAL_CODE']['VALUE'] . $brandParam . '&limit=12',
+    []
+);
+$arResult['VEHICLES'] = $randomVehicles['items'] ?? [];
+
+$arResult['COUNT'] = YApp::safeJsonGet(
+    $apiBase . '/count/' . $arResult['MODE'] . '/?token=' . $apiToken . '&dealership=' . $arResult['PROPERTIES']['EXTERNAL_CODE']['VALUE'] . $brandParam,
+    0
 );
 
 ?>

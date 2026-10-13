@@ -1,19 +1,14 @@
 <?php
-    $arResult['NEW_COUNT'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/count/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.$arResult['CODE']),
-        true
-    );
-    $arResult['USED_COUNT'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/count/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.$arResult['CODE']),
-        true
-    );
+    $apiToken = '34b5ac8b71018c0bc7e5c050ed90b243';
+    $apiBase = 'https://' . (class_exists('YApp') ? YApp::API_DOMAIN : 'apps.yug-avto.ru') . '/API/get/cis';
+    $modelCode = urlencode((string)$arResult['CODE']);
 
-    $arDealerships = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/dealerships/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.$arResult['CODE']),
-        true
-    );
+    $arResult['NEW_COUNT'] = YApp::safeJsonGet($apiBase . '/count/new/?token=' . $apiToken . '&model=' . $modelCode, []);
+    $arResult['USED_COUNT'] = YApp::safeJsonGet($apiBase . '/count/used/?token=' . $apiToken . '&model=' . $modelCode, []);
+
+    $arDealerships = YApp::safeJsonGet($apiBase . '/dealerships/new/?token=' . $apiToken . '&model=' . $modelCode, []);
 	// YApp::sp( $arDealerships );
-	foreach ( $arDealerships as $item ) $dealership_ext_ids[] = $item['id'];
+	if ( $arDealerships && is_array($arDealerships) ) foreach ( $arDealerships as $item ) $dealership_ext_ids[] = $item['id'];
 
 	$rs = CIBlockElement::GetList(
 		['NAME'=>'ASC'],
@@ -27,13 +22,6 @@
 	);
 	while ( $ob = $rs->GetNextElement() ) $arResult['DEALERSHIPS'][] = $ob->GetFields();
 
-    $arResult['NEW'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/limit/new/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.$arResult['CODE'].'&limit=12'),
-        true
-    );
-
-    $arResult['USED'] = json_decode(
-        file_get_contents('https://apps.yug-avto.ru/API/get/cis/limit/used/?token=34b5ac8b71018c0bc7e5c050ed90b243&model='.$arResult['CODE'].'&limit=12'),
-        true
-    );
+    $arResult['NEW'] = YApp::safeJsonGet($apiBase . '/limit/new/?token=' . $apiToken . '&model=' . $modelCode . '&limit=12', []);
+    $arResult['USED'] = YApp::safeJsonGet($apiBase . '/limit/used/?token=' . $apiToken . '&model=' . $modelCode . '&limit=12', []);
 ?>
