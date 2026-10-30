@@ -59,7 +59,7 @@
             <div class="swiper vehicle-recomended-swiper text-start">
                 <div class="swiper-wrapper">
                     <?php foreach ($data['recomended'] as $item) { ?>
-                    <?php $item['_general'] = $item['general']; ?>
+                    <?php $item['_general'] = $item['_general'] ?? $item['general'] ?? []; ?>
                     <?php $item['id'] = $item['ext_id']; ?>
                     <?php $item['offer_link'] = true; ?>
                     <div class="swiper-slide">
