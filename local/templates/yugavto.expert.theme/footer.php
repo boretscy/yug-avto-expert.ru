@@ -1,7 +1,7 @@
 <a href="#" class="up-button bg-yawhite b-radius-yaradius-5 b-yagray position-fixed d-flex justify-content-center align-items-center d-none">
 	<svg xmlns="http://www.w3.org/2000/svg"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-up"></use></svg>
 </a>
-<?php $APPLICATION->IncludeComponent(
+<?php ob_start(); $APPLICATION->IncludeComponent(
 	"bitrix:news.detail", 
 	"footer", 
 	array(
@@ -63,7 +63,11 @@
 		"COMPOSITE_FRAME_TYPE" => "AUTO"
 	),
 	false
-);?>
+);
+$footerHtml = ob_get_clean();
+$footerSeoHtml = include __DIR__ . '/components/bitrix/news.detail/footer/seo.php';
+echo str_replace('<!--#FOOTER_SEO#-->', $footerSeoHtml, $footerHtml);
+?>
         <?php include $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/include/modals.php'; ?>
         <?php include $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/images/svg.php'; ?>
 		
