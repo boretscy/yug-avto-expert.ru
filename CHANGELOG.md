@@ -1,5 +1,13 @@
 # Changelog - yug-avto-expert.ru (Эксперт)
 
+## [2026-11-12]
+### Changed
+- **Унификация вывода SEO-текста в футере (`local/templates/yugavto.expert.theme/`):**
+  - В `components/bitrix/news.detail/footer/template.php` блок `.footer-seo` переведён на `$APPLICATION->ShowViewContent('footer_seo')`.
+  - В `components/bitrix/news.detail/footer/component_epilog.php` перенесена выборка `YApp::IBLOCK_SEO` (с кэшированием `/footer_seo_text` на 3600с) и fallback на `$GLOBALS['META']['meta']['seo_text']` / `seo_title`.
+  - В `components/bitrix/news.detail/footer/result_modifier.php` оставлено только получение и кэширование `$arResult['BRANDS']` с защитой от пустых ответов.
+  - В `footer.php` включено кэширование компонента футера (`CACHE_TYPE => "A"`).
+
 ## [2026-10-30]
 ### Fixed
 - **Каталог авто с пробегом — карточки в блоке «Рекомендованные автомобили»:**

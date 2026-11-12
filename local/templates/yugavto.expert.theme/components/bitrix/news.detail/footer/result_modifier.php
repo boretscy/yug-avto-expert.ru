@@ -1,23 +1,18 @@
 <?php
-
-$rs = CIBlockElement::GetList(
-    [],
-    [
-        'IBLOCK_ID' => YApp::IBLOCK_SEO,
-        'PROPERTY_PATH' => Yapp::getSEOPath($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']),
-        'ACTIVE' => 'Y'
-    ],
-    false, false,
-    ['ID', 'DETAIL_TEXT']
-);
-while ( $ob = $rs->GetNextElement() ) $arResult['SEO_TEXT'] = $ob->GetFields()['DETAIL_TEXT'];
-if ( !$arResult['SEO_TEXT'] && $GLOBALS['META']['meta']['seo_text'] ) $arResult['SEO_TEXT'] = '<h2 class="fw-normal">'.$GLOBALS['META']['meta']['seo_title'].'</h2><p>'.$GLOBALS['META']['meta']['seo_text'].'</p>';
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 $arResult['BRANDS'] = YApp::getCache('footer', 'brands', 3600);
-if ( !$arResult['BRANDS'] ) {
-    $brands = json_decode( YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/footerbrands/used/?token=ef6541490c8bb9d481d37020b6a1953e'), true );
-    array_multisort(array_column($brands, 'vehicles'), SORT_DESC, SORT_NUMERIC, $brands);
-    $arResult['BRANDS'] = array_chunk($brands, 16)[0];
-    YApp::setCache('footer', 'brands', $arResult['BRANDS']);
+if (empty($arResult['BRANDS'])) {
+    $rawBrands = YApp::httpGet('https://apps.yug-avto.ru/API/get/cis/footerbrands/used/?token=ef6541490c8bb9d481d37020b6a1953e');
+    $brands = !empty($rawBrands) ? json_decode($rawBrands, true) : [];
+    if (!empty($brands) && is_array($brands)) {
+        array_multisort(array_column($brands, 'vehicles'), SORT_DESC, SORT_NUMERIC, $brands);
+        $chunks = array_chunk($brands, 16);
+        $arResult['BRANDS'] = $chunks[0] ?? [];
+        if (!empty($arResult['BRANDS'])) {
+            YApp::setCache('footer', 'brands', $arResult['BRANDS']);
+        }
+    } else {
+        $arResult['BRANDS'] = [];
+    }
 }
-?>
