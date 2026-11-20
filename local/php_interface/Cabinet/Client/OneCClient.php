@@ -240,4 +240,21 @@ class OneCClient
     {
         Cache::createInstance()->cleanDir('/cabinet/1c_soft/');
     }
+
+    /**
+     * Телеметрия: получение текущего состояния Circuit Breaker
+     */
+    public function getCircuitBreakerStatus(): array
+    {
+        $cache = Cache::createInstance();
+        $isOpen = $this->isCircuitBreakerOpen();
+        $fails = 0;
+        if ($cache->initCache(self::CB_OPEN_DURATION, 'cb_fails_count', '/cabinet/circuit_breaker/')) {
+            $fails = (int)$cache->getVars();
+        }
+        return [
+            'state' => $isOpen ? 'OPEN' : 'CLOSED',
+            'failure_count' => $fails,
+        ];
+    }
 }

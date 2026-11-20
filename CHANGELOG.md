@@ -22,6 +22,20 @@
   - **Устранение JS SyntaxError (`cabinet/index.php`, `cabinet/vehicle/history.php`):** инициализация Chartist изолирована в анонимные функции с безопасным префиксом `chart_md5(vin)`, устраняя сбой скриптов для VIN, начинающихся с цифры.
 
 ### Performance & Architecture
+- **Фаза 5: Сквозное интеграционное тестирование, верификация требований w.txt и приемка:**
+  - Разработан и успешно выполнен автоматизированный интеграционный тест-сьют (11 из 11 тестов пройдены со статусом PASSED):
+    1. `1.1_duplicate_block`: подтверждена блокировка повторной регистрации номера ДО обращения в 1С.
+    2. `1.2_clean_registration`: подтверждено создание чистых записей `b_user` (группа `CABINET_USERS` ID: 6, заполнение GUID) без паспортных данных.
+    3. `2.1_guard_redirect`: подтвержден превентивный редирект неверифицированного клиента на `/cabinet/verify/`.
+    4. `2.2_verify_page_content`: подтверждено наличие QR-кода `{"GUID":"..."}`, телефона, сессионного GUID и кнопки проверки в HTML-разметке.
+    5. `2.3_me_unverified_access`: подтвержден доступ к профилю `/cabinet/me/` со статусным бейджем («Требуется верификация»).
+    6. `3.1_change_passwd_guard`: подтверждена изоляция клиента на смене пароля при взведённом флаге `UF_CAB_CHANGE_PASSWD`.
+    7. `3.2_password_update`: подтверждена смена пароля на безопасный (хэш bcrypt), сброс флага и успешная верификация `passwdVerify`.
+    8. `4.1_sms_cooldown`: подтверждена блокировка повторной отправки SMS в течение 60 секунд.
+    9. `4.2_bruteforce_protection`: подтверждена блокировка и аннулирование проверочного кода после 3 неверных попыток ввода.
+    10. `5.1_bola_protection`: подтверждена блокировка несанкционированного доступа к чужому авто (`AccessDeniedException`).
+    11. `5.2_circuit_breaker`: добавлен метод телеметрии `OneCClient::getCircuitBreakerStatus()` и подтвержден статус цепи.
+  - Все тестовые пользователи и временные артефакты автоматически очищены из базы данных.
 - **Фаза 4: Комплексный ЧПУ-компонент `yugavto:cabinet`, AJAX Action-контроллеры и оптимизация DOM:**
   - Разработан комплексный компонент `yugavto:cabinet` (`local/components/yugavto/cabinet/class.php`) с поддержкой режима SEF (ЧПУ маршрутизация для `cars`, `vehicle`, `vehicle_history`, `vehicle_offers`, `vehicle_docs`, `profile`, `verify`).
   - Реализован интерфейс `\Bitrix\Main\Engine\Contract\Controllerable` с нативными AJAX-контроллерами (`checkVerificationStatus`, `sendOfferSms`, `confirmOffer`) с автоматической префильтрацией `Authentication` и `Csrf`.
