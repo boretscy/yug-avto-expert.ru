@@ -27,9 +27,20 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['FORM'] ?? '') === 'RECOV
 			if ( time() > $codeTimeout ) {
 				$timeout = true;
 				$status = 'code';
-			} elseif ( (int)$code !== $codeExpected ) {
+			} elseif ( empty($codeExpected) || (int)$code !== $codeExpected ) {
 				$error = true;
 				$status = 'code';
+				// Защита от брутфорса: лимит 3 неверные попытки
+				$attempts = (int)($user['PROPERTY_SMS_ATTEMPTS'] ?? 0) + 1;
+				if ( !empty($user['B_USER_ID']) ) {
+					$uObj = new \CUser;
+					if ( $attempts >= 3 ) {
+						$uObj->Update($user['B_USER_ID'], ['UF_CAB_CODE' => '', 'UF_CAB_SMS_ATTEMPTS' => 0]);
+						$timeout = true;
+					} else {
+						$uObj->Update($user['B_USER_ID'], ['UF_CAB_SMS_ATTEMPTS' => $attempts]);
+					}
+				}
 			} else {
 				$new_passwd = $cab::passwdRecovery($phone);
 			}

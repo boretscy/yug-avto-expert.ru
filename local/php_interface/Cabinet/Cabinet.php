@@ -34,11 +34,7 @@
 		const HASH_SALT = '762f28d9322ae1799ac89a'; 
 		const LOGIN_ATTEMPTS = 5;
 		const CODE_TIMEOUT = 600;
-		const IBLOCK_USERS = 20;
-
-		const SMS_USER = 'KRD_Yug_Avto1.2';
-		const SMS_PASSWD = 'wfy7dHn@';
-		const SMS_SENDER = 'Y-A_Expert';
+		const GROUP_CABINET_USERS = 'CABINET_USERS';
 
 		private static $config = null;
 
@@ -252,14 +248,17 @@
 				$by = 'id'; $order = 'asc';
 				$dbUser = \CUser::GetList($by, $order, ['ID' => $curUserId], ['SELECT' => ['UF_*']]);
 				if ( $u = $dbUser->Fetch() ) {
+					$guid = $u['UF_CAB_GUID'] ?? '';
 					return [
-						'ID' => $u['ID'],
+						'ID' => (int)$u['ID'],
 						'NAME' => $u['LOGIN'],
-						'PROPERTY_GUID_VALUE' => $u['UF_CAB_GUID'] ?? '',
+						'LOGIN' => $u['LOGIN'],
+						'EMAIL' => $u['EMAIL'],
+						'PROPERTY_GUID_VALUE' => $guid,
 						'PROPERTY_SSID_VALUE' => $ssid,
 						'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
-						'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
-						'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+						'PROPERTY_CODE_TIMEOUT_VALUE' => (int)($u['UF_CAB_CODE_TIMEOUT'] ?? 0),
+						'PROPERTY_CHANGE_PASSWD_VALUE' => (int)($u['UF_CAB_CHANGE_PASSWD'] ?? 0),
 						'B_USER_ID' => (int)$u['ID'],
 					];
 				}
@@ -269,156 +268,114 @@
 			$by = 'id'; $order = 'asc';
 			$dbUsers = \CUser::GetList($by, $order, ['!UF_CAB_GUID' => false], ['SELECT' => ['UF_*']]);
 			while ( $u = $dbUsers->Fetch() ) {
-				$userSsid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . ($u['UF_CAB_GUID'] ?? '') );
+				$guid = $u['UF_CAB_GUID'] ?? '';
+				$userSsid = md5( static::HASH_SALT . $guid );
 				if ( $userSsid === $ssid ) {
 					return [
-						'ID' => $u['ID'],
+						'ID' => (int)$u['ID'],
 						'NAME' => $u['LOGIN'],
-						'PROPERTY_GUID_VALUE' => $u['UF_CAB_GUID'] ?? '',
+						'LOGIN' => $u['LOGIN'],
+						'EMAIL' => $u['EMAIL'],
+						'PROPERTY_GUID_VALUE' => $guid,
 						'PROPERTY_SSID_VALUE' => $ssid,
 						'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
-						'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
-						'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+						'PROPERTY_CODE_TIMEOUT_VALUE' => (int)($u['UF_CAB_CODE_TIMEOUT'] ?? 0),
+						'PROPERTY_CHANGE_PASSWD_VALUE' => (int)($u['UF_CAB_CHANGE_PASSWD'] ?? 0),
 						'B_USER_ID' => (int)$u['ID'],
 					];
 				}
 			}
 
-			// 3. Fallback: поиск в ИБ 20
-			$res = false;
-			$rs = CIBlockElement::GetList(
-				[], 
-				[
-					'IBLOCK_ID' => static::IBLOCK_USERS,
-					'PROPERTY_SSID' => $ssid,
-					'ACTIVE' => 'Y'
-				], 
-				false, false, 
-				['ID','NAME','PROPERTY_GUID','PROPERTY_SSID', 'PROPERTY_CODE', 'PROPERTY_CODE_TIMEOUT', 'PROPERTY_CHANGE_PASSWD']
-			);
-			while( $ob = $rs->GetNextElement() ) $res = $ob->GetFields();
-			return $res;
+			return false;
 		}
+
 		public static function getCabUserByName( $name ) {
 			$cleanPhone = YApp::phoneIn($name);
 			if ( empty($cleanPhone) ) return false;
 
-			// 1. Поиск в штатной таблице b_user
 			$by = 'id'; $order = 'asc';
 			$dbUser = \CUser::GetList($by, $order, ['LOGIN_EQUAL_EXACT' => $cleanPhone], ['SELECT' => ['UF_*']]);
 			if ( $u = $dbUser->Fetch() ) {
 				$guid = $u['UF_CAB_GUID'] ?? '';
-				$ssid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . $guid );
+				$ssid = md5( static::HASH_SALT . $guid );
 				return [
-					'ID' => $u['ID'],
+					'ID' => (int)$u['ID'],
 					'NAME' => $u['LOGIN'],
+					'LOGIN' => $u['LOGIN'],
+					'EMAIL' => $u['EMAIL'],
 					'PROPERTY_GUID_VALUE' => $guid,
 					'PROPERTY_SSID_VALUE' => $ssid,
 					'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
-					'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
-					'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+					'PROPERTY_CODE_TIMEOUT_VALUE' => (int)($u['UF_CAB_CODE_TIMEOUT'] ?? 0),
+					'PROPERTY_CHANGE_PASSWD_VALUE' => (int)($u['UF_CAB_CHANGE_PASSWD'] ?? 0),
+					'PROPERTY_SMS_ATTEMPTS' => (int)($u['UF_CAB_SMS_ATTEMPTS'] ?? 0),
+					'PROPERTY_LAST_SMS' => (int)($u['UF_CAB_LAST_SMS'] ?? 0),
 					'B_USER_ID' => (int)$u['ID'],
 				];
 			}
 
-			// 2. Fallback: поиск в ИБ 20
-			$res = false;
-			$rs = CIBlockElement::GetList(
-				[], 
-				[
-					'IBLOCK_ID' => static::IBLOCK_USERS,
-					'NAME' => $cleanPhone,
-					'ACTIVE' => 'Y'
-				], 
-				false, false, 
-				['ID','NAME','PROPERTY_GUID','PROPERTY_SSID', 'PROPERTY_CODE', 'PROPERTY_CODE_TIMEOUT', 'PROPERTY_CHANGE_PASSWD']
-			);
-			while( $ob = $rs->GetNextElement() ) $res = $ob->GetFields();
-			return $res;
+			return false;
 		}
-		private static function getPasswdHashByGUID( $guid ) {
 
-			$res = false;
-			$rs = CIBlockElement::GetList(
-				[], 
-				[
-					'IBLOCK_ID' => static::IBLOCK_USERS,
-					'PROPERTY_GUID' => $guid,
-					'ACTIVE' => 'Y'
-				], 
-				false, false, 
-				['ID','NAME','PROPERTY_PASSWD']
-			);
-			while( $ob = $rs->GetNextElement() ) $res = $ob->GetFields()['PROPERTY_PASSWD_VALUE'];
-			return $res;
-
-		}
 		public static function setCabUser( $POST = [] ) {
-			
-			$res = false;
-			if ( !empty($POST['PHONE']) ) {
-				$user = static::getCabUserByName( $POST['PHONE'] );
-				if ( $user ) return ['status'=>false, 'description'=>'Такой пользователь уже зарегистрирован'];
-				$passwd = static::newPasswd();
-				$cleanPhone = YApp::phoneIn( $POST['PHONE'] );
-				$guid = $POST['GUID'] ?? '';
-				$ssid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . $guid );
-
-				// Регистрация в b_user
-				$userObj = new \CUser;
-				$resGroup = \CGroup::GetList($by = "c_sort", $order = "asc", ["STRING_ID" => 'CABINET_USERS'])->Fetch();
-				$cabGroupId = $resGroup ? (int)$resGroup['ID'] : 2;
-
-				$userObj->Add([
-					'LOGIN' => $cleanPhone,
-					'NAME' => $POST['NAME'] ?? $cleanPhone,
-					'EMAIL' => !empty($POST['EMAIL']) ? $POST['EMAIL'] : "{$cleanPhone}@yug-avto-expert.ru",
-					'PASSWORD' => $passwd,
-					'CONFIRM_PASSWORD' => $passwd,
-					'ACTIVE' => 'Y',
-					'GROUP_ID' => [2, $cabGroupId],
-					'PERSONAL_PHONE' => $cleanPhone,
-					'UF_CAB_GUID' => $guid,
-					'UF_CAB_CHANGE_PASSWD' => 1,
-				]);
-
-				// Сохранение в ИБ 20 для обратной совместимости
-				$arIns = [
-					'IBLOCK_ID' => static::IBLOCK_USERS,
-					'MODIFIED_BY' => 1,
-					'NAME' => $cleanPhone,
-					'ACTIVE' => 'Y',
-					'PROPERTY_VALUES' => [
-						'GUID' => $guid,
-						'CHANGE_PASSWD' => 1,
-						'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT ),
-						'SSID' => $ssid,
-					]
-				];
-				$el = new CIBlockElement;
-				if ( $PRODUCT_ID = $el->Add($arIns) ) {
-					static::sendSMS([
-						'text' => 'Временный пароль: '.$passwd,
-						'phone' => $cleanPhone
-					]);
-					return [
-						'status' => true,
-						'description' => $passwd
-					];
-				} else {
-					error_log("Cabinet setCabUser error: " . $el->LAST_ERROR);
-				}
+			if ( empty($POST['PHONE']) ) return false;
+			$cleanPhone = YApp::phoneIn($POST['PHONE']);
+			$user = static::getCabUserByName($cleanPhone);
+			if ( $user ) {
+				return ['status' => false, 'description' => 'Пользователь с таким номером уже зарегистрирован'];
 			}
-			return $res;
-		}
 
+			$passwd = static::newPasswd();
+			$guid = $POST['GUID'] ?? '';
+			$name = !empty($POST['NAME']) ? trim($POST['NAME']) : $cleanPhone;
+			$email = !empty($POST['EMAIL']) ? trim($POST['EMAIL']) : "{$cleanPhone}@yug-avto-expert.ru";
+
+			$userObj = new \CUser;
+			$resGroup = \CGroup::GetList($by = "c_sort", $order = "asc", ["STRING_ID" => 'CABINET_USERS'])->Fetch();
+			$cabGroupId = $resGroup ? (int)$resGroup['ID'] : 2;
+
+			$newUserId = $userObj->Add([
+				'LOGIN' => $cleanPhone,
+				'NAME' => $name,
+				'EMAIL' => $email,
+				'PASSWORD' => $passwd,
+				'CONFIRM_PASSWORD' => $passwd,
+				'ACTIVE' => 'Y',
+				'GROUP_ID' => [2, $cabGroupId],
+				'PERSONAL_PHONE' => $cleanPhone,
+				'UF_CAB_GUID' => $guid,
+				'UF_CAB_CHANGE_PASSWD' => 1,
+				'UF_CAB_LAST_SMS' => time(),
+				'UF_CAB_SMS_ATTEMPTS' => 0,
+			]);
+
+			if ( $newUserId ) {
+				static::sendSMS([
+					'text' => 'Временный пароль для входа в кабинет: ' . $passwd,
+					'phone' => $cleanPhone
+				]);
+				return [
+					'status' => true,
+					'user_id' => $newUserId,
+					'description' => $passwd
+				];
+			} else {
+				error_log("Cabinet setCabUser error: " . $userObj->LAST_ERROR);
+				return [
+					'status' => false,
+					'description' => $userObj->LAST_ERROR
+				];
+			}
+		}
 
 		public static function checkAUth() {
-			
-			return ( !empty($_SESSION['CABINET_SSID']) ) ? true : false;
+			if ( is_object($GLOBALS['USER']) && $GLOBALS['USER']->IsAuthorized() ) {
+				return true;
+			}
+			return ( !empty($_SESSION['CABINET_SSID']) );
 		}
+
 		public static function unAUth() {
-			
 			unset( $_SESSION['CABINET_SSID'] );
 			unset( $_SESSION['CABINET_USER_INFO'] );
 			unset( $_SESSION['CABINET_USER_INFO_TIME'] );
@@ -426,135 +383,111 @@
 				$GLOBALS['USER']->Logout();
 			}
 		}
+
 		public static function AUth($user) {
-			
-			$res = false;
-			$userData = static::getCabUserByName( $user['NAME'] ?? '' );
+			$userData = static::getCabUserByName( $user['NAME'] ?? ($user['LOGIN'] ?? '') );
 			if ( !empty($userData) ) {
-				$ssid = $userData['PROPERTY_SSID_VALUE'] ?? md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . ($userData['PROPERTY_GUID_VALUE'] ?? '') );
+				$ssid = $userData['PROPERTY_SSID_VALUE'];
 				$_SESSION['CABINET_SSID'] = $ssid;
 
 				// Авторизуем в штатном Битриксе
 				if ( !empty($userData['B_USER_ID']) && is_object($GLOBALS['USER']) ) {
-					$GLOBALS['USER']->Authorize($userData['B_USER_ID']);
+					$GLOBALS['USER']->Authorize($userData['B_USER_ID'], true);
 				}
-				$res = true;
+				return true;
 			}
-			return $res;
+			return false;
 		}
+
 		public static function getAUthSSID() {
 			return ( $_SESSION['CABINET_SSID'] ) ?: false;
 		}
-		public static function passwdVerify( $value = '', $guid = null ) {
-			
-			$res = false;
-			if ( $guid ) {
-				$passwd_hash = static::getPasswdHashByGUID( $guid );
-				$res = password_verify( $value, $passwd_hash);
-			}
-			return $res;
-		}
-		public static function passwdRecovery( $name ) {
 
+		public static function passwdVerify( $value = '', $guid = null ) {
+			if ( empty($guid) || empty($value) ) return false;
+
+			$by = 'id'; $order = 'asc';
+			$dbUser = \CUser::GetList($by, $order, ['UF_CAB_GUID' => $guid], ['FIELDS' => ['ID', 'PASSWORD']]);
+			if ( $u = $dbUser->Fetch() ) {
+				$hash = $u['PASSWORD'];
+				if ( \Bitrix\Main\Security\Password::equals($hash, $value) || password_verify($value, $hash) ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static function passwdRecovery( $name ) {
 			$user = static::getCabUserByName( $name );
-			if ( $user ) {
+			if ( $user && !empty($user['B_USER_ID']) ) {
+				// Защита от спама: кулдаун 60 сек
+				$lastSms = (int)($user['PROPERTY_LAST_SMS'] ?? 0);
+				if ( $lastSms > 0 && (time() - $lastSms < 60) ) {
+					return false;
+				}
+
 				$passwd = static::newPasswd();
 				$cleanPhone = YApp::phoneIn($name);
 
-				// Обновление в b_user
-				if ( !empty($user['B_USER_ID']) ) {
-					$uObj = new \CUser;
-					$uObj->Update($user['B_USER_ID'], [
-						'PASSWORD' => $passwd,
-						'CONFIRM_PASSWORD' => $passwd,
-						'UF_CAB_CHANGE_PASSWD' => 1,
-					]);
-				}
-
-				// Обновление в ИБ 20
-				if ( !empty($user['ID']) && empty($user['B_USER_ID']) || !empty($user['ID']) ) {
-					CIBlockElement::SetPropertyValuesEx(
-						$user['ID'], 
-						static::IBLOCK_USERS,
-						[
-							'CHANGE_PASSWD' => 1,
-							'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT ),
-						]
-					);
-				}
+				$uObj = new \CUser;
+				$uObj->Update($user['B_USER_ID'], [
+					'PASSWORD' => $passwd,
+					'CONFIRM_PASSWORD' => $passwd,
+					'UF_CAB_CHANGE_PASSWD' => 1,
+					'UF_CAB_LAST_SMS' => time(),
+					'UF_CAB_SMS_ATTEMPTS' => 0,
+				]);
 
 				static::sendSMS([
-					'text' => 'Временный пароль: '.$passwd,
+					'text' => 'Новый временный пароль для входа: ' . $passwd,
 					'phone' => $cleanPhone
 				]);
 				return $passwd;
 			}
 			return false;
 		}
+
 		public static function setPasswd( $name, $passwd ) {
-
 			$user = static::getCabUserByName( $name );
-			if ( $user ) {
-				// Обновление в b_user
-				if ( !empty($user['B_USER_ID']) ) {
-					$uObj = new \CUser;
-					$uObj->Update($user['B_USER_ID'], [
-						'PASSWORD' => $passwd,
-						'CONFIRM_PASSWORD' => $passwd,
-						'UF_CAB_CHANGE_PASSWD' => 0,
-					]);
-				}
-
-				// Обновление в ИБ 20
-				if ( !empty($user['ID']) ) {
-					CIBlockElement::SetPropertyValuesEx(
-						$user['ID'], 
-						static::IBLOCK_USERS,
-						[
-							'CHANGE_PASSWD' => 0,
-							'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT )
-						]
-					);
-				}
-				return true;
+			if ( $user && !empty($user['B_USER_ID']) ) {
+				$uObj = new \CUser;
+				$res = $uObj->Update($user['B_USER_ID'], [
+					'PASSWORD' => $passwd,
+					'CONFIRM_PASSWORD' => $passwd,
+					'UF_CAB_CHANGE_PASSWD' => 0,
+				]);
+				return (bool)$res;
 			}
 			return false;
 		}
-		public static function getSMSCodeByName( $name ) {
 
-			$res = false;
+		public static function getSMSCodeByName( $name ) {
 			$user = static::getCabUserByName( $name );
-			if ( $user ) {
-				$res = mt_rand(123456, 987654);
+			if ( $user && !empty($user['B_USER_ID']) ) {
+				// Защита от спама: кулдаун 60 сек
+				$lastSms = (int)($user['PROPERTY_LAST_SMS'] ?? 0);
+				if ( $lastSms > 0 && (time() - $lastSms < 60) ) {
+					return false;
+				}
+
+				$code = random_int(100000, 999999);
 				$timeout = time() + static::CODE_TIMEOUT;
 
-				// Обновление в b_user
-				if ( !empty($user['B_USER_ID']) ) {
-					$uObj = new \CUser;
-					$uObj->Update($user['B_USER_ID'], [
-						'UF_CAB_CODE' => (string)$res,
-						'UF_CAB_CODE_TIMEOUT' => $timeout,
-					]);
-				}
-
-				// Обновление в ИБ 20
-				if ( !empty($user['ID']) ) {
-					CIBlockElement::SetPropertyValuesEx(
-						$user['ID'], 
-						static::IBLOCK_USERS,
-						[
-							'CODE' => $res,
-							'CODE_TIMEOUT' => $timeout
-						]
-					);
-				}
+				$uObj = new \CUser;
+				$uObj->Update($user['B_USER_ID'], [
+					'UF_CAB_CODE' => (string)$code,
+					'UF_CAB_CODE_TIMEOUT' => $timeout,
+					'UF_CAB_SMS_ATTEMPTS' => 0,
+					'UF_CAB_LAST_SMS' => time(),
+				]);
 
 				static::sendSMS([
-					'text' => 'Проверочный код: '.$res,
+					'text' => 'Проверочный код: ' . $code,
 					'phone' => YApp::phoneIn($name)
 				]);
+				return $code;
 			}
-			return $res;
+			return false;
 		}
 		private static function newPasswd( $length = 8 ) {
 	
