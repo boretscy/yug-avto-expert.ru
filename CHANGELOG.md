@@ -22,6 +22,17 @@
   - **Устранение JS SyntaxError (`cabinet/index.php`, `cabinet/vehicle/history.php`):** инициализация Chartist изолирована в анонимные функции с безопасным префиксом `chart_md5(vin)`, устраняя сбой скриптов для VIN, начинающихся с цифры.
 
 ### Performance & Architecture
+- **Фаза 4: Комплексный ЧПУ-компонент `yugavto:cabinet`, AJAX Action-контроллеры и оптимизация DOM:**
+  - Разработан комплексный компонент `yugavto:cabinet` (`local/components/yugavto/cabinet/class.php`) с поддержкой режима SEF (ЧПУ маршрутизация для `cars`, `vehicle`, `vehicle_history`, `vehicle_offers`, `vehicle_docs`, `profile`, `verify`).
+  - Реализован интерфейс `\Bitrix\Main\Engine\Contract\Controllerable` с нативными AJAX-контроллерами (`checkVerificationStatus`, `sendOfferSms`, `confirmOffer`) с автоматической префильтрацией `Authentication` и `Csrf`.
+  - Внедрены защитные Guard-редиректы в `executeComponent()` до отправки HTTP-вывода:
+    - Неавторизованные пользователи -> `/cabinet/login/`.
+    - Неверифицированные пользователи при попытке доступа к автомобилям/оферам -> `/cabinet/verify/`.
+    - Пользователи с требованием смены пароля (`UF_CAB_CHANGE_PASSWD`) -> `/cabinet/me/#cabinet-me-passwd`.
+  - Разработаны шаблоны страниц в `local/components/yugavto/cabinet/templates/.default/` (`cars.php`, `vehicle.php`, `vehicle_history.php`, `vehicle_offers.php`, `profile.php`, `verify.php`).
+  - Очищен подвал кабинета (`local/templates/yugavto.expert.cabinet/include/modals.php`): полностью удален паразитный цикл с 15 компонентами `bitrix:form.result.new` для общих форм сайта, сократив объем DOM и количество запросов к БД при открытии страниц кабинета.
+  - Во все формы модальных окон кабинета внедрены CSRF-токены `bitrix_sessid_post()`.
+  - В `urlrewrite.php` добавлено штатное правило для комплексного компонента `#^/cabinet/#`.
 - **Фаза 3: Сервисный слой D7, Circuit Breaker и защита данных:**
   - Разработан HTTP-клиент `Cabinet\Client\OneCClient` на базе `Bitrix\Main\Web\HttpClient` с таймаутом сокета 2.5с.
   - Внедрен паттерн **Circuit Breaker** (порог 3 подряд сбоя, блокировка на 180с) с двухуровневым кэшированием (Soft TTL 10 мин, Hard TTL 24 ч), защищающий сайт от каскадных падений (504 Gateway Timeout) при сбоях 1С.

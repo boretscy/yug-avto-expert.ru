@@ -104,4 +104,12 @@ $arUrlRewrite=array (
     'PATH' => '/news/index.php',
     'SORT' => 100,
   ),
+  50 => 
+  array (
+    'CONDITION' => '#^/cabinet/#',
+    'RULE' => '',
+    'ID' => 'yugavto:cabinet',
+    'PATH' => '/cabinet/index.php',
+    'SORT' => 100,
+  ),
 );
