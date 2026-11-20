@@ -128,9 +128,16 @@ if (php_sapi_name() !== 'cli') {
 	require_once __DIR__.'/YApp/BEESMS.class.php';
     $yapp = new YApp();
 
+	// Автозагрузка сервисного слоя личного кабинета (Cabinet D7)
+	\Bitrix\Main\Loader::registerAutoLoadClasses(null, [
+		'Cabinet\Client\OneCClient' => '/local/php_interface/Cabinet/Client/OneCClient.php',
+		'Cabinet\Services\SmsService' => '/local/php_interface/Cabinet/Services/SmsService.php',
+		'Cabinet\Services\VehicleService' => '/local/php_interface/Cabinet/Services/VehicleService.php',
+		'Cabinet\Services\AuthService' => '/local/php_interface/Cabinet/Services/AuthService.php',
+		'Cabinet' => '/local/php_interface/Cabinet/Cabinet.php',
+	]);
+
 	require_once __DIR__.'/Cabinet/Cabinet.php';
     $cabConf = require __DIR__.'/Cabinet/Config.php';
     $cab = new Cabinet( $cabConf );
-    
-
 ?>
