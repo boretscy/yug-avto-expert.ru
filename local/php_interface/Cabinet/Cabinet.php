@@ -40,6 +40,8 @@
 		const SMS_PASSWD = 'wfy7dHn@';
 		const SMS_SENDER = 'Y-A_Expert';
 
+		private static $config = null;
+
 		////////////////////////////////////////////////////////////////
 		// Init  ///////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////
@@ -47,10 +49,30 @@
         public function __construct( $arConf ) {
             
 			$this->Conf = $arConf;
+			static::$config = $arConf;
         }
 		public function Conf() {
 
 			return $this->Conf;
+		}
+
+		public static function getConfig( $key = null, $default = null ) {
+			if ( static::$config === null ) {
+				$cfgPath = __DIR__.'/Config.php';
+				static::$config = file_exists($cfgPath) ? require $cfgPath : [];
+			}
+			if ( $key === null ) {
+				return static::$config;
+			}
+			$parts = explode('.', $key);
+			$val = static::$config;
+			foreach ($parts as $p) {
+				if ( !is_array($val) || !isset($val[$p]) ) {
+					return $default;
+				}
+				$val = $val[$p];
+			}
+			return $val;
 		}
 
 
@@ -60,18 +82,26 @@
 
 		private static function buildHeaders() {
 
-            $headers['Content-Type'][] = 'application/json; charset=utf-8';
-            $headers['Accept'][] = 'application/json';
-            return $headers;
+            return [
+                'Content-Type: application/json; charset=utf-8',
+                'Accept: application/json'
+            ];
         }
 		private static function makeBaseURI() {
 
+			$apiSsl = static::getConfig('api.ssl', static::API_SSL);
+			$apiHost = static::getConfig('api.host', static::API_HOST);
+			$isTest = static::getConfig('test', static::TEST);
+			$apiBaseTest = static::getConfig('api.base_test', static::API_BASE_T);
+			$apiBase = static::getConfig('api.base', static::API_BASE);
+			$apiUri = static::getConfig('api.uri', static::API_URI);
+
 			$uri = 'http';
-			$uri .= ( static::API_SSL ) ? 's' : '';
+			$uri .= ( $apiSsl ) ? 's' : '';
 			$uri .= '://';
-			$uri .= static::API_HOST;
-			$uri .= ( static::TEST ) ? static::API_BASE_T : static::API_BASE;
-			$uri .= static::API_URI;
+			$uri .= $apiHost;
+			$uri .= ( $isTest ) ? $apiBaseTest : $apiBase;
+			$uri .= $apiUri;
 
 			return $uri;
 		}
@@ -95,8 +125,11 @@
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, static::buildHeaders());
-				curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-				curl_setopt($ch, CURLOPT_USERPWD, static::API_USER.':'.static::API_PASS);
+				$timeout = (int)static::getConfig('api.timeout', 5);
+				curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+				$apiUser = static::getConfig('api.user', static::API_USER);
+				$apiPass = static::getConfig('api.pass', static::API_PASS);
+				curl_setopt($ch, CURLOPT_USERPWD, $apiUser.':'.$apiPass);
 
 				switch ( $method ) {
 					case static::METHOD_GET: 	curl_setopt($ch, CURLOPT_HTTPGET, 1); break;
@@ -111,53 +144,35 @@
 				$response = false;
 
 				try {
-					// $response = curl_exec($ch);
 
 					while ($attempt < static::API_RETRIES) {
 						$response = curl_exec($ch);
 						$err_code = curl_errno($ch);
 
 						if ($response !== false) {
-							// Успех — выходим из цикла
 							break;
 						}
 
 						if ($err_code === CURLE_OPERATION_TIMEDOUT) {
 							$attempt++;
-							// echo "Попытка $attempt не удалась по таймауту. Повтор...\n";
-							sleep(1); // Пауза перед повтором
+							sleep(1);
 							continue;
 						}
 
-						// Если ошибка не связана с таймаутом (например, 404), прерываем цикл
-						echo "Критическая ошибка cURL: " . curl_error($ch);
+						error_log("Cabinet 1C cURL error: " . curl_error($ch));
 						break;
 					}
 
-					// 1. Проверка на ошибки соединения/транспорта
 					if ($response === false) throw new \RuntimeException(curl_error($ch), curl_errno($ch));
 
-					// 2. Проверка HTTP-статуса (например, 404 или 500)
 					$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-					// if ( $httpCode !== 200 && $httpCode !== 204 ) throw new Exception(sprintf('Curl error http code: (%s) %s uri: %s', $httpCode, $response, $uri), $httpCode);
 					if ( $httpCode !== 200 && $httpCode !== 204 ) return false;
-					// if ( $httpCode !== 200 && $httpCode !== 204 ) {
-					// 	echo $httpCode.PHP_EOL.PHP_EOL;
-					// 	echo $response;
-					// 	die;
-					// };
 
-					// Успешная обработка
 					$result = json_decode($response, true);
-					// $result = $response;
 
 				} catch (\RuntimeException $e) {
-					// Обработка ошибок (логирование)
-					error_log(sprintf('Curl error (%d): %s', $e->getCode(), $e->getMessage()));
-					echo "Ошибка запроса: " . $e->getMessage();
-
+					error_log(sprintf('Cabinet 1C error (%d): %s', $e->getCode(), $e->getMessage()));
 				} finally {
-					// Ресурс должен быть закрыт всегда
 					curl_close($ch);
 				}
 			}
@@ -174,17 +189,17 @@
 			/*
 			FIO						ФИО клиента*
 			Phone					Телефон (+7...)*
-			Series					Серия паспорта*
-			Number					Номер паспорта*
+			Series					Серия паспорта (опционально)
+			Number					Номер паспорта (опционально)
 			ProcessPersonalData		Согласие на обработку СОПД пользователя*
 			*/
-
-			if ( $POST['GUID'] ) $res['GUID'] = $POST['GUID'];
-			if ( $POST['NAME'] ) $res['FIO'] = $POST['NAME'];
-			if ( $POST['PHONE'] ) $res['Phone'] = YApp::phoneIn($POST['PHONE']);
-			if ( $POST['EMAIL'] ) $res['Email'] = $POST['EMAIL'];
-			if ( $POST['PASSPORT_SERIES'] ) $res['Series'] = $POST['PASSPORT_SERIES'];
-			if ( $POST['PASSPORT_NUMBER'] ) $res['Number'] = $POST['PASSPORT_NUMBER'];
+			$res = [];
+			if ( !empty($POST['GUID']) ) $res['GUID'] = $POST['GUID'];
+			if ( !empty($POST['NAME']) ) $res['FIO'] = $POST['NAME'];
+			if ( !empty($POST['PHONE']) ) $res['Phone'] = YApp::phoneIn($POST['PHONE']);
+			if ( !empty($POST['EMAIL']) ) $res['Email'] = $POST['EMAIL'];
+			if ( !empty($POST['PASSPORT_SERIES']) ) $res['Series'] = $POST['PASSPORT_SERIES'];
+			if ( !empty($POST['PASSPORT_NUMBER']) ) $res['Number'] = $POST['PASSPORT_NUMBER'];
 			if ( isset($POST['PERSONAL']) ) $res['ProcessPersonalData'] = true;
 			return $res;
 		}
@@ -229,7 +244,47 @@
 		}
 
 		public static function getCabUserBySSID( $ssid ) {
+			if ( empty($ssid) ) return false;
 
+			// 1. Поиск по текущей сессии Битрикса
+			if ( is_object($GLOBALS['USER']) && $GLOBALS['USER']->IsAuthorized() ) {
+				$curUserId = (int)$GLOBALS['USER']->GetID();
+				$by = 'id'; $order = 'asc';
+				$dbUser = \CUser::GetList($by, $order, ['ID' => $curUserId], ['SELECT' => ['UF_*']]);
+				if ( $u = $dbUser->Fetch() ) {
+					return [
+						'ID' => $u['ID'],
+						'NAME' => $u['LOGIN'],
+						'PROPERTY_GUID_VALUE' => $u['UF_CAB_GUID'] ?? '',
+						'PROPERTY_SSID_VALUE' => $ssid,
+						'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
+						'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
+						'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+						'B_USER_ID' => (int)$u['ID'],
+					];
+				}
+			}
+
+			// 2. Поиск в b_user по совпадению SSID хэша от GUID
+			$by = 'id'; $order = 'asc';
+			$dbUsers = \CUser::GetList($by, $order, ['!UF_CAB_GUID' => false], ['SELECT' => ['UF_*']]);
+			while ( $u = $dbUsers->Fetch() ) {
+				$userSsid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . ($u['UF_CAB_GUID'] ?? '') );
+				if ( $userSsid === $ssid ) {
+					return [
+						'ID' => $u['ID'],
+						'NAME' => $u['LOGIN'],
+						'PROPERTY_GUID_VALUE' => $u['UF_CAB_GUID'] ?? '',
+						'PROPERTY_SSID_VALUE' => $ssid,
+						'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
+						'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
+						'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+						'B_USER_ID' => (int)$u['ID'],
+					];
+				}
+			}
+
+			// 3. Fallback: поиск в ИБ 20
 			$res = false;
 			$rs = CIBlockElement::GetList(
 				[], 
@@ -245,13 +300,34 @@
 			return $res;
 		}
 		public static function getCabUserByName( $name ) {
+			$cleanPhone = YApp::phoneIn($name);
+			if ( empty($cleanPhone) ) return false;
 
+			// 1. Поиск в штатной таблице b_user
+			$by = 'id'; $order = 'asc';
+			$dbUser = \CUser::GetList($by, $order, ['LOGIN_EQUAL_EXACT' => $cleanPhone], ['SELECT' => ['UF_*']]);
+			if ( $u = $dbUser->Fetch() ) {
+				$guid = $u['UF_CAB_GUID'] ?? '';
+				$ssid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . $guid );
+				return [
+					'ID' => $u['ID'],
+					'NAME' => $u['LOGIN'],
+					'PROPERTY_GUID_VALUE' => $guid,
+					'PROPERTY_SSID_VALUE' => $ssid,
+					'PROPERTY_CODE_VALUE' => $u['UF_CAB_CODE'] ?? '',
+					'PROPERTY_CODE_TIMEOUT_VALUE' => $u['UF_CAB_CODE_TIMEOUT'] ?? 0,
+					'PROPERTY_CHANGE_PASSWD_VALUE' => $u['UF_CAB_CHANGE_PASSWD'] ?? 0,
+					'B_USER_ID' => (int)$u['ID'],
+				];
+			}
+
+			// 2. Fallback: поиск в ИБ 20
 			$res = false;
 			$rs = CIBlockElement::GetList(
 				[], 
 				[
 					'IBLOCK_ID' => static::IBLOCK_USERS,
-					'NAME' => YApp::phoneIn($name),
+					'NAME' => $cleanPhone,
 					'ACTIVE' => 'Y'
 				], 
 				false, false, 
@@ -280,34 +356,57 @@
 		public static function setCabUser( $POST = [] ) {
 			
 			$res = false;
-			if ( $POST['PHONE'] ) {
+			if ( !empty($POST['PHONE']) ) {
 				$user = static::getCabUserByName( $POST['PHONE'] );
 				if ( $user ) return ['status'=>false, 'description'=>'Такой пользователь уже зарегистрирован'];
 				$passwd = static::newPasswd();
+				$cleanPhone = YApp::phoneIn( $POST['PHONE'] );
+				$guid = $POST['GUID'] ?? '';
+				$ssid = md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . $guid );
+
+				// Регистрация в b_user
+				$userObj = new \CUser;
+				$resGroup = \CGroup::GetList($by = "c_sort", $order = "asc", ["STRING_ID" => 'CABINET_USERS'])->Fetch();
+				$cabGroupId = $resGroup ? (int)$resGroup['ID'] : 2;
+
+				$userObj->Add([
+					'LOGIN' => $cleanPhone,
+					'NAME' => $POST['NAME'] ?? $cleanPhone,
+					'EMAIL' => !empty($POST['EMAIL']) ? $POST['EMAIL'] : "{$cleanPhone}@yug-avto-expert.ru",
+					'PASSWORD' => $passwd,
+					'CONFIRM_PASSWORD' => $passwd,
+					'ACTIVE' => 'Y',
+					'GROUP_ID' => [2, $cabGroupId],
+					'PERSONAL_PHONE' => $cleanPhone,
+					'UF_CAB_GUID' => $guid,
+					'UF_CAB_CHANGE_PASSWD' => 1,
+				]);
+
+				// Сохранение в ИБ 20 для обратной совместимости
 				$arIns = [
 					'IBLOCK_ID' => static::IBLOCK_USERS,
 					'MODIFIED_BY' => 1,
-					'NAME' => YApp::phoneIn( $POST['PHONE'] ),
+					'NAME' => $cleanPhone,
 					'ACTIVE' => 'Y',
 					'PROPERTY_VALUES' => [
-						'GUID' => $POST['GUID'],
+						'GUID' => $guid,
 						'CHANGE_PASSWD' => 1,
 						'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT ),
-						'SSID' => md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10).$POST['GUID'] ),
+						'SSID' => $ssid,
 					]
 				];
 				$el = new CIBlockElement;
 				if ( $PRODUCT_ID = $el->Add($arIns) ) {
 					static::sendSMS([
 						'text' => 'Временный пароль: '.$passwd,
-						'phone' => YApp::phoneIn( $POST['PHONE'] )
+						'phone' => $cleanPhone
 					]);
 					return [
 						'status' => true,
 						'description' => $passwd
 					];
 				} else {
-					echo 'Error: '.$el->LAST_ERROR;
+					error_log("Cabinet setCabUser error: " . $el->LAST_ERROR);
 				}
 			}
 			return $res;
@@ -316,18 +415,29 @@
 
 		public static function checkAUth() {
 			
-			return ( $_SESSION['CABINET_SSID'] ) ? true : false;
+			return ( !empty($_SESSION['CABINET_SSID']) ) ? true : false;
 		}
 		public static function unAUth() {
 			
 			unset( $_SESSION['CABINET_SSID'] );
+			unset( $_SESSION['CABINET_USER_INFO'] );
+			unset( $_SESSION['CABINET_USER_INFO_TIME'] );
+			if ( is_object($GLOBALS['USER']) && $GLOBALS['USER']->IsAuthorized() ) {
+				$GLOBALS['USER']->Logout();
+			}
 		}
 		public static function AUth($user) {
 			
 			$res = false;
-			$user = static::getCabUserByName( YApp::phoneIn($user['NAME']) );
-			if ( $user['PROPERTY_SSID_VALUE'] ) {
-				$_SESSION['CABINET_SSID'] = $user['PROPERTY_SSID_VALUE'];
+			$userData = static::getCabUserByName( $user['NAME'] ?? '' );
+			if ( !empty($userData) ) {
+				$ssid = $userData['PROPERTY_SSID_VALUE'] ?? md5( substr( md5('https://yug-avto-expert.ru/cabinet/'), 0, -10) . ($userData['PROPERTY_GUID_VALUE'] ?? '') );
+				$_SESSION['CABINET_SSID'] = $ssid;
+
+				// Авторизуем в штатном Битриксе
+				if ( !empty($userData['B_USER_ID']) && is_object($GLOBALS['USER']) ) {
+					$GLOBALS['USER']->Authorize($userData['B_USER_ID']);
+				}
 				$res = true;
 			}
 			return $res;
@@ -349,17 +459,33 @@
 			$user = static::getCabUserByName( $name );
 			if ( $user ) {
 				$passwd = static::newPasswd();
-				CIBlockElement::SetPropertyValuesEx(
-					$user['ID'], 
-					static::IBLOCK_USERS,
-					[
-						'CHANGE_PASSWD' => 1,
-						'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT ),
-					]
-				);
+				$cleanPhone = YApp::phoneIn($name);
+
+				// Обновление в b_user
+				if ( !empty($user['B_USER_ID']) ) {
+					$uObj = new \CUser;
+					$uObj->Update($user['B_USER_ID'], [
+						'PASSWORD' => $passwd,
+						'CONFIRM_PASSWORD' => $passwd,
+						'UF_CAB_CHANGE_PASSWD' => 1,
+					]);
+				}
+
+				// Обновление в ИБ 20
+				if ( !empty($user['ID']) && empty($user['B_USER_ID']) || !empty($user['ID']) ) {
+					CIBlockElement::SetPropertyValuesEx(
+						$user['ID'], 
+						static::IBLOCK_USERS,
+						[
+							'CHANGE_PASSWD' => 1,
+							'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT ),
+						]
+					);
+				}
+
 				static::sendSMS([
 					'text' => 'Временный пароль: '.$passwd,
-					'phone' => $name
+					'phone' => $cleanPhone
 				]);
 				return $passwd;
 			}
@@ -369,14 +495,27 @@
 
 			$user = static::getCabUserByName( $name );
 			if ( $user ) {
-				CIBlockElement::SetPropertyValuesEx(
-					$user['ID'], 
-					static::IBLOCK_USERS,
-					[
-						'CHANGE_PASSWD' => 0,
-						'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT )
-					]
-				);
+				// Обновление в b_user
+				if ( !empty($user['B_USER_ID']) ) {
+					$uObj = new \CUser;
+					$uObj->Update($user['B_USER_ID'], [
+						'PASSWORD' => $passwd,
+						'CONFIRM_PASSWORD' => $passwd,
+						'UF_CAB_CHANGE_PASSWD' => 0,
+					]);
+				}
+
+				// Обновление в ИБ 20
+				if ( !empty($user['ID']) ) {
+					CIBlockElement::SetPropertyValuesEx(
+						$user['ID'], 
+						static::IBLOCK_USERS,
+						[
+							'CHANGE_PASSWD' => 0,
+							'PASSWD' => password_hash( $passwd, PASSWORD_DEFAULT )
+						]
+					);
+				}
 				return true;
 			}
 			return false;
@@ -387,17 +526,32 @@
 			$user = static::getCabUserByName( $name );
 			if ( $user ) {
 				$res = mt_rand(123456, 987654);
-				CIBlockElement::SetPropertyValuesEx(
-					$user['ID'], 
-					static::IBLOCK_USERS,
-					[
-						'CODE' => $res,
-						'CODE_TIMEOUT' => time() + static::CODE_TIMEOUT
-					]
-				);
+				$timeout = time() + static::CODE_TIMEOUT;
+
+				// Обновление в b_user
+				if ( !empty($user['B_USER_ID']) ) {
+					$uObj = new \CUser;
+					$uObj->Update($user['B_USER_ID'], [
+						'UF_CAB_CODE' => (string)$res,
+						'UF_CAB_CODE_TIMEOUT' => $timeout,
+					]);
+				}
+
+				// Обновление в ИБ 20
+				if ( !empty($user['ID']) ) {
+					CIBlockElement::SetPropertyValuesEx(
+						$user['ID'], 
+						static::IBLOCK_USERS,
+						[
+							'CODE' => $res,
+							'CODE_TIMEOUT' => $timeout
+						]
+					);
+				}
+
 				static::sendSMS([
 					'text' => 'Проверочный код: '.$res,
-					'phone' => $name
+					'phone' => YApp::phoneIn($name)
 				]);
 			}
 			return $res;
@@ -433,54 +587,61 @@
 			return $q;
 		}
 		public static function passportOut( $q ) {
-			
 			$q = self::passportIn( $q );
-			for ($k = 0; $k < mb_strlen((string)$q); $k++) $p[] = mb_substr($q, $k, 1);
-			return $p[0].$p[1].$p[2].$p[3].' '.$p[4].$p[5].$p[6].$p[7].$p[8].$p[9];
+			$len = mb_strlen((string)$q);
+			if ($len < 10) {
+				return (string)$q;
+			}
+			return mb_substr($q, 0, 4) . ' ' . mb_substr($q, 4, 6);
 		}
 
 
 
 		public static function sendform( $POST ) {
-          
+			require_once __DIR__.'/../../../api/vendor/phpmailer/phpmailer/src/Exception.php';
+			require_once __DIR__.'/../../../api/vendor/phpmailer/phpmailer/src/PHPMailer.php';
 
-            require __DIR__.'/../../../api/vendor/phpmailer/phpmailer/src/Exception.php';
-            require __DIR__.'/../../../api/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-
-            $mail = new PHPMailer(true);
+			$mail = new PHPMailer(true);
+			$mail->LE = "\r\n";
 			$mail->Body = '';
 
+			$name = !empty($POST['NAME']) ? \Bitrix\Main\Text\HtmlFilter::encode($POST['NAME']) : '';
+			$phone = !empty($POST['PHONE']) ? \Bitrix\Main\Text\HtmlFilter::encode($POST['PHONE']) : '';
+			$comment = !empty($POST['COMMENT']) ? \Bitrix\Main\Text\HtmlFilter::encode($POST['COMMENT']) : '';
 
-            if ( $POST['NAME'] ) $mail->Body .= 'Имя: '.$POST['NAME'].'<br />';
-			if ( $POST['PHONE'] ) $mail->Body .= 'Телефон: '.$POST['PHONE'].'<br />';
-			if ( $POST['COMMENT'] ) $mail->Body .= 'Комментарий: '.$POST['COMMENT'].'<br />';
+			if ( $name ) $mail->Body .= 'Имя: '.$name.'<br />';
+			if ( $phone ) $mail->Body .= 'Телефон: '.$phone.'<br />';
+			if ( $comment ) $mail->Body .= 'Комментарий: '.$comment.'<br />';
 
 			try {
-                
-                $mail->setFrom('cabinet_formsender@yug-avto-expert.ru', (($_POST['SENDER'])?:'Формы кабинета yug-avto-expert.ru'));
-                $mail->isHTML(true);
-                $mail->CharSet = 'utf-8';
-                $mail->addAddress('anton.boreckiy@yug-avto.ru');
-                $mail->send();
-                return true;
-
-            } catch (Exception $e) {
-
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+				$sender = !empty($POST['SENDER']) ? \Bitrix\Main\Text\HtmlFilter::encode($POST['SENDER']) : 'Формы кабинета yug-avto-expert.ru';
+				$mail->setFrom('cabinet_formsender@yug-avto-expert.ru', $sender);
+				$mail->isHTML(true);
+				$mail->CharSet = 'utf-8';
+				$mail->addAddress('anton.boreckiy@yug-avto.ru');
+				$mail->send();
+				return true;
+			} catch (Exception $e) {
+				error_log("Cabinet sendform Mailer Error: " . $mail->ErrorInfo);
 				return false;
-            }
-            
-        }
+			}
+		}
 
 
 		public static function sendSMS( $POST ) {
-            
-            $SMS = new SMS(static::SMS_USER, static::SMS_PASSWD);
-			$r = $SMS->post_message($POST['text'], $POST['phone'], static::SMS_SENDER);
+			$cfg = static::getConfig();
+			$smsUser = $cfg['sms']['user'] ?? '';
+			$smsPass = $cfg['sms']['pass'] ?? '';
+			$smsSender = $cfg['sms']['sender'] ?? '';
 
-			YApp::sp( $r );
-            
-            return true;
+			$SMS = new SMS($smsUser, $smsPass);
+			$r = $SMS->post_message($POST['text'], $POST['phone'], $smsSender);
+
+			if (is_array($r) && isset($r['status']) && $r['status'] !== 'ok') {
+				error_log('Cabinet sendSMS error: ' . json_encode($r, JSON_UNESCAPED_UNICODE));
+			}
+
+			return true;
 		}
 
 		////////////////////////////////////////////////////////////////

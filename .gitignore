@@ -19,6 +19,7 @@
 /local/settings.php
 /local/php_interface/dbconn.php
 /local/php_interface/yapps_config.php
+/local/php_interface/Cabinet/config.local.php
 /local/php_interface/*.json
 
 # === Исключение папок логов YApp ===

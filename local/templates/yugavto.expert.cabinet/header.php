@@ -7,10 +7,33 @@
     
 
     if ( $cab::checkAuth() ) {
-        $user = $cab::getCabUserBySSID( $cab::getAUthSSID() );
-        $user['INFO'] = $cab::getUserByGUID($user['PROPERTY_GUID_VALUE']);
-        // $user['INFO']['Status'] = false;
-        $GLOBALS['CABINET_USER'] = $user;
+        $ssid = $cab::getAUthSSID();
+        $user = $cab::getCabUserBySSID( $ssid );
+        if ( !empty($user) ) {
+            $cachedInfo = $_SESSION['CABINET_USER_INFO'] ?? null;
+            $cachedTime = (int)($_SESSION['CABINET_USER_INFO_TIME'] ?? 0);
+            
+            // Кэш информации пользователя на 300 секунд для устранения задержек сетевого waterfall 1С
+            if ( !empty($cachedInfo) && is_array($cachedInfo) && (time() - $cachedTime < 300) ) {
+                $user['INFO'] = $cachedInfo;
+            } else {
+                $guid = $user['PROPERTY_GUID_VALUE'] ?? '';
+                $freshInfo = !empty($guid) ? $cab::getUserByGUID($guid) : null;
+                if ( !empty($freshInfo) && is_array($freshInfo) ) {
+                    $user['INFO'] = $freshInfo;
+                    $_SESSION['CABINET_USER_INFO'] = $freshInfo;
+                    $_SESSION['CABINET_USER_INFO_TIME'] = time();
+                } elseif ( !empty($cachedInfo) && is_array($cachedInfo) ) {
+                    // Soft fallback при временной недоступности 1С
+                    $user['INFO'] = $cachedInfo;
+                } else {
+                    $user['INFO'] = [];
+                }
+            }
+            $GLOBALS['CABINET_USER'] = $user;
+        } else {
+            $cab::unAuth();
+        }
     }
 ?>
 <!doctype html>

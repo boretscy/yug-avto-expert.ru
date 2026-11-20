@@ -1,21 +1,31 @@
 <?php 
 $APPLICATION->AddChainItem('Документы', '');
-$rawResponse = $cab::getGenerateADocument($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $data['vin'], $_GET['doc']);
 
-// YApp::sp($_GET);
-// YApp::sd( $rawResponse );
+$userGuid = $GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'] ?? '';
+$vin = $data['vin'] ?? '';
+$numDoc = (string)($_GET['doc'] ?? '');
+
+$rawResponse = $cab::getGenerateADocument($userGuid, $vin, $numDoc);
+
+if ( empty($rawResponse['Doc']) ) {
+    ShowError('Не удалось сформировать документ. Пожалуйста, обратитесь к менеджеру автосалона.');
+    return;
+}
 
 $binary = base64_decode($rawResponse['Doc'], true);
 
-// if (!$binary || !str_starts_with($binary, "%PDF-")) exit("Ошибка: Сервис вернул некорректные данные.");
+if ( empty($binary) ) {
+    ShowError('Ошибка декодирования содержимого документа.');
+    return;
+}
 
-if (ob_get_length()) ob_end_clean();
+while ( ob_get_level() ) {
+    ob_end_clean();
+}
 
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="document.pdf"');
+header('Content-Disposition: inline; filename="document_' . urlencode($numDoc) . '.pdf"');
 header('Content-Length: ' . strlen($binary));
 
 echo $binary;
 exit;
-
-?>

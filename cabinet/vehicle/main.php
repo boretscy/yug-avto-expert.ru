@@ -1,16 +1,35 @@
 <?php 
 $GLOBALS['CABINET_USER']['CAR_INFO'] = $cab::getCarInfo($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $data['vin']);
-if ( $GLOBALS['CABINET_USER']['CAR_INFO']['Request'] ) $GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS'] = $cab::getOffersForCarRevaluation($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $data['vin']);
-$calls = 0; $visits = 0; $internet = 0;
-foreach ( $GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals'] as $h ) {
-    if ( $h['Call'] ) $calls += $h['Call'] ;
-    if ( $h['Visit'] ) $visits += $h['Visit'];
-    if ( $h['Internet'] ) $internet += $h['Internet'];
+if ( !empty($GLOBALS['CABINET_USER']['CAR_INFO']['Request']) ) {
+    $GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS'] = $cab::getOffersForCarRevaluation($GLOBALS['CABINET_USER']['PROPERTY_GUID_VALUE'], $data['vin']);
 }
-// YApp::sp($GLOBALS['CABINET_USER']['CAR_INFO']);
-// $calls = mt_rand(5,99);
-// $visits = mt_rand(5,99);
-// $internet = mt_rand(5,99);
+
+$calls = 0; $visits = 0; $internet = 0;
+if ( !empty($GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals']) && is_array($GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals']) ) {
+    foreach ( $GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals'] as $h ) {
+        if ( !empty($h['Call']) ) $calls += (int)$h['Call'];
+        if ( !empty($h['Visit']) ) $visits += (int)$h['Visit'];
+        if ( !empty($h['Internet']) ) $internet += (int)$h['Internet'];
+    }
+}
+
+// Поиск конкретного автомобиля по VIN в MassAvto (устранение ошибки подстановки MassAvto[0])
+$currentCar = null;
+if ( !empty($GLOBALS['CABINET_USER']['INFO']['MassAvto']) && is_array($GLOBALS['CABINET_USER']['INFO']['MassAvto']) ) {
+    foreach ( $GLOBALS['CABINET_USER']['INFO']['MassAvto'] as $car ) {
+        if ( !empty($car['VIN']) && !empty($data['vin']) && strtoupper($car['VIN']) === strtoupper($data['vin']) ) {
+            $currentCar = $car;
+            break;
+        }
+    }
+}
+$priceC = (float)($currentCar['PriceC'] ?? ($GLOBALS['CABINET_USER']['INFO']['MassAvto'][0]['PriceC'] ?? 0));
+$price = (float)($currentCar['Price'] ?? ($GLOBALS['CABINET_USER']['INFO']['MassAvto'][0]['Price'] ?? 0));
+
+$offersCount = 0;
+if ( !empty($GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS']['Current']) && is_array($GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS']['Current']) ) {
+    $offersCount = count($GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS']['Current']);
+}
 ?>
 <div class="py-3 bg-yablue c-yawhite vehicle-title">
     <div class="container">
@@ -71,13 +90,13 @@ foreach ( $GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals'] as $h ) {
                         </div>
                         <div class="col-12 d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="h2"><?= number_format($GLOBALS['CABINET_USER']['INFO']['MassAvto'][0]['PriceC'], 0, '.', ' ');?> ₽ <span class="c-yamiddlegray h6">Вы получите</span></div>
-                                <div class="c-yamiddlegray"><?= number_format($GLOBALS['CABINET_USER']['INFO']['MassAvto'][0]['Price'], 0, '.', ' ');?> ₽ Цена продажи</div>
+                                <div class="h2"><?= number_format($priceC, 0, '.', ' ');?> ₽ <span class="c-yamiddlegray h6">Вы получите</span></div>
+                                <div class="c-yamiddlegray"><?= number_format($price, 0, '.', ' ');?> ₽ Цена продажи</div>
                             </div>
                             <a href="/cabinet/vehicle/<?= $vehicle;?>/offers/" class="c-yadarkgray b-yagray b-radius-yaradius-7 text-decoration-none px-2 py-1 d-flex justify-content-between align-items-center">
                                 <span>Предложения</span>
-                                <?php if ( $GLOBALS['CABINET_USER']['CAR_INFO']['Request'] ) { ?>
-                                <span class="cabinet-vehicle-offers-count bg-yadarkgreen c-yawhite b-radius-c-yaradius ms-1 d-flex justify-content-center align-items-center"><?= count($GLOBALS['CABINET_USER']['CAR_INFO']['OFFERS']['Current']);?></span>
+                                <?php if ( $offersCount > 0 ) { ?>
+                                <span class="cabinet-vehicle-offers-count bg-yadarkgreen c-yawhite b-radius-c-yaradius ms-1 d-flex justify-content-center align-items-center"><?= $offersCount;?></span>
                                 <?php } ?>
                             </a>
                         </div>
@@ -113,9 +132,12 @@ foreach ( $GLOBALS['CABINET_USER']['CAR_INFO']['HistoryAppeals'] as $h ) {
                                 <div class="h5">Комиссионная продажа</div>
                                 <div class="c-yagray text-minus">Статистика:</div>
                                 <ul class="list-unstyled text-minus-minus mt-4">
-                                    <li class="d-flex justify-content-between"><span class="c-yadarkgray">Начало комиссионных услуг:</span><span><?= date( 'd.m.Y', strtotime($GLOBALS['CABINET_USER']['CAR_INFO']['CommissionServicesStart']));?></span></li>
+                                    <?php 
+                                    $commDate = !empty($GLOBALS['CABINET_USER']['CAR_INFO']['CommissionServicesStart']) ? date('d.m.Y', strtotime($GLOBALS['CABINET_USER']['CAR_INFO']['CommissionServicesStart'])) : '—';
+                                    ?>
+                                    <li class="d-flex justify-content-between"><span class="c-yadarkgray">Начало комиссионных услуг:</span><span><?= $commDate;?></span></li>
                                     <hr class="my-2" />
-                                    <li class="d-flex justify-content-between"><span class="c-yadarkgray">Дата публикации:</span><span><?= date( 'd.m.Y', strtotime($GLOBALS['CABINET_USER']['CAR_INFO']['CommissionServicesStart']));?></span></li>
+                                    <li class="d-flex justify-content-between"><span class="c-yadarkgray">Дата публикации:</span><span><?= $commDate;?></span></li>
                                     <hr class="my-2" />
                                     <li class="d-flex justify-content-between"><span><img src="/cabinet/images/vehicle-user.svg" class="me-2" />Визиты</span><span class="c-yablue"><?= $visits;?></span></li>
                                     <hr class="my-2" />
